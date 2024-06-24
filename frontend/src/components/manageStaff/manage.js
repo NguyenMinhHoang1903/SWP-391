@@ -52,8 +52,12 @@ export default function ManageStaff() {
           <div className='container' >
             <div className='table' >
               <div className='row' >
-                <div className='col-10' >
-                  <div className='table-heading-left' ><h1>Staffs Schedule </h1></div>
+                <div className='col-2'>
+                  <button className='table-heading-left'>Manage Service</button>
+                  <button className='table-heading-left'>Manage Combo</button>
+                </div>
+                <div className='col-8' >
+                  <div className='table-heading-center' ><h1>Staffs Schedule </h1></div>
                 </div>
                 <div className='col-2' >
                   <img className='table-heading-right' src='assets/imgs/gif-1.gif' alt='' />

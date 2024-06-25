@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Container = () => {
+const ChangeBooking = () => {
   const [bookingInfo, setBookingInfo] = useState({
     bookingID: "",
     service: "",
@@ -63,4 +63,4 @@ const Container = () => {
   );
 };
 
-export default Container;
+export default ChangeBooking;

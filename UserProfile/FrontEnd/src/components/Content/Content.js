@@ -5,7 +5,7 @@ export default class Content extends Component {
   render() {
     return (
       <>
-      <div className='content' >
+      <div className='contentProfile' >
         <div className='container' >
           <div className='container-heading' ><h1>User Profile</h1></div>
           <form>

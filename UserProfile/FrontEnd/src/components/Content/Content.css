@@ -1,10 +1,10 @@
-.content .container {
+.contentProfile .container {
     background-color: rgb(155, 95, 60);
     margin-top: 30px;
     padding-bottom: 25px;
 }
 
-.content .container-heading {
+.contentProfile .container-heading {
     color: white;
     text-align: center;
     padding-top: 20px;
@@ -52,23 +52,23 @@
     margin-top: 10%;
 }
 
-.content .input-group, .content .row {
+.contentProfile .input-group, .contentProfile .row {
     padding-left: 40px;
     padding-right: 40px;
     padding-bottom: 10px;
     font-family: Cursive;
 }
 
-.content .input-group:nth-child(4) {
+.contentProfile .input-group:nth-child(4) {
     padding-right: 40px;
     text-align: center;
 }
 
-.content .row label {
+.contentProfile .row label {
     color: white;
 }
 
-.content .btn-success {
+.contentProfile .btn-success {
     display: block;
     margin-left: auto;
     margin-right: 10%;

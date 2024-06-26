@@ -759,6 +759,15 @@ input[type="radio"]{
   margin-bottom: 10px;
 }
 
+.form-check {
+  margin-left: 15%;
+  margin-top: 10%;
+}
+
+.form-check-label {
+  color: whitesmoke;
+}
+
 .contentProfile .input-group, .content .row {
   padding-left: 40px;
   padding-right: 40px;

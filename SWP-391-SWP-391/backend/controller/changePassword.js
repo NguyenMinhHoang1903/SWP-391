@@ -4,14 +4,13 @@ const jwt = require('jsonwebtoken');
 
 async function changePassword(req, res) {
   try {
-    const { password, userPassword, confirmPassword } = req.body;
-    const { _id } = req.user;
+    const { name, password, userPassword, confirmPassword } = req.body;
 
     if (!password || !userPassword || !confirmPassword) {
       throw new Error("Please provide all required fields");
     }
 
-    const user = await userModel.findById(_id);
+    const user = await userModel.findOne({ name: name.toString() });
 
     if (!user) {
       throw new Error("User not found");
@@ -28,18 +27,18 @@ async function changePassword(req, res) {
     }
 
     const hashedPassword = await bcrypt.hash(userPassword, 10);
-    await userModel.updateOne({ _id }, { $set: { password: hashedPassword } });
+    await userModel.updateOne({ name: name.toString() }, { $set: { password: hashedPassword } });
 
-    const tokenData = {
+    /*const tokenData = {
       _id: user._id,
     };
     const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET_KEY, { expiresIn: '8h' });
     const tokenOption = {
       httpOnly: true,
       secure: true,
-    };
+    };*/
 
-    res.cookie("token", token, tokenOption).status(200).json({
+    /*res.cookie("token", token, tokenOption).status(200).json({
       message: "Password changed successfully",
       success: true,
       error: false
@@ -49,6 +48,20 @@ async function changePassword(req, res) {
       message: err.message || err,
       error: true,
       success: false,
+    });*/
+
+    res.json({
+      data: "",
+      message: "Password profile updated successfully",
+      success: true,
+      error: false
+    });
+  } catch (err) {
+    console.error('Error updating user Password:', err);
+    res.status(400).json({
+      message: err.message || err,
+      error: true,
+      success: false
     });
   }
 }

@@ -1,26 +1,8 @@
 const userModel = require("../models/userModel");
 
 async function updateProfile(req, res) {
- /* const token = req.token;
-
-  if (!token) {
-    return res.status(403).json({
-      message: "No token provided",
-      error: true,
-      success: false
-    });
-  }*/
-
   try {
-    const {
-      name,
-      fullname,
-      dateOfBirth,
-      gender,
-      phoneNumber,
-      address,
-      email
-    } = req.body;
+    const { name, fullname, dateOfBirth, gender, phoneNumber, address, email } = req.body;
 
     const updateFields = {};
 
@@ -31,9 +13,6 @@ async function updateProfile(req, res) {
     if (phoneNumber !== undefined) updateFields.phoneNumber = phoneNumber;
     if (address !== undefined) updateFields.address = address;
     if (email !== undefined) updateFields.email = email;
-
-    // Log the update fields for debugging
-    console.log('Updating user with fields:', updateFields);
 
     // Update user profile
     await userModel.updateOne(

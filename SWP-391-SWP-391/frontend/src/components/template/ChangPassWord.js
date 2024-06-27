@@ -5,9 +5,10 @@ import SummaryApi from "../../common/index";
 
 const ChangePassword = () => {
   const user = useSelector(state => state?.user?.user);
-  const token = useSelector(state => state?.auth?.token);
+  //const token = useSelector(state => state?.auth?.token);
   const [showPassword, setShowPassword] = useState(false);
   const [data, setData] = useState({
+    name : user.name,
     password: "",
     userPassword: "",
     confirmPassword: "",

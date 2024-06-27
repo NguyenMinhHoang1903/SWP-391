@@ -5,7 +5,7 @@ import SummaryApi from "../../common/index";
 
 const UserProfile = () => {
   const user = useSelector(state => state?.user?.user);
-  const token = useSelector(state => state?.auth?.token);
+  //const token = useSelector(state => state?.auth?.token);
   const [data, setData] = useState({
     name: "",
     fullname: "",

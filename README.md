@@ -12,22 +12,13 @@
 |  4  | Manage booking  | Manage booking appointments  |
 
 ## **Member:**
+| No. |       Name         |          Description            |
+|-----|---------------------|---------------------------------|
+|  1  | Manage account      | Manage account information      |
+|  2  | Manage service      | Manage the provided services    |
+|  3  | Manage profiles     | Manage personal profiles        |
+|  4  | Manage booking      | Manage booking appointments     |
 
---------------------------------------------------------------
-|   No.  |       Name             |         Role                |
---------------------------------------------------------------
-|   1.   |  Huynh Minh Khoi       |         Leader             |
---------------------------------------------------------------
-|   2.   |  Doan Nguyen Thuy Ha   |         Member             |
---------------------------------------------------------------
-|   3.   |  Nguyen Minh Hoang     |         Member             |
---------------------------------------------------------------
-|   4.   |  Ta Minh Duc           |         Member             |
---------------------------------------------------------------
-|   5.   |  Nguyen Thai Thuan     |         Member             |
---------------------------------------------------------------
-|   6.   |  Cao Minh Quy          |         Member             |
---------------------------------------------------------------
 
 ## Use Case
 | Sprint   |            Use case           |

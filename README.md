@@ -36,8 +36,8 @@ Sprint 1
 | Use case | Name                  |
 |----------|-----------------------|
 | UC02     | Huynh Minh Khoi       |
-| UC04     | Doan Nguyen Thuy Ha   |
-| UC09     | Nguyen Minh Hoang     |
+| UC09     | Doan Nguyen Thuy Ha   |
+| UC04     | Nguyen Minh Hoang     |
 | UC20     | Nguyen Thai Thuan     |
 | UC25     | Ta Minh Duc           |
 | UC27     | Cao Minh Quy          |

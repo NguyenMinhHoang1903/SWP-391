@@ -32,7 +32,7 @@ Book an appointment at Pet's Spa Service for a luxurious pampering experience fo
 | Sprint 4 |                               | 
 
 ## **Assignment**
-Sprint 1
+### Sprint 1
 | Use case | Name                  |
 |----------|-----------------------|
 | UC02     | Huynh Minh Khoi       |

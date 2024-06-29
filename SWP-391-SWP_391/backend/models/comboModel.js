@@ -18,6 +18,12 @@ const comboSchema = new Schema({
         type: Array,
         required: true
     },
+    startdate: {
+        type: Date
+    },
+    enddate: {
+        type: Date
+    },
 }, { timestamps: true });
 
 const Combo = mongoose.model('Combo', comboSchema);

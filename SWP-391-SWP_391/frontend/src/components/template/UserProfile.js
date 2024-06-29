@@ -45,6 +45,20 @@ const UserProfile = () => {
     const today = new Date();
     const dateOfBirth = new Date(data.dateOfBirth);
 
+    // Validate fullname
+    const nameRegex = /^[a-zA-Z\s]+$/;
+    if (!nameRegex.test(data.fullname)) {
+      toast.error("Full Name cannot contain numbers or special characters");
+      return;
+    }
+
+    // Validate email
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+    if (!emailRegex.test(data.email)) {
+      toast.error("Please enter a valid email address ending with @gmail.com");
+      return;
+    }
+
     if (dateOfBirth > today) {
       toast.error("Date of Birth cannot be in the future");
       return;
@@ -119,9 +133,9 @@ const UserProfile = () => {
             <div className='col-6'>
               <div className='input-group mb-3'>
                 <div className="input-group-text">Gender</div>
+                
                 <div className='col-2'>
                   <div className='form-check'>
-
                     <input
                       className="form-check-input"
                       type="radio"

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Select from 'react-select';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import DatePicker from 'react-datepicker';
 import { NumericFormat } from 'react-number-format';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -43,6 +43,11 @@ const CreateCombo = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (data.service.length < 2) {
+      toast.error("Please select at least two services");
+      return;
+    }
 
     if (data.endDate < data.startDate) {
       toast.error("End date cannot be before start date");
@@ -201,9 +206,12 @@ const CreateCombo = () => {
             </div>
           </div>
 
-          <button className='btn btn-success' type='submit'>Submit</button>
+          <div className="button-group">
+            <button className='btn btn-success' type='submit'>Submit</button>
+          </div>
         </form>
       </div>
+      <ToastContainer />
     </div>
   );
 };

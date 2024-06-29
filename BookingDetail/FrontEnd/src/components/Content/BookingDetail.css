@@ -1,0 +1,105 @@
+.contentBookDetail {
+    display: flex;
+    justify-content: center; /* Căn giữa theo chiều ngang */
+    align-items: center;
+    height: 100vh;
+    margin: 0 auto;
+    max-width: 900px;
+    padding: 0 20px;
+    box-sizing: border-box; /* Đảm bảo padding không làm thay đổi kích thước ngoài cùng của phần tử */
+  }
+  
+  .container {
+    text-align: center;
+    width: 100%; /* Chiếm toàn bộ chiều rộng của phần tử cha */
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .container-heading h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .infor {
+    margin-bottom: 20px;
+    background-color: transparent;
+  }
+  
+  .input {
+    margin: 5px 0;
+    font-size: 16px;
+    color: #000; /* Màu chữ */
+    text-align: left;
+  }
+
+  .first {
+    margin-left: 5%;
+  }
+
+  /* Service list */
+  .service-list {
+    margin-bottom: 20px;
+  }
+  
+  .service {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .service div {
+    margin-right: 10px;
+  }
+  
+  button {
+    padding: 5px 10px;
+    background-color: transparent;
+    color: #080808;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #751818;
+    color: #f4f4f4;
+  }
+  
+  .total {
+    margin-top: 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+  }
+  
+  .total h3 {
+    margin: 0;
+    font-size: 20px;
+  }
+  
+
+  .total .text-left {
+    text-align: left;
+  }
+  
+  .total .text-right {
+    text-align: left;
+  }
+
+  .button {
+    padding-top: 10px;
+  }
+
+  .button .text-left {
+    text-align: left;
+  }
+  
+  .button .text-right {
+    text-align: right;
+  }

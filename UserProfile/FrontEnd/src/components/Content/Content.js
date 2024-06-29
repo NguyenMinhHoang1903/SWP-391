@@ -41,14 +41,22 @@ export default class Content extends Component {
 
                   <div className='col-2' >
                     <div className='form-check' >
-                      <input class="form-check-input" type="radio" value="Male" name='gender' id='male' />
+                      <input  className="form-check-input"
+                              type="radio"
+                              value="Male"
+                              name='gender'
+                              id='male'/>
                       <label className='form-check-label' for='male' >Male</label>
                     </div>
                   </div>
                   
                   <div className='col-2' >
                     <div className='form-check' >
-                      <input class="form-check-input" type="radio" value="Female" name='gender' id='female' />
+                      <input  class="form-check-input"
+                              type="radio"
+                              value="Female"
+                              name='gender'
+                              id='female' />
                       <label className='form-check-label' for='female' >Female</label>
                     </div>
                   </div>

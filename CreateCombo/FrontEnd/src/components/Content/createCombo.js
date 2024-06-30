@@ -21,8 +21,8 @@ const CreateCombo = () => {
     comboName: "",
     service: [],
     price: "",
-    startDate: new Date(),
-    endDate: new Date(),
+    startDate: new Date(new Date().setDate(new Date().getDate() + 1)), // Set start date to tomorrow
+    endDate: new Date(new Date().setDate(new Date().getDate() + 1)), // Set end date to tomorrow
     description: ""
   });
 
@@ -175,7 +175,7 @@ const CreateCombo = () => {
                   id='startDate'
                   placeholderText='Enter'
                   required
-                  minDate={new Date()}
+                  minDate={new Date(new Date().setDate(new Date().getDate() + 1))} // Set min date to tomorrow
                 />
               </div>
 

@@ -8,7 +8,16 @@ import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { IconButton } from "@mui/material";
+import { NumericFormat } from 'react-number-format';
 import TooltipDefault from "@mui/material/Tooltip";
+
+// Utility function to get next day's date
+const getNextDayDate = () => {
+  const today = new Date();
+  const nextDay = new Date(today);
+  nextDay.setDate(today.getDate() + 1);
+  return nextDay.toISOString().split('T')[0];
+};
 
 export default function AddCombo() {
   const navigate = useNavigate();
@@ -20,6 +29,9 @@ export default function AddCombo() {
       comboId: "",
       name: "",
       price: "",
+      startDate: new Date(new Date().setDate(new Date().getDate() + 1)),
+      endDate: new Date(new Date().setDate(new Date().getDate() + 1)),
+      description: "",
       serviceId: [],
       agree: false,
     },
@@ -33,6 +45,9 @@ export default function AddCombo() {
           comboId: Number(values.comboId),
           name: values.name,
           price: Number(values.price),
+          startDate: values.startDate,
+          endDate: values.endDate,
+          description: values.description,
           serviceId: values.serviceId,
         }),
       })
@@ -53,10 +68,17 @@ export default function AddCombo() {
         .min(2, "Must be 2 characters or more")
         .required("Required."),
       price: Yup.string().required("Required"),
+      startDate: Yup.date()
+        .min(getNextDayDate(), "Start date must be at least the next day")
+        .required("Required"),
+      endDate: Yup.date()
+        .min(Yup.ref('startDate'), "End date cannot be before start date")
+        .required("Required"),
+      description: Yup.string().required("Required"),
       serviceId: Yup.array()
         .test({
-          message: "Please choose at least one service",
-          test: (arr) => arr.length !== 0,
+          message: "Please choose at least 2 service",
+          test: (arr) => arr.length > 1,
         })
         .required("Required."),
       agree: Yup.boolean().oneOf(
@@ -81,7 +103,7 @@ export default function AddCombo() {
     }
   };
 
-  //Read all service
+  // Read all service
   const readAllService = async () => {
     let isFetched = true;
     await fetch("http://localhost:5000/api/services/read")
@@ -135,10 +157,10 @@ export default function AddCombo() {
                   </Link>
                 </div>
                 <div className="col-9">
-                  <div className="heading" >ADD NEW COMBO</div>
+                  <div className="heading">ADD NEW COMBO</div>
                 </div>
               </div>
-              
+
               {/* Form */}
               <form onSubmit={formik.handleSubmit}>
                 {/* Input ID */}
@@ -159,11 +181,7 @@ export default function AddCombo() {
                     />
                   </a>
                 </div>
-                <Tooltip
-                  id="comboId-tooltip"
-                  isOpen={isOpen}
-                  imperativeModeOnly
-                />
+                <Tooltip id="comboId-tooltip" isOpen={isOpen} imperativeModeOnly />
 
                 {/* Input Name */}
                 <div className="row mb-4">
@@ -193,20 +211,83 @@ export default function AddCombo() {
                     data-tooltip-variant="warning"
                     data-tooltip-place="right"
                   >
+                   
+                    <NumericFormat
+                  value={formik.values.price}
+                  onChange={formik.handleChange}
+                      onKeyDown={handleKeyDown}
+                  thousandSeparator="."
+                  decimalSeparator=","
+                  suffix="VND "
+                  name="price"
+                  placeholder='Enter price'
+                  isNumericString
+                  allowNegative={false}
+                  required
+                />
+                  </a>
+                </div>
+                <Tooltip id="price-tooltip" isOpen={isOpen} imperativeModeOnly />
+
+                {/* Input Start Date */}
+                <div className="row mb-4">
+                  <label>Start Date</label>
+                  <a
+                    data-tooltip-id="startDate-tooltip"
+                    data-tooltip-content={formik.errors.startDate}
+                    data-tooltip-variant="warning"
+                    data-tooltip-place="right"
+                  >
                     <input
                       onChange={formik.handleChange}
-                      onKeyDown={handleKeyDown}
-                      type="text"
-                      name="price"
-                      value={formik.values.price}
+                      type="date"
+                      name="startDate"
+                      value={formik.values.startDate}
+                      required
+                  minDate={new Date(new Date().setDate(new Date().getDate() + 1))}
                     />
                   </a>
                 </div>
-                <Tooltip
-                  id="price-tooltip"
-                  isOpen={isOpen}
-                  imperativeModeOnly
-                />
+                <Tooltip id="startDate-tooltip" isOpen={isOpen} imperativeModeOnly />
+
+                {/* Input End Date */}
+                <div className="row mb-4">
+                  <label>End Date</label>
+                  <a
+                    data-tooltip-id="endDate-tooltip"
+                    data-tooltip-content={formik.errors.endDate}
+                    data-tooltip-variant="warning"
+                    data-tooltip-place="right"
+                  >
+                    <input
+                      onChange={formik.handleChange}
+                      type="date"
+                      name="endDate"
+                      value={formik.values.endDate}
+                      required
+                  minDate={formik.values.startDate}
+                    />
+                  </a>
+                </div>
+                <Tooltip id="endDate-tooltip" isOpen={isOpen} imperativeModeOnly />
+
+                {/* Input Description */}
+                <div className="row mb-4">
+                  <label>Description</label>
+                  <a
+                    data-tooltip-id="description-tooltip"
+                    data-tooltip-content={formik.errors.description}
+                    data-tooltip-variant="warning"
+                    data-tooltip-place="right"
+                  >
+                    <textarea
+                      onChange={formik.handleChange}
+                      name="description"
+                      value={formik.values.description}
+                    ></textarea>
+                  </a>
+                </div>
+                <Tooltip id="description-tooltip" isOpen={isOpen} imperativeModeOnly />
 
                 {/* Choose Service */}
                 <div className="row mb-4">
@@ -234,7 +315,7 @@ export default function AddCombo() {
                           </div>
                           <div className="col">
                             <label class="form-check-label">
-                              $ {service.price}
+                              {service.price}VND
                             </label>
                           </div>
                         </div>
@@ -242,11 +323,7 @@ export default function AddCombo() {
                     ))}
                   </a>
                 </div>
-                <Tooltip
-                  id="services-tooltip"
-                  isOpen={isOpen}
-                  imperativeModeOnly
-                />
+                <Tooltip id="services-tooltip" isOpen={isOpen} imperativeModeOnly />
 
                 {/* Switch */}
                 <div className="row mb-4">
@@ -271,11 +348,7 @@ export default function AddCombo() {
                     </div>
                   </a>
                 </div>
-                <Tooltip
-                  id="agree-tooltip"
-                  isOpen={isOpen}
-                  imperativeModeOnly
-                />
+                <Tooltip id="agree-tooltip" isOpen={isOpen} imperativeModeOnly />
 
                 {/* Submit Button */}
                 <button

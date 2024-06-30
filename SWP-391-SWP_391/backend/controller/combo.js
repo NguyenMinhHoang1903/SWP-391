@@ -7,16 +7,21 @@ const indexCombo = (req, res) => {
 
 // CREATE
 const createCombo = async (req, res) => {
+  console.log(req.body); // Add this line
   let query = { comboId: req.body.comboId };
 
   const existingCombo = await Combo.findOne(query);
 
-  if (existingCombo) res.json({ message: 0 });
-  else {
+  if (existingCombo) {
+    res.json({ message: 0 });
+  } else {
     const newCombo = new Combo({
       comboId: req.body.comboId,
       name: req.body.name,
       price: req.body.price,
+      startDate: req.body.startDate,
+      endDate: req.body.endDate,
+      description: req.body.description,
       serviceId: req.body.serviceId,
     });
 
@@ -25,7 +30,10 @@ const createCombo = async (req, res) => {
       .then((result) => {
         res.send(result);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        res.status(400).json({ message: 'Validation failed', errors: err.errors });
+      });
   }
 };
 
@@ -85,9 +93,12 @@ const updateOneCombo = async (req, res) => {
       .catch((err) => console.log(err));
 
     const newCombo = await new Combo({
-      comboId: comboId,
+      comboId: req.body.comboId,
       name: req.body.name,
       price: req.body.price,
+      startDate: req.body.startDate,
+      endDate: req.body.endDate,
+      description: req.body.description,
       serviceId: req.body.serviceId,
     });
 

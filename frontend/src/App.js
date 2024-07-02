@@ -17,8 +17,8 @@ import Home from "./components/template/Home";
 import Header from "./components/layouts/Header";
 import Booking from "./components/template/Booking";
 import ForgotPassword from "./components/template/ForgotPassword";
-import ManageStaff from "./components/manageStaff/manage";
-import UpdateStaff from "./components/manageStaff/updateStaff";
+import ManageStaff from "./components/manageAccount/manage";
+import UpdateStaff from "./components/manageAccount/updateStaff";
 import HairDye from "./components/details/HairDye";
 import TrimFur from "./components/details/TrimFur";
 import CutNails from "./components/details/Cutnails";
@@ -37,7 +37,7 @@ import Spinner from "./components/Spinner/Spinner";
 import OTPVerification from "./components/template/OTPVerification";
 import ChangePassword from "./components/template/ChangPassWord";
 import SpeedDialBox from "./components/layouts/SpeedDialBox";
-import BookingDetail from "./components/template/BookoingDetail";
+import BookingDetail from "./components/template/BookingDetail";
 
 function App() {
   // Get user from store

@@ -51,6 +51,11 @@ const Login = () => {
       toast.error("Password must be at least 6 characters");
       return;
     }
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+    if (!emailRegex.test(data.email)) {
+      toast.error("Please enter a valid email address ending with @gmail.com");
+      return;
+    }
     if (data.password === data.confirmPassword) {
       const dataResponse = await fetch(SummaryApi.signUp.url, {
         method: SummaryApi.signUp.method,

@@ -76,7 +76,7 @@ export default function ManageStaff() {
                 </div>
                 <div className="col-8">
                   <div className="heading">
-                    Staff Schedule
+                    Manage Account
                   </div>
                 </div>
                 <div className="col-2">

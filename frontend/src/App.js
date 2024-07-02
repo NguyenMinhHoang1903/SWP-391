@@ -77,11 +77,13 @@ function App() {
 
   const ErrorElement = () => (
     <Container>
+      <div style={{marginTop: 200, marginBottom: 200}}>
       <h1 className="text-center">SORRY</h1>
       <h2 className="text-center">We couldn't find that page</h2>
       <h2 className="text-center">
         Try going to <Link to="/">Pet Spa's home page</Link>
       </h2>
+      </div>
     </Container>
   );
 

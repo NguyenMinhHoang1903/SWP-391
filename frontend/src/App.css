@@ -1,0 +1,2232 @@
+body {
+  margin: 0px;
+  font-family: "SoDo Sans SemiBold", Helvetica Neue, Helvetica, Arial,
+      sans-serif;
+}
+.navbar-container {
+  background-color: rgb(185,114,74);
+}
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.dropdown_menu{
+  display: none;
+  position: absolute;
+  right: 2rem;
+  top: 60px;
+  width: 500px; 
+  height: 0;
+  background: rgba(188, 84, 84, 0.123);
+  backdrop-filter: blur(15px);
+  border-radius: 30px;
+  overflow: hidden;
+  transition: height 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.dropdown_menu.open{
+  height: 220px;
+}
+.dropdown_menu li {
+  padding: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+}
+.dropdown_menu{
+  display: block;
+}
+
+.navbar .bar_btn{
+  color: #ffffff;
+  font-size: 1.5rem;;
+  cursor: pointer;
+  display: none;
+}
+@media (max-width: 1278px){
+  .navbar .wrapper,
+  .navbar .navbar-right {
+    display: none;
+  }
+  .navbar .bar_btn{
+    display: block;
+  }
+}
+@media (max-width: 576px){
+  .dropdown_menu{
+    left: 2rem;
+    width: unset;
+  }
+  .carousel{
+    width: 100%;
+    height: 100%;
+  }
+  .product-container {
+    margin: 0px 0px 0px 0px;
+    flex-direction: column;
+  }
+  .product{
+    width: unset;
+  }
+  .product-left img{
+    display: none;
+  }
+  .product-right{
+    /* display: block;
+    justify-content: left; */
+    width: 100%;
+    height: 100%;
+  }
+  .product-title{
+    font-size: 14px;
+  }
+  .product-description{
+    font-size: 10px;
+    text-align: left;
+    padding: 0%;
+    width: 100%;
+  }
+}
+.navbar-left img {
+  width: 70px;
+  margin-right: 20px;
+  transition: transform 0.5s;
+  cursor: pointer;
+}
+.navbar-left img:hover{
+    transform: scale(1.30);
+  }
+.navbar-left div {
+  font-weight: 800;
+  color: #ffff;;
+}
+.navbar-left div:hover,
+.find-a-store:hover {
+  color: #00754a;
+}
+
+.userIcon{
+  margin-bottom: 10px;
+  display: flex;
+  color: #fff;
+}
+.userIcon img{
+  width: 40px;
+  background-color: #fff;
+  border-radius: 20px;
+  color: #fff;
+}
+.username{
+  color: white;
+  padding-right: 60px;
+}
+.guest{
+  color: white;
+  padding-right: 70px;
+  margin-left: 10px;
+}
+
+.navbar-left {
+  display: flex;
+}
+
+.navbar-left > * {
+  margin: 20px;
+}
+.navbar-right .sign-in,
+.navbar-right .logout {
+  font-weight: 500;
+  border: 1px solid black;
+  color: #ffff;
+  border-radius: 40px;
+  padding: 5px 20px 5px 20px;
+}
+
+.logout {
+  background-color: #362115FF;
+  color: white;
+}
+
+.logout:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.sign-in:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+}
+
+.link{
+  font-weight: 500;
+  color: #ffff;
+  text-decoration: none;
+  font-size: 18px;
+}
+.link div.hover,
+.find-a-store:hover{
+  color: #00754a
+}
+.login-button{
+  text-decoration: none;
+  text-align: center;
+  font-weight: 500;
+  border: 1px solid black;
+  color: #ffff;
+  border-radius: 40px;
+  padding: 5px 20px 5px 20px;
+  transition: all 0.3s;
+  margin-right: 40px;
+}
+.login-button:hover {
+  background-color: white;
+  color: black;
+  transform: translateY(-10px);
+}
+
+.product img {
+  max-width: 100%;
+  object-fit: contain;
+  height: 100%;
+}
+.product {
+  display: flex;
+}
+
+.product-left,
+.product-right {
+  max-width: 50%;
+  display: flex;
+  width: 50%;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  align-content: stretch;
+  flex-direction: column;
+  transition: all 0.3s;
+}
+
+.product-left:hover,
+.product-right:hover {
+  transform: scale(1.05);
+}
+
+.product-title {
+  width: 100%;
+  text-align: center;
+  color: white;
+  margin-top: 60px;
+  font-size: 48px;
+}
+.product-container {
+  margin: 40px 0px 40px 0px;
+  display: flex;
+}
+
+.product-button {
+  border: 1px solid rgb(0, 0, 0);
+  max-width: max-content;
+  padding: 5px 20px 5px 20px;
+  border-radius: 40px;
+  text-align: center;
+  margin: auto;
+  margin-bottom: 30px;
+  color: rgb(0, 0, 0);
+  transition: all 0.3s;
+}
+
+.product-button:hover{
+  transform: translateY(-10px);
+  background-color: var(--clr-accent);
+  color: var(--clr-light);
+}
+
+.product-description {
+  /* text-align: center; */
+  padding: 30px 60px 30px 60px;
+  font-size: 18px;
+  color: #000;
+}
+
+
+/*Login page*/
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.loginBody{
+    background-color: #c9d6ff;
+    background: linear-gradient(to right, #e2e2e2, #c9d6ff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.containerLogin{
+    background-color: #fff;
+    border-radius: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
+    position: relative;
+    overflow: hidden;
+    width: 768px;
+    max-width: 100%;
+    min-height: 480px;
+}
+
+.containerLogin p{
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0.3px;
+    margin: 20px 0;
+}
+
+.containerLogin div{
+    font-size: 16px;
+}
+
+.containerLogin a{
+    color: #333;
+    font-size: 13px;
+    text-decoration: none;
+    margin: 15px 0 10px;
+}
+
+.loginContainer{
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  width: 300px;
+  border-radius: 100px;
+  gap: 30px;
+  transition: transform 0.5s;
+  cursor: pointer;
+}
+.loginContainer:hover{
+  transform: scale(1.05);
+}
+.card{
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  width: 320px;
+  border-radius: 30px;
+  gap: 30px;
+  transition: transform 0.5s;
+  cursor: pointer;
+}
+
+.card:hover{
+  transform: scale(1.08);
+}
+
+.imglist {
+  border-radius: 30px;
+}
+.loginContainer img{
+  width: 40px;
+}
+.loginContainer .title{
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.containerLogin button{
+    background-color: rgb(144, 86, 53);
+    color: #fff;
+    font-size: 12px;
+    padding: 10px 45px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.containerLogin button.hidden{
+    background-color: transparent;
+    border-color: #fff;
+}
+
+.containerLogin form{
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 40px;
+    height: 100%;
+}
+
+.containerLogin input{
+    background-color: #eee;
+    border: none;
+    margin: 8px 0;
+    padding: 10px 15px;
+    font-size: 13px;
+    border-radius: 8px;
+    width: 100%;
+    outline: none;
+}
+.form-containerLogin{
+    position: absolute;
+    top: 0;
+    height: 100%;
+    transition: all 0.6s ease-in-out;
+}
+
+.btnn{
+  border-radius: 10px;
+  transition: all 0.3s;
+  text-decoration: none;
+
+}
+.btnn:hover {
+  transform: translateY(-10px);
+  background-color: var(--clr-accent);
+  color: var(--clr-light);
+}
+
+.block {
+  display: block;
+}
+
+.w-fit {
+  width: fit-content;
+}
+
+.ml-auto {
+  margin-left: auto;
+}
+
+.hover\:underline:hover {
+  text-decoration: underline;
+}
+.Loginsign-in{
+    color: #333;
+    left: 0;
+    width: 50%;
+    z-index: 2;
+}
+
+.containerLogin.active .Loginsign-in{
+    transform: translateX(100%);
+}
+
+.Loginsign-up{
+    color: #333;
+    left: 0;
+    width: 50%;
+    opacity: 0;
+    z-index: 1;
+}
+
+.containerLogin.active .Loginsign-up{
+    transform: translateX(100%);
+    opacity: 1;
+    z-index: 5;
+    animation: move 0.6s;
+}
+
+@keyframes move{
+    0%, 49.99%{
+        opacity: 0;
+        z-index: 1;
+    }
+    50%, 100%{
+        opacity: 1;
+        z-index: 5;
+    }
+}
+
+.loginButton{
+    color: #333;
+    margin: 20px 0;
+    
+}
+
+.loginButton img{
+    border: 1px solid #ccc;
+    border-radius: 20%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 3px;
+    width: 40px;
+    height: 40px;
+}
+
+.toggle-containerLogin{
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+    transition: all 0.6s ease-in-out;
+    border-radius: 150px 0 0 100px;
+    z-index: 1000;
+}
+
+.containerLogin.active .toggle-containerLogin{
+    transform: translateX(-100%);
+    border-radius: 0 150px 100px 0;
+}
+
+.Logintoggle{
+    background-color: #633D27FF;
+    height: 100%;
+    background: linear-gradient(to right, rgb(85, 52, 33), rgb(119, 74, 47));
+    color: #fff;
+    position: relative;
+    left: -100%;
+    height: 100%;
+    width: 200%;
+    transform: translateX(0);
+    transition: all 0.6s ease-in-out;
+}
+
+.containerLogin.active .Logintoggle{
+    transform: translateX(50%);
+}
+
+.toggle-panelLogin{
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 30px;
+    text-align: center;
+    top: 0;
+    transform: translateX(0);
+    transition: all 0.6s ease-in-out;
+}
+
+.Logintoggle-left{
+    transform: translateX(-200%);
+}
+
+.containerLogin.active .Logintoggle-left{
+    transform: translateX(0);
+}
+
+.Logintoggle-right{
+    right: 0;
+    transform: translateX(0);
+}
+
+.containerLogin.active .Logintoggle-right{
+    transform: translateX(200%);
+}
+
+
+/*Booking*/
+.content .container {
+  background-color: #c9d6ff;
+  background: linear-gradient(to right, #bebebe, #c9d6ff);
+  margin-top: 30px;
+  padding-bottom: 25px;
+}
+
+.content .container-heading {
+  color: rgb(0, 0, 0);
+  text-align: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.content .input-group, .content .row {
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-bottom: 10px;
+}
+
+.content .input-group:nth-child(4) {
+  padding-right: 40px;
+  text-align: center;
+}
+
+.content .row label {
+  color: rgb(0, 0, 0);
+}
+
+.content .btn-success {
+  display: block;
+  margin-left: auto;
+  margin-right: 40px;
+}
+
+
+/*Change Password*/
+
+.contentChangePassWord {
+  display: flex;
+  /* justify-content: center;  */
+  align-items: center;
+  /* height: 100vh; */
+  margin: 0 auto;
+  max-width: 900px;
+  padding: 0 20px;
+  box-sizing: border-box;
+  justify-content: space-between
+}
+.contentChangePassWord .container {
+  background-color: rgb(155, 95, 60);
+  margin-top: 30px;
+  margin-bottom: 30px;
+  padding-bottom: 25px;
+}
+.contentChangePassWord .container-heading {
+  color: white;
+  text-align: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.avatar {
+  display: flex;
+  justify-content: center;
+}
+
+.avatar img {
+  width: 120px;
+  height: 120px;
+  object-position: center;
+  object-fit: cover;
+  border-radius: 5%;
+  border-radius: 60px;
+}
+
+.user-name{
+  display: flex;
+  justify-content: center;
+}
+
+.user-name h1{
+  font-size: 48px;
+  color: #fff;
+  padding: 10px;
+}
+
+.change{
+  display: flex;
+  justify-content: space-between;
+}
+
+.change-password {
+  max-width:70%;
+}
+
+.contentChangePassWord .input-group, .content .row {
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-bottom: 10px;
+  justify-content: space-between;
+  font-size: 18px;
+}
+
+.contentChangePassWord .row label {
+  color: white;
+}
+
+.contentChangePassWord .btn-success {
+  display: block;
+  margin-left: auto;
+  margin-right: 40px;
+}
+
+.contentChangePassWord .nav-item {
+  display: block;
+  margin-left: auto;
+  margin-right: 40px;
+}
+
+.wrapper{
+  margin-right: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.wrapper input[type="radio"]{
+  display: none;
+}
+
+.tabs{
+  padding: 10px;
+  border-radius: 5rem;
+  display: flex;
+  position: relative;
+}
+
+.tabs label {
+  display: block;
+  height: 55px;
+  width: 120px;
+  font-size: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 2;
+}
+
+/*User Profile*/
+.profile{
+  text-decoration: none;
+}
+.contentProfile .container {
+  background-color: rgb(155, 95, 60);
+  margin-top: 30px;
+  padding-bottom: 25px;
+}
+
+.contentProfile .container-heading {
+  color: white;
+  text-align: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.avatar {
+  display: flex;
+  justify-content: center;
+}
+
+.avatar img {
+  width: 120px;
+  height: 120px;
+  object-position: center;
+  object-fit: cover;
+  border-radius: 5%;
+  border-radius: 60px;
+}
+
+.customer-name{
+  display: flex;
+  justify-content: center;
+}
+
+.customer-name h1{
+  font-size: 20px;
+}
+
+.change {
+  display: flex;
+  justify-content: center;
+}
+
+.btn-change{
+  background-color: rgb(59, 121, 59);
+  color: bisque;
+  margin-bottom: 10px;
+}
+
+.contentProfile .input-group, .content .row {
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-bottom: 10px;
+  justify-content: space-between;
+}
+
+.contentProfile .input-group:nth-child(4) {
+  padding-right: 40px;
+  text-align: center;
+}
+
+.contentProfile .row label {
+  color: white;
+}
+
+.contentProfile .btn-success {
+  display: block;
+  margin-left: auto;
+  margin-right: 10%;
+}
+
+.link {
+  display: flex;
+  justify-content: end;
+  margin-right: 7%;
+}
+
+.nav-item {
+  color: rgb(155, 95, 60);
+}
+
+
+body {
+  height: 100vh;
+  background-color: #ffffff;
+}
+.navbarWashing {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100px;
+  margin: 0 8rem;
+}
+.navbarWashing a {
+  text-decoration: none;
+}
+.navbarWashing .logo a {
+  font-size: 33px;
+  font-weight: 700;
+  color: #099268;
+}
+.navbarWashing .logo span {
+  color: black;
+}
+.navbarWashing .btn a {
+  padding: 16px 36px;
+  background-color: #099268;
+  color: white;
+  border-radius: 25px;
+}
+/* Container */
+
+.cardWashing-container{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 90%;
+}
+
+@media screen and (max-width: 1200px) {
+  .cardWashing-container{
+    flex-direction: column;
+    gap: 80px;
+  }
+
+  .home_product{
+    width: 30%;
+  }
+}
+@media screen and (max-width: 800px) {
+  .home_product{
+    width: 100%;
+  }
+
+
+}
+
+.cardWashing {
+  background-color: #099268;
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  height: 550px;
+  justify-content: start;
+  align-items: center;
+  border-radius: 50px 0px 50px 50px;
+  box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.5);
+  position: relative;
+  transition: 0.5s;
+
+
+}
+.cardWashing h1:first-child{
+  color: #ffffff;
+  text-align: center;
+  margin: 20px 0;
+  text-transform: uppercase;
+}
+.cardWashing h1:last-of-type{
+  background-color: #000;
+  color: #ffffff;
+  margin: 20px 0;
+  text-align: center;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 400px;
+  text-transform: uppercase;
+  border-radius: 30px 0px 30px 30px;
+}
+.cardWashing ul li{
+  list-style-type: none;
+  color: #ffffff;
+  margin: 15px 0;
+  font-size: 20px;
+}
+.cardWashing a{
+  text-decoration: none;
+  margin-top: 50px;
+  padding: 15px 50px;
+  background-color: #000;
+  color: white;
+  border-radius: 25px;
+}
+.fa-solid{
+  margin: 0 10px;
+}
+.navbarWashing .btn a:hover{
+  background-color: #000;
+}
+.cardWashing a:hover{
+  background-color: #1f1e1e;
+}
+
+.cardWashing::before{
+content: '';
+position: absolute;
+width: 100%;
+height: 100%;
+border-radius: 50px 0px 50px 50px;
+background-color: #099269c0;
+z-index: -2;
+transition: 0.5s;
+}
+.cardWashing::after{
+content: '';
+position: absolute;
+width: 100%;
+height: 100%;
+border-radius: 50px 0px 50px 50px;
+background-color: #09926974;
+z-index: -2;
+transition: 0.5s;
+}
+.cardWashing:hover::before{
+  transform: rotate(15deg);
+  transition: 0.5s;
+}
+.cardWashing:hover::after{
+  transform: rotate(-15deg);
+  transition: 0.5s;
+}
+.cardWashing:hover{
+  transform: translateY(-30px);
+  transition: 0.5s;
+}
+.btnBooking{
+  border-radius: 100px;
+  border: 1px solid #000000;
+  text-decoration: none;
+  width: 90px;
+  height: 30px;
+  color: #000;
+}
+.card{
+  border: 1px solid #000000;
+}
+.checkbox{
+  display: flex;
+  align-items: center;
+}
+.dropdown{
+  display: flex;
+  align-items: center;
+}
+
+
+/* Spinner */
+.spinner-component {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(185,114,74);
+  height: 100vh;
+}
+
+.spinner-component .loader {
+  color: #fff;
+  font-size: 10px;
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  position: relative;
+  text-indent: -9999em;
+  animation: mulShdSpin 1.3s infinite linear;
+  transform: translateZ(0);
+}
+
+@keyframes mulShdSpin {
+  0%,
+  100% {
+    box-shadow: 0 -3em 0 0.2em, 
+    2em -2em 0 0em, 3em 0 0 -1em, 
+    2em 2em 0 -1em, 0 3em 0 -1em, 
+    -2em 2em 0 -1em, -3em 0 0 -1em, 
+    -2em -2em 0 0;
+  }
+  12.5% {
+    box-shadow: 0 -3em 0 0, 2em -2em 0 0.2em, 
+    3em 0 0 0, 2em 2em 0 -1em, 0 3em 0 -1em, 
+    -2em 2em 0 -1em, -3em 0 0 -1em, 
+    -2em -2em 0 -1em;
+  }
+  25% {
+    box-shadow: 0 -3em 0 -0.5em, 
+    2em -2em 0 0, 3em 0 0 0.2em, 
+    2em 2em 0 0, 0 3em 0 -1em, 
+    -2em 2em 0 -1em, -3em 0 0 -1em, 
+    -2em -2em 0 -1em;
+  }
+  37.5% {
+    box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em,
+     3em 0em 0 0, 2em 2em 0 0.2em, 0 3em 0 0em, 
+     -2em 2em 0 -1em, -3em 0em 0 -1em, -2em -2em 0 -1em;
+  }
+  50% {
+    box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em,
+     3em 0 0 -1em, 2em 2em 0 0em, 0 3em 0 0.2em, 
+     -2em 2em 0 0, -3em 0em 0 -1em, -2em -2em 0 -1em;
+  }
+  62.5% {
+    box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em,
+     3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 0, 
+     -2em 2em 0 0.2em, -3em 0 0 0, -2em -2em 0 -1em;
+  }
+  75% {
+    box-shadow: 0em -3em 0 -1em, 2em -2em 0 -1em, 
+    3em 0em 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, 
+    -2em 2em 0 0, -3em 0em 0 0.2em, -2em -2em 0 0;
+  }
+  87.5% {
+    box-shadow: 0em -3em 0 0, 2em -2em 0 -1em, 
+    3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, 
+    -2em 2em 0 0, -3em 0em 0 0, -2em -2em 0 0.2em;
+  }
+}
+/* Page Loading */
+
+.block {
+  animation: appear 5s linear;
+  animation-timeline: view();
+  animation-range: entry 0% cover 20%;
+}
+.otp_body{
+  min-height: 100vh;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(224, 104, 104);;
+}
+:where(.container_otp, .form_otp, .input-field, .header_otp){
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.container_otp{
+  background: #fff;
+  padding: 30px 65px;
+  border-radius: 20px;
+  row-gap: 20px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+.header_otp{
+  height: 65px;
+  width: 65px;
+  background: #4070f4;
+  color: #fff;
+  font-size: 2.5rem;
+  border-radius: 50%;
+}
+.container_otp h4 {
+  font-size: 1.25rem;
+  color: #333;
+  font-weight: 500;
+}
+form .input-field {
+  flex-direction: row;
+  column-gap: 10px;
+
+}
+.input-field input{
+  height: 45px;
+  width: 42px;
+  border-radius: 6px;
+  outline: none;
+  font-size: 1.125rem;
+  text-align: center;
+  border: 1px solid  #ddd;
+}
+.input-field input:focus {
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+}
+.input-field input::-webkit-inner-spin-button,
+.input-field input::-webkit-outer-spin-button {
+  display: none;
+}
+
+.form_otp button{
+  margin-top: 25px;
+  width: 100%;
+  color: #fff;
+  font-size: 1rem;
+  border: none;
+  padding: 9px 0;
+  cursor: pointer;
+  border-radius: 6px;
+  pointer-events: none;
+  background: #6e93f7;
+  transition: all 0.3s;
+}
+.form_otp button.active {
+  background: #4070f4;
+  pointer-events: auto;
+}
+.form_otp button:hover{
+  transform: translateY(-10px);
+  background-color: var(--clr-accent);
+  color: var(--clr-light);
+}
+
+
+.form-containerForgotPassword{
+  background-color: #fff;
+  border-radius: 30px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
+  /* position: relative;
+  overflow: hidden; */
+  width: 500px;
+  max-width: 100%;
+  min-height: 480px;
+  align-items: center;
+  align-content: center;
+  justify-content:  center;
+}
+.forgotBody{
+  background-color: #c9d6ff;
+  background: linear-gradient(to right, #e2e2e2, #c9d6ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+.item_forgot{
+  justify-content:  center;
+}
+
+
+
+/* Manage Staff */
+/* Component */
+@keyframes component-motion {
+  from { transform: translateX(-1300px); }
+  to {transform: translateX(0);}
+}
+
+.manageStaff-component .container {
+  width: 80%;
+  margin-bottom: 30px;
+  margin-top: 30px;
+  animation: 1s ease-in-out component-motion;
+}
+
+.manageStaff-component .container .table {
+  padding: 40px 50px;
+}
+
+/* Table */
+.manageStaff-component .table {
+  position: relative;
+  background: rgb(185,114,74); 
+  backdrop-filter: blur(7px);
+  box-shadow: 0 .4rem .8rem #0005;
+  border-radius: .8rem;
+  overflow: hidden;
+}
+/* Heading left */
+.manageStaff-component .heading-button-Link {
+  color: black;
+  text-align: center;
+  transition: all 0.3s;
+  text-decoration: none;
+}
+.manageStaff-component .heading-button:hover {
+  background-color: rgb(0, 201, 170);
+}
+
+/* Heading */
+.manageStaff-component .table .heading  {
+  font-weight: 500;
+  font-size: 3rem;
+  background-color: inherit;
+  text-align: center;
+}
+.table-heading-center h1{
+  margin-top: 35px;
+  margin-left: 300px;
+}
+
+/* Table heading right */
+.manageStaff-component .table .table-heading-right {
+  width: 100%;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+
+.manageStaff-component .table thead tr {
+  color: rgb(0, 0, 0);
+  width: 100%;
+}
+
+/* Table content */
+.manageStaff-component .table th, .manageStaff-component .table td, .manageStaff-component .table {
+  padding: 1rem;
+}
+
+.manageStaff-component .table tbody {
+  background-color: #fffb;
+  margin: .8rem auto;
+  border-radius: 1rem;
+  overflow: auto;
+}
+
+.manageStaff-component table img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  vertical-align: middle;
+}
+
+.manageStaff-component table {
+  width: 100% ;
+  height: 70%;
+  margin-bottom: 30px;
+}
+
+.manageStaff-component .table tbody tr:nth-child(even) {
+  background-color: #00000006;
+}
+
+.manageStaff-component .table tbody tr:hover {
+  background-color: #fff6;
+}
+
+/* Delete Button */
+.manageStaff-component tbody, .manageStaff-component tbody #delete-button  {
+  background-color: rgb(0, 201, 170);
+  color: white;
+  padding: 2px 15px;
+  border: none;
+  border-radius: 20px;
+  padding: 7px 20px;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: .05s;
+}
+.manageStaff-component tbody .delete-button:active {
+  opacity: .65;
+  box-shadow: 4px 4px 5px rgb(0, 0, 0, 0.15);
+}
+
+
+/* Update Button */
+.manageStaff-component tbody .update-button {
+  background-color: rgb(0, 201, 170);
+  color: white;
+  text-decoration: none;
+  box-sizing: border-box;
+  padding: 8.2px 18px;
+  border-radius: 20px;
+  font-weight: 500;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+}
+.manageStaff-component tbody .update-button:active {
+  opacity: .65;
+  box-shadow: 4px 4px 5px rgb(0, 0, 0, 0.15);
+}
+
+
+/* Add Button */
+.manageStaff-component .table .add-button {
+  text-align: right;
+  margin-bottom: 15px;
+  margin-right: 40px;
+}
+.manageStaff-component .table .add-button-Link {
+  background-color: rgb(0, 201, 170);
+  color: white;
+  margin-bottom: 120px;
+  padding: 7px 20px;
+  border-radius: 20px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.1rem;
+  border: none;
+  cursor: pointer;
+  transition: .2s;
+}
+.manageStaff-component .table .add-button .add-button-Link:hover {
+  color: rgb(0, 201, 170);
+  background-color: white;
+  box-shadow: 9px 9px 10px rgb(0, 0, 0, 0.3);
+}
+.manageStaff-component .table .add-button .add-button-Link:active {
+  opacity: .7;
+}
+
+/* Update Staff */
+
+.updatestaff-background {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(148, 163, 184, 0.5); /* bg-slate-200 with bg-opacity-50 */
+}
+
+/* updatestaff Container */
+.updatestaff-container {
+  margin: auto;
+  background-color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  width: 100%;
+  height: 330px;
+  max-width: 24rem;
+}
+
+/* Close Button */
+.close-button {
+  display: block;
+  margin-left: auto;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* Title */
+.updatestaff-title {
+  padding-bottom: 1rem;
+  font-size: 1.125rem; 
+  font-weight: 500;
+}
+
+/* User Info */
+.user-info p {
+  margin: 0;
+}
+
+/* Role Selection */
+.role-selection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 1rem 0;
+}
+
+.role-selection select {
+  border: 1px solid #ccc;
+  padding: 0.25rem 1rem;
+}
+
+/* Change Role Button */
+.change-role-button {
+  display: block;
+  margin: auto; 
+  padding: 0.25rem 0.75rem; 
+  border-radius: 9999px;
+  background-color: #dc2626;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.delete-button{
+  display: block;
+  margin-top: 40px;
+  margin-left: 280px; 
+  padding: 0.25rem 0.75rem; 
+  border-radius: 9999px;
+  background-color: #9c26dc;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.change-role-button:hover {
+  background-color: #b91c1c;
+}
+.delete-button:hover{
+  background-color: #241cb9;
+}
+
+.edit-button {
+  background-color: #d1fae5; /* bg-green-100 */
+  padding: 0.5rem; /* p-2 */
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.edit-button:hover {
+  background-color: #10b981; /* hover:bg-green-500 */
+  color: white; /* hover:text-white */
+}
+
+
+
+/* Booking */
+/* Component */
+.booking-component {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  animation: 1s ease-in-out component-motion;
+}
+
+@keyframes component-motion {
+  from { transform: translateX(-1300px); }
+  to {transform: translateX(0);}
+}
+
+.booking-component .container {
+  background: rgb(185,114,74);
+  width: 70%;
+  height: 70%;
+  border-radius: 20px;
+  box-shadow: 5px 5px 10px rgb(0, 0, 0, 0.15);
+}
+
+/* Heading */
+.booking-component .heading {
+  font-weight: 500;
+  font-weight: bold;
+  font-size: 2.5rem;
+  padding-bottom: 20px;
+}
+
+/* Back Button */
+.booking-component .row .back-button {
+  width: 40px;
+  height: 40px;
+}
+
+/* Video */
+.booking-component .col video {
+  width: 102.5%;
+  height: 100%;
+  object-fit: cover;
+  border-top-right-radius: 20px;
+  border-end-end-radius: 20px;
+  box-shadow: 0 5px 10px rgb(0, 0, 0, 0.15);
+}
+
+/* Input */
+.booking-component .col .row input, .booking-component .col .row select {
+  background-color: rgba(255, 255, 255, 0.85);
+  width: 100%;
+  padding: 10px 20px;
+  border-radius: 15px;
+  border: none;
+  box-shadow: 5px 5px 5px rgb(0, 0, 0, 0.15);
+}
+.booking-component .col .row input:hover {
+  background-color: rgba(255, 255, 255, 0.75);
+}
+
+.booking-component .col .row label {
+  color: white;
+  font-weight: 500;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+/* Date Input */
+.booking-component .row .date-input[type=date] {
+  background-color: lightblue;
+}
+
+/* Switch Input */
+.booking-component .col .row .form-check-input {
+  background-color: white;
+  width: 15%;
+  margin-right: 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: .4s;
+}
+.booking-component .col .row .form-check-input:checked {
+  background-color: rgb(0, 201, 170);
+}
+
+/* Submit Button */
+.booking-component .submit-button {
+  background-color: rgb(0, 201, 170);
+  color: white;
+  width: 100%;
+  font-weight: 500;
+  font-size: 1rem;
+  border-radius: 20px;
+  padding: 9px 20px;
+  border: none;
+  margin-bottom: 20px;
+  transition: .2s;
+}
+.booking-component .submit-button:hover {
+  background-color: white;
+  color: rgb(0, 201, 170);
+  box-shadow: 7px 7px 10px rgb(0, 0, 0, 0.3);
+}
+.booking-component .submit-button:active {
+  opacity: .7;
+}
+
+.booking-component .submit-button:disabled {
+  cursor: not-allowed;
+  opacity: .7;
+}
+.booking-component .submit-button:disabled:hover {
+  background-color: rgb(0, 201, 170);
+  color: white;
+  box-shadow: none;
+}
+/* Booking (bottom) */
+
+
+
+/* Manage Service (top) */
+/* Component */
+@keyframes component-motion {
+  from { transform: translateX(-1300px); }
+  to {transform: translateX(0);}
+}
+
+.manageService-component .container {
+  background-color: rgb(185,114,74);
+  width: 70%;
+  margin-bottom: 30px;
+  margin-top: 30px;
+  padding: 40px 50px;
+  border-radius: 20px;
+  animation: 1s ease-in-out component-motion;
+}
+
+/* Back Button */
+.manageService-component .back-button {
+  width: 40px;
+  height: 40px;
+}
+
+/* Heading */
+.manageService-component .heading {
+  font-size: 3rem;
+  font-weight: 500;
+}
+
+/* Video */
+.manageService-component .heading-video {
+  width: 100%;
+  border-radius: 20px;
+  border: 10px solid white;
+  margin-bottom: 30px;
+}
+
+/* Dropdown Toggle */
+.manageService-component tbody .dropdown-toggle {
+  background-color: rgb(0, 201, 170);
+  color: white;
+  transition: .5s;
+}
+
+/* Dropdown Menu */
+.manageService-component tbody .dropdown-menu {
+  box-sizing: border-box;
+  margin-top: 5px;
+  border-radius: 15px;
+  padding: 10px 40px;
+  box-shadow: 0 5px 5px rgb(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+
+/* Dropdown Item */
+.manageService-component tbody .dropdown-item:hover {
+  border-radius: 9px;
+  opacity: .9;
+  background-color: white;
+}
+
+/* Add Button */
+.manageService-component .add-button {
+  text-align: right;
+  margin-top: 40px;
+  margin-right: 40px;
+}
+.manageService-component .add-button-Link {
+  background-color: rgb(0, 201, 170);
+  color: white;
+  margin-bottom: 120px;
+  padding: 7px 20px;
+  border-radius: 20px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.1rem;
+  border: none;
+  cursor: pointer;
+  transition: .2s;
+}
+.manageService-component .add-button .add-button-Link:hover {
+  color: rgb(0, 201, 170);
+  background-color: white;
+  box-shadow: 5px 5px 10px rgb(0, 0, 0, 0.3);
+}
+.manageService-component .add-button .add-button-Link:active {
+  opacity: .7;
+}
+/* Manage Service (bottom) */
+
+
+
+/* Add Service (top) */
+/* Component */
+@keyframes component-motion {
+  from { transform: translateX(-1300px); }
+  to {transform: translateX(0);}
+}
+
+.addService-component .container {
+  background: rgb(185,114,74);
+  width: 60%;
+  margin-bottom: 30px;
+  margin-top: 30px;
+  border-radius: 20px;
+  box-shadow: 5px 5px 10px rgb(0, 0, 0, 0.15);
+  animation: 1s ease-in-out component-motion;
+}
+
+/* Video */
+.addService-component .col video {
+  width: 100%;
+  height: 100.2%;
+  object-fit: cover;
+  margin-left: -12px;
+  border-end-start-radius: 20px;
+  border-start-start-radius: 20px;
+  box-shadow: 0 5px 10px rgb(0, 0, 0, 0.3);
+}
+
+/* Heading */
+.addService-component .heading {
+  color: black;
+  margin-top: 5px;
+  font-weight: 500;
+  font-size: 2rem;
+  font-weight: bold;
+  text-shadow: 0 5px 10px rgb(0, 0, 0, 0.15);
+}
+
+/* Back Button */
+.addService-component .back-button {
+  width: 40px;
+  height: 40px;
+}
+
+.addService-component .form {
+  padding: 40px 60px;
+}
+
+/* Input */
+.addService-component .col .row input, .addService-component .col .row select {
+  background-color: rgba(255, 255, 255, 0.85);
+  width: 100%;
+  padding: 10px 20px;
+  border-radius: 15px;
+  border: none;
+  box-shadow: 5px 5px 5px rgb(0, 0, 0, 0.15);
+}
+.addService-component .col .row input:hover {
+  background-color: rgba(255, 255, 255, 0.75);
+}
+
+.addService-component .col .row label {
+  color: white;
+  font-weight: 500;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+/* Switch Input */
+.addService-component .col .row .form-check-input {
+  background-color: white;
+  width: 15%;
+  margin-right: 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: .4s;
+}
+.addService-component .col .row .form-check-input:checked {
+  background-color: rgb(0, 201, 170);
+}
+
+/* Submit Button */
+.addService-component .submit-button {
+  background-color: rgb(0, 201, 170);
+  color: white;
+  width: 100%;
+  font-weight: 500;
+  font-size: 1rem;
+  border-radius: 20px;
+  padding: 9px 20px;
+  border: none;
+  margin-bottom: 20px;
+  transition: .2s;
+}
+.addService-component .submit-button:hover {
+  background-color: white;
+  color: rgb(0, 201, 170);
+  box-shadow: 7px 7px 10px rgb(0, 0, 0, 0.3);
+}
+.addService-component .submit-button:active {
+  opacity: .7;
+}
+
+.addService-component .submit-button:disabled {
+  cursor: not-allowed;
+  opacity: .7;
+}
+.addService-component .submit-button:disabled:hover {
+  background-color: rgb(0, 201, 170);
+  color: white;
+  box-shadow: none;
+}
+/* Add Service (bottom) */
+
+
+
+/* Update Service (top) */
+/* Component */
+@keyframes component-motion {
+  from { transform: translateX(-1300px); }
+  to {transform: translateX(0);}
+}
+
+.updateService-component .container {
+  background: rgb(185,114,74);
+  width: 60%;
+  margin-bottom: 30px;
+  margin-top: 30px;
+  border-radius: 20px;
+  box-shadow: 5px 5px 10px rgb(0, 0, 0, 0.15);
+  animation: 1s ease-in-out component-motion;
+}
+
+/* Video */
+.updateService-component .col video {
+  width: 100%;
+  height: 100.04%;
+  object-fit: cover;
+  margin-left: -12px;
+  border-end-start-radius: 20px;
+  border-start-start-radius: 20px;
+  box-shadow: 0 5px 10px rgb(0, 0, 0, 0.3);
+}
+
+/* Heading */
+.updateService-component .heading {
+  margin-top: 9px;
+  font-size: 1.8rem;
+  font-weight: 500;
+  font-weight: bold;
+}
+
+/* Back Button */
+.updateService-component .back-button {
+  width: 40px;
+  height: 40px;
+}
+
+.updateService-component .form {
+  padding: 40px 80px;
+}
+
+/* Input */
+.updateService-component .col .row input, .updateService-component .col .row select {
+  background-color: rgba(255, 255, 255, 0.85);
+  width: 100%;
+  padding: 10px 20px;
+  border-radius: 15px;
+  border: none;
+  box-shadow: 5px 5px 5px rgb(0, 0, 0, 0.15);
+}
+.updateService-component .col .row input:hover {
+  background-color: rgba(255, 255, 255, 0.75);
+}
+
+.updateService-component .col .row label {
+  color: white;
+  font-weight: 500;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+/* Switch Input */
+.updateService-component .col .row .form-check-input {
+  background-color: white;
+  width: 15%;
+  margin-right: 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: .4s;
+}
+.updateService-component .col .row .form-check-input:checked {
+  background-color: rgb(0, 201, 170);
+}
+
+/* Submit Button */
+.updateService-component .submit-button {
+  background-color: rgb(0, 201, 170);
+  color: white;
+  width: 100%;
+  font-weight: 500;
+  font-size: 1rem;
+  border-radius: 20px;
+  padding: 9px 20px;
+  border: none;
+  margin-bottom: 20px;
+  transition: .2s;
+}
+.updateService-component .submit-button:hover {
+  background-color: white;
+  color: rgb(0, 201, 170);
+  box-shadow: 7px 7px 10px rgb(0, 0, 0, 0.3);
+}
+.updateService-component .submit-button:active {
+  opacity: .7;
+}
+
+.updateService-component .submit-button:disabled {
+  cursor: not-allowed;
+  opacity: .7;
+}
+.updateService-component .submit-button:disabled:hover {
+  background-color: rgb(0, 201, 170);
+  color: white;
+  box-shadow: none;
+}
+/* Update Service (bottom) */
+
+
+
+/* Manage Combo (top) */
+
+@keyframes component-motion {
+  from { transform: translateX(-1300px); }
+  to {transform: translateX(0);}
+}
+
+.manageCombo-component .container {
+  background-color: rgb(185,114,74);
+  width: 80%;
+  margin-bottom: 30px;
+  margin-top: 30px;
+  padding: 40px 40px;
+  border-radius: 20px;
+  animation: 1s ease-in-out component-motion;
+}
+
+
+/* Back Button */
+.manageCombo-component .back-button {
+  width: 40px;
+  height: 40px;
+}
+
+/* Heading */
+.manageCombo-component .heading {
+  font-weight: 500;
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+/* Video Heading */
+.manageCombo-component .heading-video {
+  width: 100%;
+  border-radius: 20px;
+  border: 10px solid white;
+  margin-bottom: 20px;
+}
+
+/* Dropdown Toggle */
+.manageCombo-component tbody .dropdown-toggle {
+  background-color: rgb(0, 201, 170);
+  color: white;
+  transition: .5s;
+}
+
+/* Dropdown Menu */
+.manageCombo-component tbody .dropdown-menu {
+  box-sizing: border-box;
+  margin-top: 5px;
+  border-radius: 15px;
+  padding: 10px 40px;
+  box-shadow: 0 5px 5px rgb(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+
+.manageCombo-component tbody .dropdown-item:hover {
+  border-radius: 9px;
+  opacity: .9;
+  background-color: white;
+}
+
+/* Add Button */
+.manageCombo-component .add-button {
+  text-align: right;
+  margin-right: 40px;
+  margin-top: 40px;
+}
+.manageCombo-component .add-button-Link {
+  background-color: rgb(0, 201, 170);
+  color: white;
+  margin-bottom: 120px;
+  padding: 7px 20px;
+  border-radius: 20px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.1rem;
+  border: none;
+  cursor: pointer;
+  transition: .2s;
+}
+.manageCombo-component .add-button .add-button-Link:hover {
+  color: rgb(0, 201, 170);
+  background-color: white;
+  box-shadow: 5px 5px 10px rgb(0, 0, 0, 0.3);
+}
+.manageCombo-component .add-button .add-button-Link:active {
+  opacity: .7;
+}
+/* Manage Combo (bottom) */
+
+
+
+/* Add Combo (top) */
+/* Component */
+@keyframes component-motion {
+  from { transform: translateX(-1300px); }
+  to {transform: translateX(0);}
+}
+
+.addCombo-component .container {
+  background: rgb(185,114,74);
+  width: 60%;
+  margin-bottom: 30px;
+  margin-top: 30px;
+  border-radius: 20px;
+  box-shadow: 5px 5px 10px rgb(0, 0, 0, 0.15);
+  animation: 1s ease-in-out component-motion;
+}
+
+/* Video */
+.addCombo-component .col video {
+  width: 110%;
+  height: 100.04%;
+  object-fit: cover;
+  margin-left: -12px;
+  border-end-start-radius: 20px;
+  border-start-start-radius: 20px;
+  box-shadow: 0 5px 10px rgb(0, 0, 0, 0.3);
+}
+
+/* Heading */
+.addCombo-component .heading {
+  font-weight: 500;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+/* Back Button */
+.addCombo-component .back-button {
+  width: 40px;
+  height: 40px;
+}
+
+.addCombo-component .form {
+  padding: 20px 50px;
+}
+
+/* Input */
+.addCombo-component .col .row input, .addCombo-component .col .row select {
+  background-color: rgba(255, 255, 255, 0.85);
+  width: 100%;
+  padding: 10px 20px;
+  border-radius: 15px;
+  border: none;
+  box-shadow: 5px 5px 5px rgb(0, 0, 0, 0.15);
+}
+.addCombo-component .col .row input:hover {
+  background-color: rgba(255, 255, 255, 0.75);
+}
+
+.addCombo-component .col .row label {
+  color: white;
+  font-weight: 500;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+
+/* Switch Input */
+.addCombo-component .col .row .form-check-input {
+  background-color: white;
+  width: 15%;
+  margin-right: 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: .4s;
+}
+.addCombo-component .col .row .form-check-input:checked {
+  background-color: rgb(0, 201, 170);
+}
+
+
+/* Submit Button */
+.addCombo-component .submit-button {
+  background-color: rgb(0, 201, 170);
+  color: white;
+  width: 100%;
+  font-weight: 500;
+  font-size: 1rem;
+  border-radius: 20px;
+  padding: 9px 20px;
+  border: none;
+  margin-bottom: 20px;
+  transition: .2s;
+}
+.addCombo-component .submit-button:hover {
+  background-color: white;
+  color: rgb(0, 201, 170);
+  box-shadow: 7px 7px 10px rgb(0, 0, 0, 0.3);
+}
+.addCombo-component .submit-button:active {
+  opacity: .7;
+}
+
+.addCombo-component .submit-button:disabled {
+  cursor: not-allowed;
+  opacity: .7;
+}
+.addCombo-component .submit-button:disabled:hover {
+  background-color: rgb(0, 201, 170);
+  color: white;
+  box-shadow: none;
+}
+/* Add Combo (bottom) */
+
+
+
+/* Update Combo (top) */
+/* Component */
+@keyframes component-motion {
+  from { transform: translateX(-1300px); }
+  to {transform: translateX(0);}
+}
+
+.updateCombo-component .container {
+  background: rgb(185,114,74);
+  width: 60%; 
+  margin-bottom: 30px;
+  margin-top: 30px;
+  border-radius: 20px;
+  box-shadow: 5px 5px 10px rgb(0, 0, 0, 0.15);
+  animation: 1s ease-in-out component-motion;
+}
+
+/* Video */
+.updateCombo-component .col video {
+  width: 110%;
+  height: 100.04%;
+  object-fit: cover;
+  margin-left: -12px;
+  border-end-start-radius: 20px;
+  border-start-start-radius: 20px;
+  box-shadow: 0 5px 10px rgb(0, 0, 0, 0.3);
+}
+
+/* Heading */
+.updateCombo-component .heading {
+  font-weight: 500;
+  font-weight: bold;
+  font-size: 2.5rem;
+}
+
+/* Back Button */
+.updateCombo-component .back-button {
+  width: 40px;
+  height: 40px;
+}
+
+.updateCombo-component .form {
+  padding: 40px 50px;
+}
+
+/* Input */
+.updateCombo-component .col .row input, .updateCombo-component .col .row select {
+  background-color: rgba(255, 255, 255, 0.85);
+  width: 100%;
+  padding: 10px 20px;
+  border-radius: 15px;
+  border: none;
+  box-shadow: 5px 5px 5px rgb(0, 0, 0, 0.15);
+}
+.updateCombo-component .col .row input:hover {
+  background-color: rgba(255, 255, 255, 0.75);
+}
+
+.updateCombo-component .col .row label {
+  color: white;
+  font-weight: 500;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+
+/* Switch Input */
+.updateCombo-component .col .row .form-check-input {
+  background-color: white;
+  width: 15%;
+  margin-right: 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: .4s;
+}
+.updateCombo-component .col .row .form-check-input:checked {
+  background-color: rgb(0, 201, 170);
+}
+
+
+/* Submit Button */
+.updateCombo-component .submit-button {
+  background-color: rgb(0, 201, 170);
+  color: white;
+  width: 100%;
+  font-weight: 500;
+  font-size: 1rem;
+  border-radius: 20px;
+  padding: 9px 20px;
+  border: none;
+  margin-bottom: 20px;
+  transition: .2s;
+}
+.updateCombo-component .submit-button:hover {
+  background-color: white;
+  color: rgb(0, 201, 170);
+  box-shadow: 7px 7px 10px rgb(0, 0, 0, 0.3);
+}
+.updateCombo-component .submit-button:active {
+  opacity: .7;
+}
+
+.updateCombo-component .submit-button:disabled {
+  cursor: not-allowed;
+  opacity: .7;
+}
+.updateCombo-component .submit-button:disabled:hover {
+  background-color: rgb(0, 201, 170);
+  color: white;
+  box-shadow: none;
+}
+/* Update Combo (bottom) */
+
+
+
+/* Feedback  (top) */
+.feedback-component {
+  position: relative;
+  padding-top: 10vh;
+  padding-bottom: 10vh;
+}
+
+/* Video */
+.feedback-component video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+
+/* Container */
+.feedback-component #container {
+  background-color: white;
+  width: 40%;
+  padding: 30px 50px;
+}
+
+/* Heading */
+.feedback-component .heading {
+  color: rgb(185,114,74); 
+  font-size: 3rem;
+  font-weight: 500;
+  font-weight: bold;
+  text-align: center;
+  padding-bottom: 15px;
+}
+/* Feedback  (bottom) */
+
+
+
+/* Transaction History (top) */
+.transactionHistory-component .heading {
+  position: relative;
+  width: 100%;
+  height: 15vh;
+  margin-top: 30px;
+}
+
+.transactionHistory-component .heading video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+
+.transactionHistory-component .heading-title {
+  color: white;
+  font-size: 2rem;
+  font-weight: 500;
+  font-weight: bold;
+  text-align: center;
+  padding-top: 27px;
+} 
+/* Transaction History (bottom) */
+
+
+/* Booking Detail  (top) */
+.bookingDetail-component {
+  position: relative;
+  padding-top: 10vh;
+  padding-bottom: 10vh;
+}
+
+/* Video */
+.bookingDetail-component video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+
+/* bookingDetail  (bottom) */

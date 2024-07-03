@@ -1,5 +1,6 @@
 const Booking = require("../models/bookingModel");
 require("dotenv").config();
+const moment = require("moment")
 const sendMail = require("../sendMail");
 
 // CREATE
@@ -20,7 +21,7 @@ const createBooking = async (req, res) => {
           <p>Your Pet Type: ${petType}</p>
           <p>Your Service: ${services}</p>
           <p>Your Combo: ${combo}</p>
-          <p>Date: ${date}</p>
+          <p>Date: ${moment(date).format('MMMM Do YYYY, h:mm:ss a')}</p>
           <p>Total: $ ${total}</p>
           <p>Thank you for booking</p>
           <p>Your regards,</p>

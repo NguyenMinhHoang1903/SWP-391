@@ -14,6 +14,9 @@ export default function BookingDetail() {
 
   // Convert date to a readable string
   const formattedDate = new Date(date).toLocaleString();
+  // const handleClick = () => {
+  //   window.location.href = 'http://localhost:8888/order/create_payment_url';
+  // };
   return (
     <>
       <div className="bookingDetail-component">
@@ -59,7 +62,7 @@ export default function BookingDetail() {
               {/* Service list */}
               <div className="service-list">
               <h2>Service List</h2>
-              {services.length > 0 ? (
+              {services ? (
                 services.map((service, index) => (
                   <div className="service" key={index}>
                     <div>{service}</div>
@@ -99,7 +102,7 @@ export default function BookingDetail() {
                   </button></Link>
                 </div>
                 <div className="col-6 text-right">
-                  <button className="btn btn-success" type="submit">Confirm</button>
+                  <a href = "http://localhost:8888/order/create_payment_url" className="btn btn-success">Confirm</a>
                 </div>
               </div>
             </form>

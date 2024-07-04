@@ -5,8 +5,8 @@ extends layout
 
 block content
     if code == "00"
-        p(style="text-align: center")  GD thành công
+        h1(style="text-align: center; front-size: 90")  Successful transaction
     else
-        p(style="text-align: center; color: red") GD thất bại
+        p(style="text-align: center; color: red") Transaction failed
     p(style="text-align: center")
-        a.btn.btn-default(href='/order') Về danh sách
+        a.btn.btn-default(href='http://localhost:3000/') Return to home page

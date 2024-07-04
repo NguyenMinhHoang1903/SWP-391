@@ -155,6 +155,9 @@ function App() {
                       </PrivateRoute>
                     }
                   />
+                  <Route
+                    path="/order/create_payment_url"
+                  />
 
                   {/* Service List */}
                   <Route path="/washingservice" element={<PrivateRoute><Washing /></PrivateRoute>} />

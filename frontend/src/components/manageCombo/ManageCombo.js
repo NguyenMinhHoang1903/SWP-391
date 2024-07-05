@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Modal, Button, Dropdown, Table, Col, Row } from "react-bootstrap";
 import toast from "react-hot-toast";
 import { Backdrop, CircularProgress, IconButton, Zoom } from "@mui/material";
@@ -23,14 +23,12 @@ export default function ManageCombo() {
   const [openBackDrop, setOpenBackDrop] = useState(false);
   const [serviceDesc, setServiceDesc] = useState();
 
-  // Close modal
   const handleClose = (nameButton) => {
     if (nameButton === "delete") setShowDelete(false);
     else if (nameButton === "comboDetail") setShowDetail(false);
     else if (nameButton === "serviceDesc") setShowDesc(false);
   };
 
-  // Show modal
   const handleShow = (field, nameButton) => {
     if (nameButton === "deleteCombo") {
       setDeleteId(field._id);
@@ -45,13 +43,26 @@ export default function ManageCombo() {
     }
   };
 
-  // Get all combo from database
   const fetchData = async () => {
     let isFetched = true;
     await fetch("http://localhost:5000/api/combos/read")
       .then((res) => res.json())
       .then((json) => {
-        if (isFetched) setCombos(json);
+        if (isFetched) {
+          const combosWithStatus = json.map((combo) => {
+            const currentDate = new Date();
+            const startDate = new Date(combo.startDate);
+            const endDate = new Date(combo.endDate);
+
+            let status = "Processing";
+            if (currentDate < startDate) status = "Soon";
+            else if (currentDate > endDate) status = "Expired";
+
+            return { ...combo, status };
+          });
+
+          setCombos(combosWithStatus);
+        }
       })
       .catch((err) => console.log(err));
 
@@ -60,7 +71,6 @@ export default function ManageCombo() {
     };
   };
 
-  // Delete one combo from database by combo ID
   const deleteCombo = async () => {
     let isFetched = true;
     setShowDelete(false);
@@ -78,7 +88,6 @@ export default function ManageCombo() {
     return () => (isFetched = false);
   };
 
-  // Read all service of selected combo
   const readAllServiceByComboId = async (passedComboId) => {
     let isFetched = true;
 
@@ -101,7 +110,6 @@ export default function ManageCombo() {
     };
   };
 
-  // Start fetching data
   useEffect(() => {
     let isFetched = true;
     if (isFetched) fetchData();
@@ -116,7 +124,6 @@ export default function ManageCombo() {
         <div className="container-fluid">
           <div className="container">
             <div className="row">
-              {/* Back Button */}
               <div className="col-4">
                 <Link to="/manageStaff">
                   <TooltipDefault title="Back">
@@ -127,27 +134,25 @@ export default function ManageCombo() {
                 </Link>
               </div>
               <div className="col-6">
-                {/* Heading */}
                 <div className="heading">COMBO LIST</div>
               </div>
-              {/* Video */}
               <div className="col-2">
                 <video
                   className="heading-video"
-                  src="assets/videos/video-3.webm "
+                  src="assets/videos/video-3.webm"
                   autoPlay
                   muted
                   loop
                 ></video>
               </div>
             </div>
-            {/* Table */}
             <Table striped bordered hover>
               <thead>
                 <tr>
                   <th></th>
                   <th>Name</th>
                   <th>Price</th>
+                  <th>Status</th>
                   <th></th>
                 </tr>
               </thead>
@@ -157,14 +162,14 @@ export default function ManageCombo() {
                     <td></td>
                     <td>{combo.name}</td>
                     <td>$ {combo.price}</td>
+                    <td style={{ color: getStatusColor(combo.status) }}>{combo.status}</td>
                     <td>
                       <Dropdown>
                         <Dropdown.Toggle
                           className="dropdown-toggle"
                           variant="light"
                         >
-                          {" "}
-                          <Link title="Option" id="option-tooltip"></Link>{" "}
+                          <Link title="Option" id="option-tooltip"></Link>
                         </Dropdown.Toggle>
 
                         <Dropdown.Menu className="dropdown-menu">
@@ -224,8 +229,6 @@ export default function ManageCombo() {
                 ))}
               </tbody>
             </Table>
-
-            {/* Add Button */}
             <div className="add-button">
               <Link className="add-button-Link" to="/addCombo">
                 ADD
@@ -234,7 +237,6 @@ export default function ManageCombo() {
           </div>
         </div>
 
-        {/* Delete Box */}
         <Modal
           show={showDelete}
           onHide={() => handleClose("deleteCombo")}
@@ -269,7 +271,6 @@ export default function ManageCombo() {
           </Modal.Footer>
         </Modal>
 
-        {/* Combo Detail Box */}
         <Modal
           show={showDetail}
           onHide={() => handleClose("comboDetail")}
@@ -318,13 +319,7 @@ export default function ManageCombo() {
           </Modal.Footer>
         </Modal>
 
-        {/* Service Description Box */}
-        <Modal
-          show={showDesc}
-          onHide={() => handleClose("serviceDesc")}
-          size="lg"
-          centered
-        >
+        <Modal show={showDesc} onHide={() => handleClose("serviceDesc")} size="lg" centered>
           <Modal.Header closeButton>
             <Modal.Title>Service Description</Modal.Title>
           </Modal.Header>
@@ -332,16 +327,12 @@ export default function ManageCombo() {
             <p className="ps-5">{serviceDesc}</p>
           </Modal.Body>
           <Modal.Footer>
-            <Button
-              variant="secondary"
-              onClick={() => handleClose("serviceDesc")}
-            >
+            <Button variant="secondary" onClick={() => handleClose("serviceDesc")}>
               Close
             </Button>
           </Modal.Footer>
         </Modal>
 
-        {/* Back Drop */}
         <Backdrop
           sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={openBackDrop}
@@ -351,4 +342,17 @@ export default function ManageCombo() {
       </div>
     </>
   );
+}
+
+function getStatusColor(status) {
+  switch (status) {
+    case "Processing":
+      return "#28a745"; // green color
+    case "Expired":
+      return "#dc3545"; // red color
+    case "Soon":
+      return "#007bff"; // blue color
+    default:
+      return ""; // default color
+  }
 }

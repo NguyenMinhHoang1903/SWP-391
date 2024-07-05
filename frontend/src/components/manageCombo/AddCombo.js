@@ -10,6 +10,15 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { IconButton } from "@mui/material";
 import TooltipDefault from "@mui/material/Tooltip";
 
+
+// Utility function to get next day's date
+const getNextDayDate = () => {
+  const today = new Date();
+  const nextDay = new Date(today);
+  nextDay.setDate(today.getDate() + 1);
+  return nextDay.toISOString().split('T')[0];
+};
+
 export default function AddCombo() {
   const navigate = useNavigate();
   const [services, setServices] = useState([]);
@@ -19,11 +28,17 @@ export default function AddCombo() {
     initialValues: {
       name: "",
       price: "",
+      startDate: "",
+      endDate: "",
       desc: "",
       serviceId: [],
       agree: false,
     },
     onSubmit: (values) => {
+      const { startDate, endDate } = values;
+      const validStartDate = startDate;
+      const validEndDate = endDate;
+
       fetch("http://localhost:5000/api/combos/create", {
         method: "POST",
         headers: {
@@ -32,6 +47,8 @@ export default function AddCombo() {
         body: JSON.stringify({
           name: values.name,
           price: Number(values.price),
+          startDate: validStartDate,
+          endDate: validEndDate,
           desc: values.desc,
           serviceId: values.serviceId,
         }),
@@ -51,19 +68,52 @@ export default function AddCombo() {
       name: Yup.string()
         .min(2, "Must be 2 characters or more")
         .required("Required."),
-      price: Yup.string().required("Required"),
+
+      price: Yup.number()
+        .typeError("Price must be a number")
+        .required("Required")
+        .test('is-less-than-total', 'Price must be less than the total of services', function(value) {
+          const { serviceId } = this.parent;
+          if (!value || !serviceId || serviceId.length === 0) {
+            return true; // No services selected or price is not set, so no comparison needed
+          }
+          const totalServicePrice = services.reduce((total, service) => {
+            if (serviceId.includes(service._id)) {
+              return total + service.price;
+            }
+            return total;
+          }, 0);
+          return value <= totalServicePrice;
+      }),
+
+      startDate: Yup.date()
+        .min(getNextDayDate(), "Start date must be at least the next day")
+        .nullable(),
+
+      endDate: Yup.date()
+        .min(Yup.ref('startDate'), "End date cannot be before start date")
+        .nullable(),
+
       desc: Yup.string()
         .min(2, "Must be 2 characters or more")
         .required("Required."),
+
       serviceId: Yup.array()
         .test({
-          message: "Please choose at least one service.",
-          test: (arr) => arr.length !== 0,
+          message: "Please choose at least 2 service.",
+          test: (arr) => arr.length > 1,
         })
-        .required("Are you forget this one?"),
-      agree: Yup.boolean().oneOf([true], "Do you forget this one?"),
+        .required("Please choose at least 2 service."),
+
+      agree: Yup.boolean().oneOf([true], "Do you add this one?"),
     }),
   });
+
+  // Function to handle date changes
+const handleDateChange = (e) => {
+  const { name, value } = e.target;
+  formik.setFieldValue(name, value); // Update formik values
+};
 
   const handleKeyDown = (e) => {
     // Allow only numeric keys, backspace, and delete
@@ -145,6 +195,7 @@ export default function AddCombo() {
 
               {/* Form */}
               <form onSubmit={formik.handleSubmit}>
+                
                 {/* Input Name */}
                 <div className="row mb-4">
                   <label>Name</label>
@@ -187,6 +238,46 @@ export default function AddCombo() {
                   isOpen={isOpen}
                   imperativeModeOnly
                 />
+
+                {/* Input Start Date */}
+                <div className="row mb-4">
+                  <label>Start Date</label>
+                  <a
+                    data-tooltip-id="startDate-tooltip"
+                    data-tooltip-content={formik.errors.startDate}
+                    data-tooltip-variant="warning"
+                    data-tooltip-place="right"
+                  >
+                    <input
+                      onChange={handleDateChange}
+                      type="date"
+                      name="startDate"
+                      value={formik.values.startDate}
+                      minDate={getNextDayDate()}
+                    />
+                  </a>
+                </div>
+                <Tooltip id="startDate-tooltip" isOpen={isOpen} imperativeModeOnly />
+
+                {/* Input End Date */}
+                <div className="row mb-4">
+                  <label>End Date</label>
+                  <a
+                    data-tooltip-id="endDate-tooltip"
+                    data-tooltip-content={formik.errors.endDate}
+                    data-tooltip-variant="warning"
+                    data-tooltip-place="right"
+                  >
+                    <input
+                      onChange={handleDateChange}
+                      type="date"
+                      name="endDate"
+                      value={formik.values.endDate}
+                      minDate={formik.values.startDate}
+                    />
+                  </a>
+                </div>
+                <Tooltip id="endDate-tooltip" isOpen={isOpen} imperativeModeOnly />
 
                 {/* Input Desc */}
                 <div className="row mb-3">

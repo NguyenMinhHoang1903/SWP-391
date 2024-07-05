@@ -13,13 +13,22 @@ const createCombo = async (req, res) => {
 
   if (existingCombo) res.json({ message: 0 });
   else {
-    const newCombo = new Combo({
+    const newComboData = {
       name: req.body.name,
       price: req.body.price,
       desc: req.body.desc,
       serviceId: req.body.serviceId,
-    });
+    };
 
+    if (req.body.startDate) {
+      newComboData.startDate = req.body.startDate;
+    }
+
+    if (req.body.endDate) {
+      newComboData.endDate = req.body.endDate;
+    }
+
+    const newCombo = new Combo(newComboData);
     await newCombo
       .save()
       .then((result) => {
@@ -100,6 +109,8 @@ const updateOneCombo = async (req, res) => {
     const newCombo = await new Combo({
       name: name,
       price: req.body.price,
+      startDate: req.body.startDate,
+      endDate: req.body.endDate,
       desc: req.body.desc,
       serviceId: req.body.serviceId,
     });

@@ -1,5 +1,4 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
@@ -9,6 +8,14 @@ import "react-tooltip/dist/react-tooltip.css";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { IconButton } from "@mui/material";
 import TooltipDefault from "@mui/material/Tooltip";
+
+// Utility function to get next day's date
+const getNextDayDate = () => {
+  const today = new Date();
+  const nextDay = new Date(today);
+  nextDay.setDate(today.getDate() + 1);
+  return nextDay.toISOString().split('T')[0];
+};
 
 export default function UpdateCombo() {
   const navigate = useNavigate();
@@ -21,11 +28,17 @@ export default function UpdateCombo() {
       oldName: "",
       name: "",
       price: "",
+      startDate: "",
+      endDate: "",
       desc: "",
       serviceId: [],
       agree: false,
     },
     onSubmit: (values) => {
+      const { startDate, endDate } = values;
+      const validStartDate = startDate;
+      const validEndDate = endDate;
+
       fetch("http://localhost:5000/api/combos/update", {
         method: "POST",
         headers: {
@@ -35,6 +48,8 @@ export default function UpdateCombo() {
           oldName: formik.values.oldName,
           name: values.name,
           price: Number(values.price),
+          startDate: validStartDate,
+          endDate: validEndDate,
           desc: values.desc,
           serviceId: values.serviceId,
         }),
@@ -54,19 +69,52 @@ export default function UpdateCombo() {
       name: Yup.string()
         .min(2, "Must be 2 characters or more")
         .required("Required."),
-      price: Yup.string().required("Required"),
+
+      price: Yup.number()
+        .typeError("Price must be a number")
+        .required("Required")
+        .test('is-less-than-total', 'Price must be less than the total of services', function(value) {
+          const { serviceId } = this.parent;
+          if (!value || !serviceId || serviceId.length === 0) {
+            return true; // No services selected or price is not set, so no comparison needed
+          }
+          const totalServicePrice = services.reduce((total, service) => {
+            if (serviceId.includes(service._id)) {
+              return total + service.price;
+            }
+            return total;
+          }, 0);
+          const maxAllowedPrice = totalServicePrice * 0.9; // 90% of total service prices
+          return value <= maxAllowedPrice;
+      }),
+
+      startDate: Yup.date()
+      .nullable(),
+
+    endDate: Yup.date()
+      .min(Yup.ref('startDate'), "End date cannot be before start date")
+      .nullable(),
+
       desc: Yup.string()
         .min(2, "Must be 2 characters or more")
         .required("Required."),
+
       serviceId: Yup.array()
         .test({
-          message: "Please choose at least one service",
-          test: (arr) => arr.length !== 0,
+          message: "Please choose at least 2 service",
+          test: (arr) => arr.length > 1,
         })
-        .required("Required."),
-      agree: Yup.boolean().oneOf([true], "Do you forget this one?"),
+        .required("Please choose at least 2 service."),
+
+      agree: Yup.boolean().oneOf([true], "Do you update this one?"),
     }),
   });
+
+  // Function to handle date changes
+  const handleDateChange = (e) => {
+    const { name, value } = e.target;
+    formik.setFieldValue(name, value); // Update formik values
+  };
 
   const handleKeyDown = (e) => {
     // Allow only numeric keys, backspace, and delete
@@ -88,7 +136,7 @@ export default function UpdateCombo() {
     }
   };
 
-  //Read all service
+  // Read all services
   const readAllService = async () => {
     let isFetched = true;
     await fetch("http://localhost:5000/api/services/read")
@@ -105,9 +153,6 @@ export default function UpdateCombo() {
     };
   };
 
-
-
-
   useEffect(() => {
     let isFetched = true;
     const passedId = location.search.substring(1);
@@ -122,6 +167,8 @@ export default function UpdateCombo() {
               oldName: json.name,
               name: json.name,
               price: json.price,
+              startDate: json.startDate,
+              endDate: json.endDate,
               desc: json.desc,
               serviceId: json.serviceId,
               agree: false,
@@ -130,19 +177,20 @@ export default function UpdateCombo() {
         })
         .catch((err) => console.log(err));
     }
-    
+
     readAllService();
     readOneCombo();
+
     return () => {
       isFetched = false;
-    }
+    };
   }, []);
 
   return (
     <>
       <div className="updateCombo-component">
         <div className="container">
-          <div className="row ">
+          <div className="row">
             {/* Video */}
             <div className="col">
               <video
@@ -216,6 +264,45 @@ export default function UpdateCombo() {
                   imperativeModeOnly
                 />
 
+                {/* Input Start Date */}
+                <div className="row mb-4">
+                  <label>Start Date</label>
+                  <a
+                    data-tooltip-id="startDate-tooltip"
+                    data-tooltip-content={formik.errors.startDate}
+                    data-tooltip-variant="warning"
+                    data-tooltip-place="right"
+                  >
+                    <input
+                      onChange={handleDateChange}
+                      type="date"
+                      name="startDate"
+                      value={formik.values.startDate}
+                    />
+                  </a>
+                </div>
+                <Tooltip id="startDate-tooltip" isOpen={isOpen} imperativeModeOnly />
+
+                {/* Input End Date */}
+                <div className="row mb-4">
+                  <label>End Date</label>
+                  <a
+                    data-tooltip-id="endDate-tooltip"
+                    data-tooltip-content={formik.errors.endDate}
+                    data-tooltip-variant="warning"
+                    data-tooltip-place="right"
+                  >
+                    <input
+                      onChange={handleDateChange}
+                      type="date"
+                      name="endDate"
+                      value={formik.values.endDate}
+                      minDate={formik.values.startDate || getNextDayDate()}
+                    />
+                  </a>
+                </div>
+                <Tooltip id="endDate-tooltip" isOpen={isOpen} imperativeModeOnly />
+
                 {/* Input Desc */}
                 <div className="row mb-3">
                   <label>Description</label>
@@ -245,24 +332,21 @@ export default function UpdateCombo() {
                     data-tooltip-place="right"
                   >
                     {services.map((service) => (
-                      <div class="form-check" key={service._id}>
+                      <div className="form-check" key={service._id}>
                         <input
-                          class="form-check-input"
+                          className="form-check-input"
                           type="checkbox"
                           name="serviceId"
                           onChange={formik.handleChange}
                           value={service._id}
+                          checked={formik.values.serviceId.includes(service._id)}
                         />
                         <div className="row">
                           <div className="col">
-                            <label class="form-check-label">
-                              {service.name}
-                            </label>
+                            <label className="form-check-label">{service.name}</label>
                           </div>
                           <div className="col">
-                            <label class="form-check-label">
-                              $ {service.price}
-                            </label>
+                            <label className="form-check-label">$ {service.price}</label>
                           </div>
                         </div>
                       </div>
@@ -283,16 +367,16 @@ export default function UpdateCombo() {
                     data-tooltip-variant="warning"
                     data-tooltip-place="right"
                   >
-                    <div class="form-check form-switch">
+                    <div className="form-check form-switch">
                       <input
-                        class="form-check-input"
+                        className="form-check-input"
                         name="agree"
                         type="checkbox"
                         id="switch"
-                        value={formik.values.agree}
+                        checked={formik.values.agree}
                         onChange={formik.handleChange}
                       />
-                      <label class="form-check-label" for="switch">
+                      <label className="form-check-label" htmlFor="switch">
                         Check this button to update
                       </label>
                     </div>

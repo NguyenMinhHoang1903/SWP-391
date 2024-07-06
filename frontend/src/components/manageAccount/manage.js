@@ -15,6 +15,7 @@ export default function ManageStaff() {
     email: "",
     name: "",
     role: "",
+    status: "",
     _id: "",
   });
 
@@ -94,6 +95,7 @@ export default function ManageStaff() {
                     <th style={{ textAlign: "center" }}>Name</th>
                     <th style={{ textAlign: "center" }}>Email</th>
                     <th style={{ textAlign: "center" }}>Role</th>
+                    <th style={{ textAlign: "center" }}>Status</th>
                     <th style={{ textAlign: "center" }}>Time</th>
                     <th>Edit</th>
                   </tr>
@@ -105,6 +107,7 @@ export default function ManageStaff() {
                       <td>{el?.name}</td>
                       <td>{el?.email}</td>
                       <td style={{ textAlign: "center" }}>{el?.role}</td>
+                      <td style={{ textAlign: "center" }}>{el?.status}</td>
                       <td style={{ textAlign: "center" }}>
                         {moment(el?.createdAt).format("LL")}
                       </td>
@@ -133,6 +136,7 @@ export default function ManageStaff() {
             name={updateUserDetails.name}
             email={updateUserDetails.email}
             role={updateUserDetails.role}
+            status={updateUserDetails.status}
             userId={updateUserDetails._id}
             callFunc={fetchAllUsers}
           />

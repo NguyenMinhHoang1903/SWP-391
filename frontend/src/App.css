@@ -1298,7 +1298,7 @@ form .input-field {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 1rem;
   width: 100%;
-  height: 330px;
+  height: 400px;
   max-width: 24rem;
 }
 
@@ -1336,6 +1336,10 @@ form .input-field {
   padding: 0.25rem 1rem;
 }
 
+.change-button{
+  display: flex;
+}
+
 /* Change Role Button */
 .change-role-button {
   display: block;
@@ -1347,6 +1351,37 @@ form .input-field {
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
+
+/* Status Selection */
+.status-selection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 1rem 0;
+}
+.status-selection select {
+  border: 1px solid #ccc;
+  padding: 0.25rem 1rem;
+}
+.change-button{
+  display: flex;
+}
+
+/* Change Status Button */
+.change-status-button {
+  display: block;
+  margin: auto; 
+  padding: 0.25rem 0.75rem; 
+  border-radius: 9999px;
+  background-color: #dc2626;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.change-status-button:hover {
+  background-color: #b91c1c;
+}
+
 .delete-button{
   display: block;
   margin-top: 40px;

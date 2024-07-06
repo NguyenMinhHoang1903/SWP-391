@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import ROLE from "../../common/role";
+import STATUSUSER from "../../common/statusUser";
 import { IoMdClose } from "react-icons/io";
 import SummaryApi from "../../common/index";
 import { toast } from "react-toastify";
@@ -7,7 +8,7 @@ import { Modal, Button, Row, Col } from "react-bootstrap";
 import { Tooltip, Zoom } from "@mui/material";
 import WarningIcon from "@mui/icons-material/Warning";
 
-const ChangeUserRole = ({ name, email, role, userId, onClose, callFunc }) => {
+const ChangeUserRole = ({ name, email, role, statusUser, userId, onClose, callFunc }) => {
   const [show, setShow] = useState(false);
 
   // Close delete box
@@ -21,12 +22,19 @@ const ChangeUserRole = ({ name, email, role, userId, onClose, callFunc }) => {
   };
 
   const [userRole, setUserRole] = useState(role);
+  const [userStatus, setUserStatus] = useState(statusUser);
 
   const handleOnChangeSelect = (e) => {
     setUserRole(e.target.value);
 
     console.log(e.target.value);
-  }; 
+  };
+
+  const handleOnChangeSelect2 = (e) => {
+    setUserStatus(e.target.value);
+
+    console.log(e.target.value);
+  };
 
   //Delete one user by id
   const deleteUser = async () => {
@@ -72,6 +80,28 @@ const ChangeUserRole = ({ name, email, role, userId, onClose, callFunc }) => {
     }
   };
 
+  const updateUserStatus = async () => {
+    const fetchResponse = await fetch(SummaryApi.updateUser.url, {
+      method: SummaryApi.updateUser.method,
+      credentials: "include",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: userId,
+        status: userStatus,
+      }),
+    });
+
+    const responseData = await fetchResponse.json();
+
+    if (responseData.success) {
+      toast.success(responseData.message);
+      onClose();
+      callFunc();
+    }
+  };
+
   return (
     <div className="updatestaff-background">
       <div className="updatestaff-container">
@@ -79,7 +109,7 @@ const ChangeUserRole = ({ name, email, role, userId, onClose, callFunc }) => {
           <IoMdClose />
         </button>
 
-        <h1 className="updatestaff-title">Change User Role</h1>
+        <h1 className="updatestaff-title">Change User</h1>
 
         <div className="user-info">
           <p>Name : {name}</p>
@@ -99,9 +129,27 @@ const ChangeUserRole = ({ name, email, role, userId, onClose, callFunc }) => {
           </select>
         </div>
 
-        <button className="change-role-button" onClick={updateUserRole}>
-          Change Role
-        </button>
+        <div className="status-selection">
+          <p>Status :</p>
+          <select value={userStatus} onChange={handleOnChangeSelect2}>
+            {Object.values(STATUSUSER).map((el) => {
+              return (
+                <option value={el} key={el}>
+                  {el}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+
+        <div className="change-button">
+          <button className="change-role-button" onClick={updateUserRole}>
+            Change role
+          </button>
+          <button className="change-status-button" onClick={updateUserStatus}>
+            Change status
+          </button>
+        </div>
         <Button className="delete-button" onClick={() => handleShow()}>
           DELETE
         </Button>

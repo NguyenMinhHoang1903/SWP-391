@@ -3,6 +3,7 @@ const userModel = require("../models/userModel")
 async function updateUser(req, res) {
     try {
         await userModel.updateOne({ _id: req.body.userId.toString() }, { $set: { role: req.body.role } })
+        await userModel.updateOne({ _id: req.body.userId.toString() }, { $set: { status: req.body.status } })
         res.json({
             data : "",
             message : "User Updated",

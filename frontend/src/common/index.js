@@ -57,8 +57,10 @@ const SummaryApi =  {
         url : `${backendDomin}/api/google/callback`,
         method : 'get'
     },
-    
-    
+    refund : {
+        url : `${backendDomin}/api/refund/create`,
+        method : 'post'
+    }    
 
 }
 export default SummaryApi

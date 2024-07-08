@@ -2371,3 +2371,71 @@ button:hover {
 .button .text-right {
   text-align: right;
 }
+
+/*Refund*/
+
+.contentRefundPage {
+  display: flex;
+  align-items: center;
+  margin: 0 auto;
+  max-width: 900px;
+  padding: 0 20px;
+  box-sizing: border-box;
+  justify-content: space-between;
+}
+
+.contentRefundPage .container {
+  background-color: rgb(155, 95, 60);
+  margin-top: 30px;
+  margin-bottom: 30px;
+  padding-bottom: 25px;
+  max-width: 500px;
+  border-radius: 15px; /* Added for rounded corners */
+}
+
+.contentRefundPage .container-heading {
+  color: white;
+  text-align: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-radius: 15px 15px 0 0; /* Added for rounded corners at the top */
+}
+
+.contentRefundPage .input-group, .content .row {
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-bottom: 10px;
+  justify-content: space-between;
+  font-size: 18px;
+}
+
+.contentRefundPage .row label {
+  color: white;
+}
+
+.contentRefundPage .input-group-addon {
+  width: 150px; /* Set a fixed width for the label */
+}
+
+.contentRefundPage .input-field {
+  width: calc(100% - 150px); /* Adjust width to align with the label */
+  max-width: 100%; /* Ensure input doesn't exceed container width */
+}
+
+.contentRefundPage .btn-success {
+  display: block;
+  margin-left: auto;
+  margin-right: 40px;
+  border-radius: 8px; /* Added for rounded corners */
+}
+
+.contentRefundPage .nav-item {
+  display: block;
+  margin-left: auto;
+  margin-right: 40px;
+  border-radius: 8px; /* Added for rounded corners */
+}
+
+.contentRefundPage .form-check {
+  margin-left: 40px;
+}

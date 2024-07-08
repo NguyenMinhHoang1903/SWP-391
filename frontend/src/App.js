@@ -53,6 +53,7 @@ const ChangePassword = lazy(() =>
 );
 const SpeedDialBox = lazy(() => import("./components/layouts/SpeedDialBox"));
 const BookingDetail = lazy(() => import("./components/template/BookingDetail"));
+const Refund = lazy(() => import("./components/template/Refund"));
 const Home = lazy(() => import("./components/template/Home"));
 const Footer = lazy(() => import("./components/layouts/Footer"));
 
@@ -226,6 +227,19 @@ function App() {
                         <PrivateRoute>
                           <Suspense fallback={<Loader />}>
                             <BookingDetail />
+                          </Suspense>
+                        </PrivateRoute>
+                      </Suspense>
+                    }
+                  />
+
+                  <Route
+                    path="/refund"
+                    element={
+                      <Suspense fallback={<Loader />}>
+                        <PrivateRoute>
+                          <Suspense fallback={<Loader />}>
+                            <Refund />
                           </Suspense>
                         </PrivateRoute>
                       </Suspense>

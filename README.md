@@ -24,13 +24,13 @@ Book an appointment at Pet's Spa Service for a luxurious pampering experience fo
 
 
 ## Use Case
-| Sprint   |            Use case           |
-|----------|-------------------------------|
-| Sprint 1 | UC02,UC04,UC09,UC20,UC25,UC27 |
-| Sprint 2 |                               |
-| Sprint 3 |                               |
-| Sprint 4 |                               | 
 
+| Sprint | Use Cases |
+|---|---|
+| Sprint 1 | UC02, UC04, UC09, UC20, UC25, UC27 |
+| Sprint 2 | UC01, UC03, UC05, UC06, UC07, UC08, UC12, UC13, UC14, UC26, UC28, UC29, UC30 |
+| Sprint 3 |  |
+| Sprint 4 |  |
 ## **Assignment**
 ### Sprint 1
 | Use case | Name                  |

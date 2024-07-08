@@ -19,6 +19,8 @@ const updatePassword = require('../controller/changePassword')
 const booking = require('../controller/booking');
 const refund = require('../controller/refund');
 
+const myBooking = require('../controller/myBooking')
+
 // Service Import
 const service = require('../controller/service');
 
@@ -57,6 +59,7 @@ router.get("/google/callback",userGoogleCallBack)
 // Booking Router
 router.post('/bookings/create', booking.createBooking);
 router.get('/bookings/read/:id', booking.readOneBooking);
+router.get('/myBooking/read', myBooking.allMyBooking);
 
 // Refund Router
 router.post('/refund/create', refund.createRefund);

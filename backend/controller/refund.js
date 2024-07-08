@@ -25,12 +25,13 @@ const createRefund = async (req, res) => {
     };
 
     const newRefund = new Refund(newRefundData);
-    await newRefund
-      .save()
-      .then((result) => {
-        res.send(result);
-      })
-      .catch((err) => console.log(err));
+  try {
+    const result = await newRefund.save();
+    res.status(201).json({ success: true, message: "Refund created successfully", data: result });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Failed to create refund" });
+  }
   }
 };
 

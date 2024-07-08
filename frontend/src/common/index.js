@@ -60,7 +60,10 @@ const SummaryApi =  {
     refund : {
         url : `${backendDomin}/api/refund/create`,
         method : 'post'
-    }    
-
+    }, 
+    allMyBooking : {
+        url : `${backendDomin}/api/myBooking/read`,
+        method : 'get'
+    }
 }
 export default SummaryApi

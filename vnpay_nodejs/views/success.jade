@@ -1,0 +1,12 @@
+//
+   Created by vinhnt on 6/16/2017.
+
+extends layout
+
+block content
+    if code == "00"
+        h1(style="text-align: center; color: green")  Successful transaction
+    else
+        h1(style="text-align: center; color: red") Transaction failed
+    p(style="text-align: center")
+        a.btn.btn-default(href='http://localhost:3000/') Return to home page

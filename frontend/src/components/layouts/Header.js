@@ -7,6 +7,7 @@ import { ImProfile } from "react-icons/im";
 import { MdOutlineChangeCircle } from "react-icons/md";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
+import BookTwoToneIcon from '@mui/icons-material/BookTwoTone';
 import { MdManageAccounts } from "react-icons/md";
 import { MdHistory } from "react-icons/md";
 import React, { useEffect, useState } from "react";
@@ -121,7 +122,7 @@ const Header = () => {
                       </Link>
                       <Link className="profile" to="/myBookingList">
                         <div class="dropdown-item">
-                          <MdOutlineChangeCircle /> My Booking
+                          <BookTwoToneIcon /> My Booking
                         </div>
                       </Link>
                       <Collapse in={openManageLink}>

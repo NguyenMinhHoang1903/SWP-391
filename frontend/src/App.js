@@ -11,6 +11,8 @@ import { Container } from "react-bootstrap";
 import SummaryApi from "./common";
 import Context from "./context";
 import { Loader } from "./loader/Loader";
+import ManageBooking from "./components/manageBooking/ManageBooking";
+
 // Components
 const Header = lazy(() => import("./components/layouts/Header"));
 const Booking = lazy(() => import("./components/template/Booking"));
@@ -101,12 +103,12 @@ function App() {
 
   const ErrorElement = () => (
     <Container>
-      <div style={{marginTop: 200, marginBottom: 200}}>
-      <h1 className="text-center">SORRY</h1>
-      <h2 className="text-center">We couldn't find that page</h2>
-      <h2 className="text-center">
-        Try going to <Link to="/">Pet Spa's home page</Link>
-      </h2>
+      <div style={{ marginTop: 200, marginBottom: 200 }}>
+        <h1 className="text-center">SORRY</h1>
+        <h2 className="text-center">We couldn't find that page</h2>
+        <h2 className="text-center">
+          Try going to <Link to="/">Pet Spa's home page</Link>
+        </h2>
       </div>
     </Container>
   );
@@ -214,9 +216,9 @@ function App() {
                     path="/forgotpassword"
                     element={
                       <Suspense fallback={<Loader />}>
-                          <Suspense fallback={<Loader />}>
-                            <ForgotPassword />
-                          </Suspense>
+                        <Suspense fallback={<Loader />}>
+                          <ForgotPassword />
+                        </Suspense>
                       </Suspense>
                     }
                   />
@@ -253,6 +255,19 @@ function App() {
                         <PrivateRoute>
                           <Suspense fallback={<Loader />}>
                             <MyBookingDetail />
+                          </Suspense>
+                        </PrivateRoute>
+                      </Suspense>
+                    }
+                  />
+
+                  <Route
+                    path="/manageBooking"
+                    element={
+                      <Suspense fallback={<Loader />}>
+                        <PrivateRoute>
+                          <Suspense fallback={<Loader />}>
+                            <ManageBooking />
                           </Suspense>
                         </PrivateRoute>
                       </Suspense>

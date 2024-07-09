@@ -1,0 +1,7 @@
+const STATUSBOOKING = {
+    PENDING : "PENDING",
+    PROCESS : "PROCESS",
+    FINISHED : "FINISHED",
+    CANCELLED : "CANCELLED",
+}
+export default STATUSBOOKING

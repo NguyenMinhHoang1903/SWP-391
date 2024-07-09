@@ -100,10 +100,10 @@ export default function MyBooking() {
                   onChange={handleFilterChange}
                 >
                   <option value="All">All</option>
-                  <option value="Pending">Pending</option>
-                  <option value="Process">Process</option>
-                  <option value="Finished">Finished</option>
-                  <option value="Canceled">Canceled</option>
+                  <option value="PENDING">Pending</option>
+                  <option value="PROCESS">Process</option>
+                  <option value="FINISHED">Finished</option>
+                  <option value="CANCELLED">Cancelled</option>
                 </select>
               </div>
             </div>

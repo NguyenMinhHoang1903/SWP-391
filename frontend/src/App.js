@@ -59,6 +59,7 @@ const ManageBooking = lazy(() => import("./components/manageBooking/ManageBookin
 const ManageBookingDetail = lazy(() => import("./components/manageBooking/bookingDetail"));
 const MyBookingList = lazy(() => import("./components/myBooking/bookingList"))
 const MyBookingDetail = lazy(() => import("./components/myBooking/bookingDetail"));
+const UpdateBooking = lazy(() => import("./components/manageBooking/updateBooking"));
 
 const Refund = lazy(() => import("./components/template/Refund"));
 const ManageRefund = lazy(() => import("./components/manageRefund/ManageRefund"));
@@ -288,6 +289,19 @@ function App() {
                             <ManageBookingDetail />
                           </Suspense>
                         </PrivateRoute>
+                      </Suspense>
+                    }
+                  />
+
+                  <Route
+                    path="/updateBooking"
+                    element={
+                      <Suspense fallback={<Loader />}>
+                        <ManagerRoute>
+                          <Suspense fallback={<Loader />}>
+                            <UpdateBooking />
+                          </Suspense>
+                        </ManagerRoute>
                       </Suspense>
                     }
                   />

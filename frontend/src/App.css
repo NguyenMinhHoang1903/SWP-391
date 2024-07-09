@@ -2336,7 +2336,6 @@ button {
 }
 
 button:hover {
-  background-color: #751818;
   color: #f4f4f4;
 }
 
@@ -2385,7 +2384,7 @@ button:hover {
 }
 
 .contentRefundPage .container {
-  background-color: rgb(155, 95, 60);
+  background-color: rgb(182, 120, 83);
   margin-top: 30px;
   margin-bottom: 30px;
   padding-bottom: 25px;
@@ -2422,11 +2421,8 @@ button:hover {
   max-width: 100%; /* Ensure input doesn't exceed container width */
 }
 
-.contentRefundPage .btn-success {
-  display: block;
-  margin-left: auto;
-  margin-right: 40px;
-  border-radius: 8px; /* Added for rounded corners */
+.contentRefundPage .form-check {
+  margin-left: 40px;
 }
 
 .contentRefundPage .nav-item {
@@ -2436,6 +2432,38 @@ button:hover {
   border-radius: 8px; /* Added for rounded corners */
 }
 
-.contentRefundPage .form-check {
-  margin-left: 40px;
+.contentRefundPage .btn-success {
+  border-radius: 8px; /* Rounded corners for buttons */
+  width: 50%; /* Ensure buttons take full width of their container */
+}
+
+.contentRefundPage .button.row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px; /* Adjust as needed */
+}
+
+.contentRefundPage .button.row .col-6 {
+  flex: 1; /* Make each column take half the width */
+}
+
+/* Booking list*/
+.status-Pending {
+  color: rgba(255, 238, 0, 0.738);
+}
+
+.status-Process {
+  color: rgba(0, 0, 255, 0.742);
+}
+
+.status-Finished {
+  color: rgba(0, 128, 0, 0.737);
+}
+
+.status-Canceled {
+  color: rgba(255, 0, 0, 0.616);
+}
+
+.row .form-select{
+  width: 100px;
 }

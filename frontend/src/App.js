@@ -250,7 +250,7 @@ function App() {
                   />
 
                   <Route
-                    path="/mybooking/:id"
+                    path="/mybooking"
                     element={
                       <Suspense fallback={<Loader />}>
                         <PrivateRoute>

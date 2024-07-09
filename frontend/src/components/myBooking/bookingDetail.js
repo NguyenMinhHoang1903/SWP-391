@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import SummaryApi from "../../common";
 import "react-tooltip/dist/react-tooltip.css";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import PetsIcon from '@mui/icons-material/Pets';
@@ -9,18 +10,38 @@ import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import TodayIcon from '@mui/icons-material/Today';
 import { FaCircleCheck } from "react-icons/fa6";
-import RefundPage from '../template/Refund'; // Assuming you have a separate RefundPage component
 
 export default function BookingDetail() {
+  const user = useSelector((state) => state?.user?.user);
+  const [booking, setBooking] = useState("");
   const location = useLocation();
-  const { state } = location;
-  const { userName, email, petName, petType, date, services, combo, total } = state || {};
+  const passedid = location.search.substring(1);
+  const formattedDate = booking.date ? new Date(booking.date).toLocaleString() : '';
+  const [canRefund, setCanRefund] = useState(false); // State for enabling/disabling Refund button
 
-  const formattedDate = date ? new Date(date).toLocaleString() : '';
 
-  const user = useSelector(state => state?.user?.user);
+  const readOneBooking = async () => {
+    await fetch(`http://localhost:5000/api/myBooking/readOne/${passedid}`)
+      .then((res) => res.json())
+      .then((json) => setBooking(json.data))
+      .catch((err) => console.log(err));
+  };
 
-  const [showRefundForm, setShowRefundForm] = useState(false);
+  useEffect(() => {
+    readOneBooking();
+  }, []);
+
+  useEffect(() => {
+    // Calculate current time
+    const currentTime = new Date();
+    // Calculate 12 hours before booking time
+    const bookingTime = new Date(booking.date);
+    const timeBeforeBooking = new Date(bookingTime);
+    timeBeforeBooking.setHours(bookingTime.getHours() - 12);
+
+    // Enable refund if current time is before 12 hours of booking time
+    setCanRefund(currentTime < timeBeforeBooking);
+  }, [booking.date]);
 
   return (
     <div className="bookingDetail-component">
@@ -36,20 +57,20 @@ export default function BookingDetail() {
                 <div className="col-6">
                   <div className="mb-3 first">
                     <div className="inputBookDetail">
-                      <PersonOutlineIcon /> Name: {userName}
+                      <PersonOutlineIcon /> Name: {booking.userName}
                     </div>
                     <div className="inputBookDetail">
-                      <PetsIcon /> Pet type: {petType}
+                      <PetsIcon /> Pet type: {booking.petType}
                     </div>
                     <div className="inputBookDetail">
-                      <PetsIcon /> Pet's name: {petName}
+                      <PetsIcon /> Pet's name: {booking.petName}
                     </div>
                   </div>
                 </div>
                 <div className="col-6">
                   <div className="mb-3 first">
                     <div className="inputBookDetail">
-                      <MailOutlineIcon /> Email: {email}
+                      <MailOutlineIcon /> Email: {booking.email}
                     </div>
                     <div className="inputBookDetail">
                       <TodayIcon /> Date Time: {formattedDate}
@@ -61,8 +82,8 @@ export default function BookingDetail() {
 
             <div className="service-list">
               <h2>Service List</h2>
-              {services ? (
-                services.map((service, index) => (
+              {booking.services ? (
+                booking.services.map((service, index) => (
                   <div className="service" key={index}>
                     <div>{service}</div>
                     <FaCircleCheck />
@@ -73,9 +94,9 @@ export default function BookingDetail() {
               )}
 
               <h2>Combo</h2>
-              {combo ? (
+              {booking.combo ? (
                 <div className="service">
-                  {combo}
+                  {booking.combo}
                   <FaCircleCheck />
                 </div>
               ) : (
@@ -88,7 +109,7 @@ export default function BookingDetail() {
                 <h3>Total Amount:</h3>
               </div>
               <div className="col-md-2 text-right">
-                <h3>{total} $</h3>
+                <h3>{booking.total} VND</h3>
               </div>
             </div>
 
@@ -101,16 +122,14 @@ export default function BookingDetail() {
                 </Link>
               </div>
               <div className="col-6 text-right">
-                <button className="btn btn-danger" type="button" onClick={() => setShowRefundForm(!showRefundForm)}>
-                  Cancel
-                </button>
+                <Link to={`/refund?${booking._id}`}>
+                  <button className="btn btn-success" type="button" disabled={!canRefund}>
+                    Refund
+                  </button>
+                </Link>
               </div>
             </div>
           </form>
-
-          {showRefundForm && (
-            <RefundPage /> // Render the RefundPage component when showRefundForm is true
-          )}
         </div>
       </div>
     </div>

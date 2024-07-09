@@ -16,7 +16,8 @@ export default function MyBooking() {
   const user = useSelector((state) => state?.user?.user);
   const dispatch = useDispatch();
   const [MyBookingList, setAllBooking] = useState([]);
-  
+  const [filteredStatus, setFilteredStatus] = useState("All"); // State to store filtered status
+
   const [data, setData] = useState({
     userName: user?.name || "",
     petName: "",
@@ -34,6 +35,10 @@ export default function MyBooking() {
     }
   }, [user]);
 
+  useEffect(() => {
+    fetchAllBooking();
+  }, []);
+
   const fetchAllBooking = async () => {
     try {
       const fetchData = await fetch(SummaryApi.allMyBooking.url, {
@@ -45,6 +50,8 @@ export default function MyBooking() {
       if (dataResponse.success) {
         // Filter bookings by logged-in user
         const userBookings = dataResponse.data.filter(booking => booking.userName === user.name);
+        // Sort bookings by date in ascending order (oldest to newest)
+        userBookings.sort((a, b) => new Date(b.date) - new Date(a.date));
         setAllBooking(userBookings);
       } else {
         toast.error(dataResponse.message);
@@ -52,15 +59,18 @@ export default function MyBooking() {
     } catch (error) {
       toast.error("Failed to fetch bookings");
     }
-  };  
+  };
 
-  useEffect(() => {
-    fetchAllBooking();
-  }, []);
+  const handleFilterChange = (event) => {
+    setFilteredStatus(event.target.value);
+  };
 
-  const [isOpen, setIsOpen] = useState(false);
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
+  const filterBookings = (booking) => {
+    if (filteredStatus === "All") {
+      return true; // Show all bookings if "All" is selected
+    } else {
+      return booking.status === filteredStatus; // Filter by selected status
+    }
   };
 
   return (
@@ -79,6 +89,22 @@ export default function MyBooking() {
                   src="assets/imgs/gif-1.gif"
                   alt=""
                 />
+              </div>
+            </div>
+            {/* Filter bar */}
+            <div className="row justify-content-end mb-3">
+              <div className="col-auto">
+                <select
+                  className="form-select"
+                  value={filteredStatus}
+                  onChange={handleFilterChange}
+                >
+                  <option value="All">All</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Process">Process</option>
+                  <option value="Finished">Finished</option>
+                  <option value="Canceled">Canceled</option>
+                </select>
               </div>
             </div>
             <table>
@@ -108,7 +134,7 @@ export default function MyBooking() {
                 </tr>
               </thead>
               <tbody>
-                {MyBookingList.map((data, index) => {
+                {MyBookingList.filter(filterBookings).map((data, index) => {
                   const date = new Date(data?.date);
                   const formattedDate = format(date, 'yyyy-MM-dd');
                   const formattedTime = format(date, 'HH:mm');
@@ -119,22 +145,18 @@ export default function MyBooking() {
                       <td style={{ textAlign: "center" }}>{formattedDate}</td>
                       <td style={{ textAlign: "center" }}>{formattedTime}</td>
                       <td style={{ textAlign: "right" }}>{data?.total}</td>
-                      <td style={{ textAlign: "center" }}>{data?.status}</td>
+                      <td className={`status-${data?.status}`}>{data?.status}</td>
                       <td>
-                      <Link
-                        className="update-button"
-                        to={{
-                          pathname: `/mybooking/${data._id}`,
-                          state: { ...data }
-                        }}
-                      >
-                        <Tooltip TransitionComponent={Zoom} arrow>
-                          <IconButton>
-                            <SubjectTwoToneIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-
+                        <Link
+                          className="update-button"
+                          to={`/mybooking?${data._id}`}
+                        >
+                          <Tooltip TransitionComponent={Zoom} arrow>
+                            <IconButton>
+                              <SubjectTwoToneIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
                       </td>
                     </tr>
                   );

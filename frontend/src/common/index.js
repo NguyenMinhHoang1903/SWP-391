@@ -65,10 +65,6 @@ const SummaryApi =  {
         url : `${backendDomin}/api/myBooking/read`,
         method : 'get'
     },
-    myBooking : {
-        url : `${backendDomin}/api/myBooking/read/:id`,
-        method : 'get'
-    },
     allListBooking : {
         url : `${backendDomin}/api/listBooking/read`,
         method : 'get'

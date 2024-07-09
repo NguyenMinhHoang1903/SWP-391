@@ -24,6 +24,8 @@ const readOneBooking = async (req, res) => {
   try {
     const id = req.params.id;
     const booking = await Booking.findOne({ _id: id });
+    console.log("Booking"+booking)
+    console.log("Booking"+req.params.id)
     if (booking) {
       res.json({
         message: "Booking Found",

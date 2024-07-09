@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from "react-router-dom";
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import AccountBalanceRoundedIcon from '@mui/icons-material/AccountBalanceRounded';
 import { IconButton, Zoom } from "@mui/material";
@@ -19,11 +19,15 @@ import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import PersonIcon from '@mui/icons-material/Person';
 import CloseTwoToneIcon from '@mui/icons-material/CloseTwoTone';
-import { Tooltip } from 'react-tooltip'; // Updated import
+import SwipeRightAltTwoToneIcon from '@mui/icons-material/SwipeRightAltTwoTone';
+import { Tooltip } from 'react-tooltip';
 import SummaryApi from "../../common/index";
 
 const RefundPage = () => {
   const user = useSelector(state => state?.user?.user);
+  const navigate = useNavigate();
+  //const [booking, setBooking] = useState("");
+  //const location = useLocation();
 
   const [data, setData] = useState({
     reason: "",
@@ -164,24 +168,13 @@ const RefundPage = () => {
     }
   };
 
+  const handleBack = () => {
+    navigate(-1);
+  };
+
   return (
     <div className='contentRefundPage'>
       <div className='container'>
-      <div className="text-right">
-      <Link
-                        className="update-button"
-                        to={{
-                          pathname: `/mybooking/${data._id}`,
-                          state: { ...data }
-                        }}
-                      >
-                        <Tooltip TransitionComponent={Zoom} arrow>
-                          <IconButton>
-                            <CloseTwoToneIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Link>
-                </div>
         <div className='container-heading'><h1>Refund Information</h1></div>
         <form onSubmit={handleSubmit}>
           <div className='refund'>
@@ -334,7 +327,7 @@ const RefundPage = () => {
                       onChange={handleSwitchChange}
                     />
                     <label className="form-check-label" htmlFor="switch">
-                      Check this button to be sure you want to CANCEL
+                      Check this button to be sure you want to CANCEL this booking
                     </label>
                   </div>
                 </a>
@@ -342,9 +335,20 @@ const RefundPage = () => {
               </div>
             </div>
           </div>
-                <div className="text-right">
-                <button className='btn btn-success' type='submit' disabled={!data.agree}>Accept</button>
+
+          <div className='button row' >
+                <div className="col-6 text-left">
+                  <button className="btn btn-success" variant="contained"  onClick={handleBack} >
+                  Back
+                  </button>
                 </div>
+
+                <div className="col-6 text-right">
+                  <button type="submit" className="btn btn-success" disabled={!data.agree}>
+                    Accept
+                  </button>
+                </div>
+          </div>
         </form>
       </div>
     </div>

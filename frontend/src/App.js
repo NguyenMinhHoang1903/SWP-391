@@ -12,6 +12,7 @@ import SummaryApi from "./common";
 import Context from "./context";
 import { Loader } from "./loader/Loader";
 import ManageBooking from "./components/manageBooking/ManageBooking";
+import ManageRefund from "./components/manageRefund/ManageRefund";
 
 // Components
 const Header = lazy(() => import("./components/layouts/Header"));
@@ -281,6 +282,19 @@ function App() {
                         <PrivateRoute>
                           <Suspense fallback={<Loader />}>
                             <Refund />
+                          </Suspense>
+                        </PrivateRoute>
+                      </Suspense>
+                    }
+                  />
+
+                  <Route
+                    path="/manageRefund"
+                    element={
+                      <Suspense fallback={<Loader />}>
+                        <PrivateRoute>
+                          <Suspense fallback={<Loader />}>
+                            <ManageRefund />
                           </Suspense>
                         </PrivateRoute>
                       </Suspense>

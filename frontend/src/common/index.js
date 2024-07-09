@@ -72,6 +72,10 @@ const SummaryApi =  {
     allListBooking : {
         url : `${backendDomin}/api/listBooking/read`,
         method : 'get'
+    },
+    allListRefund : {
+        url : `${backendDomin}/api/listRefund/read`,
+        method : 'get'
     }
 }
 export default SummaryApi

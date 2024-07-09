@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from "react-router-dom";
-import { useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
-import SummaryApi from "../../common";
 import "react-tooltip/dist/react-tooltip.css";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import PetsIcon from '@mui/icons-material/Pets';

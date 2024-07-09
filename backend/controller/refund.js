@@ -20,6 +20,17 @@ const createRefund = async (req, res) => {
       return res.status(400).json({ success: false, message: "Refund already requested for this booking" });
     }
 
+    const bookingDate = new Date(existingBooking.date);
+    const currentTime = new Date();
+    const hoursDiff = (bookingDate - currentTime) / (1000 * 60 * 60);
+
+    let refundAmount = 0;
+    if (hoursDiff > 12) {
+      refundAmount = existingBooking.total; // 100% refund
+    } else {
+      refundAmount = existingBooking.total * 0.7; // 70% refund
+    }
+
     const newRefundData = {
       userName: req.body.userName,
       bookingID: id,
@@ -27,7 +38,7 @@ const createRefund = async (req, res) => {
       bank: req.body.bank,
       bankNumber: req.body.bankNumber,
       holder: req.body.holder,
-      amount: req.body.amount,
+      amount: refundAmount, // Set the calculated refund amount
       status: req.body.status || "Pending", // Set default status to "Pending"
     };
 
@@ -43,7 +54,52 @@ const createRefund = async (req, res) => {
   }
 };
 
+
+// Uncomment the other functions if needed
+/*
+const readAllRefund = async (req, res) => {
+  await Refund.find()
+    .sort({ userName: 1 })
+    .then((result) => {
+      res.send(result);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+const readOneRefund = async (req, res) => {
+  let query = { _id: req.params.id.toString() };
+
+  await Refund.findOne(query)
+    .then((result) => {
+      res.send(result);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+const readAllServiceOfRefund = async (req, res) => {
+  let query1 = { _id: req.params.id.toString() };
+  const refund = await Refund.findOne(query1);
+
+  let query2 = { _id: { $in: refund.bookingID } };
+  await Booking.find(query2)
+    .sort({ name: 1 })
+    .then((result) => {
+      res.send(result);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+*/
+
 module.exports = {
   indexRefund,
   createRefund,
+  // readAllRefund,
+  // readOneRefund,
+  // readAllServiceOfRefund,
 };

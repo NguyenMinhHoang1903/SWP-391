@@ -18,8 +18,6 @@ import WorkIcon from '@mui/icons-material/Work';
 import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import PersonIcon from '@mui/icons-material/Person';
-import CloseTwoToneIcon from '@mui/icons-material/CloseTwoTone';
-import SwipeRightAltTwoToneIcon from '@mui/icons-material/SwipeRightAltTwoTone';
 import { Tooltip } from 'react-tooltip';
 import SummaryApi from "../../common/index";
 
@@ -95,6 +93,39 @@ const RefundPage = () => {
     { title: "SAI GON BANK" },
   ];
 
+  useEffect(() => {
+    // Fetch booking details to calculate the refund amount
+    const fetchBookingDetails = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/api/myBooking/readOne/${passedid}`);
+        const booking = await response.json();
+
+        if (booking) {
+          const bookingDate = new Date(booking.data.date);
+          const currentTime = new Date();
+          const hoursDiff = (bookingDate - currentTime) / (1000 * 60 * 60);
+
+          let refundAmount = 0;
+          if (hoursDiff > 2) {
+            refundAmount = booking.data.total; // 100% refund
+          } else {
+            refundAmount = booking.data.total * 0.7; // 70% refund
+          }
+
+          setData(prev => ({
+            ...prev,
+            amount: refundAmount,
+          }));
+        }
+      } catch (error) {
+        console.error("Error fetching booking details:", error);
+        toast.error("Failed to fetch booking details");
+      }
+    };
+
+    fetchBookingDetails();
+  }, [passedid]);
+
   const defaultProps = {
     options: bankingOptions,
     getOptionLabel: (option) => option.title,
@@ -131,6 +162,10 @@ const RefundPage = () => {
     }));
   };
 
+  const handleBack = () => {
+    navigate(-1);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Form Data on Submit:", data);
@@ -146,8 +181,8 @@ const RefundPage = () => {
     }
 
     // Validate that bankNumber and amount are numbers
-    if (!numberRegex.test(data.bankNumber) || !numberRegex.test(data.amount)) {
-      toast.error("Bank number and amount must be numbers");
+    if (!numberRegex.test(data.bankNumber)) {
+      toast.error("Bank number  must be numbers");
       return;
     }
 
@@ -169,7 +204,8 @@ const RefundPage = () => {
       const responseData = await createRefund.json();
 
       if (responseData.success) {
-        toast.success("Refund details submitted successfully");
+        toast.success("Money will be refunded within 3-5 business days");
+        handleBack();
       } else {
         toast.error(responseData.message);
       }
@@ -177,10 +213,6 @@ const RefundPage = () => {
       toast.error("An error occurred while submitting the form");
       console.error("Fetch Error:", error);
     }
-  };
-
-  const handleBack = () => {
-    navigate(-1);
   };
 
   return (
@@ -315,7 +347,7 @@ const RefundPage = () => {
                     ),
                   }}
                   sx={{ width: '55%' }}
-                  required
+                  disabled
                 />
               </div>
 
@@ -349,7 +381,7 @@ const RefundPage = () => {
 
           <div className='button row' >
                 <div className="col-6 text-left">
-                  <button className="btn btn-success" variant="contained"  onClick={handleBack} >
+                  <button className="btn btn-success" variant="contained" type="button"  onClick={handleBack} >
                   Back
                   </button>
                 </div>

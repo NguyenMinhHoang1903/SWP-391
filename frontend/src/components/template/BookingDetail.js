@@ -1,7 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import "react-tooltip/dist/react-tooltip.css";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import DeleteIcon from '@mui/icons-material/Delete';
 import PetsIcon from '@mui/icons-material/Pets';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';

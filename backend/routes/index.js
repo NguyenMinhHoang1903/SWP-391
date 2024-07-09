@@ -65,7 +65,7 @@ router.get('/myBooking/readOne/:id', myBooking.readOneBooking);
 router.get('/listBooking/read', listBooking.allListBooking);
 
 // Refund Router
-router.post('/refund/create', refund.createRefund);
+router.post('/refund/createOne/:id', refund.createRefund);
 //router.get('/refund/read', refund.readAllRefund);
 //router.get('/refund/readOne/:id', refund.readOneRefund);
 router.get('/listRefund/read', listRefund.allListRefund);

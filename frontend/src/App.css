@@ -2452,7 +2452,7 @@ button:hover {
   color: rgba(255, 238, 0, 0.738);
 }
 
-.status-Process {
+.status-Proccess {
   color: rgba(0, 0, 255, 0.742);
 }
 
@@ -2460,7 +2460,7 @@ button:hover {
   color: rgba(0, 128, 0, 0.737);
 }
 
-.status-Canceled {
+.status-Cancelled {
   color: rgba(255, 0, 0, 0.616);
 }
 

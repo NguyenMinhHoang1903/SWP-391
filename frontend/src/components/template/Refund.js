@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import AccountBalanceRoundedIcon from '@mui/icons-material/AccountBalanceRounded';
 import { IconButton, Zoom } from "@mui/material";
@@ -26,10 +26,12 @@ import SummaryApi from "../../common/index";
 const RefundPage = () => {
   const user = useSelector(state => state?.user?.user);
   const navigate = useNavigate();
-  //const [booking, setBooking] = useState("");
-  //const location = useLocation();
+  const location = useLocation();
+  const passedid = location.search.substring(1);
 
   const [data, setData] = useState({
+    userName: "",
+    bookingID: "",
     reason: "",
     bank: "",
     bankNumber: "",
@@ -38,6 +40,16 @@ const RefundPage = () => {
     agree: false,
     status: "Pending"
   });
+
+  useEffect(() => {
+    if (user) {
+      setData(prev => ({
+        ...prev,
+        userName: user.name,
+      }));
+    }
+  }, [user]);
+
   const [isOpen, setIsOpen] = useState(false);
 
   const reasonOptions = [
@@ -146,7 +158,7 @@ const RefundPage = () => {
     }
 
     try {
-      const fetchResponse = await fetch(SummaryApi.refund.url, {
+      const createRefund = await fetch(`http://localhost:5000/api/refund/createOne/${passedid}`, {
         method: SummaryApi.refund.method,
         headers: {
           "Content-Type": "application/json",
@@ -154,8 +166,7 @@ const RefundPage = () => {
         body: JSON.stringify(data),
       });
 
-      const responseData = await fetchResponse.json();
-      console.log("API Response:", responseData);
+      const responseData = await createRefund.json();
 
       if (responseData.success) {
         toast.success("Refund details submitted successfully");

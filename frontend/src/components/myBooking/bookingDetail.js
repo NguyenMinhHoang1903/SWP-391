@@ -12,13 +12,11 @@ import TodayIcon from '@mui/icons-material/Today';
 import { FaCircleCheck } from "react-icons/fa6";
 
 export default function BookingDetail() {
-  const user = useSelector((state) => state?.user?.user);
   const [booking, setBooking] = useState("");
   const location = useLocation();
   const passedid = location.search.substring(1);
   const formattedDate = booking.date ? new Date(booking.date).toLocaleString() : '';
   const [canRefund, setCanRefund] = useState(false); // State for enabling/disabling Refund button
-
 
   const readOneBooking = async () => {
     await fetch(`http://localhost:5000/api/myBooking/readOne/${passedid}`)
@@ -34,12 +32,12 @@ export default function BookingDetail() {
   useEffect(() => {
     // Calculate current time
     const currentTime = new Date();
-    // Calculate 12 hours before booking time
+    // Calculate 2 hours before booking time
     const bookingTime = new Date(booking.date);
     const timeBeforeBooking = new Date(bookingTime);
-    timeBeforeBooking.setHours(bookingTime.getHours() - 12);
+    timeBeforeBooking.setHours(bookingTime.getHours() - 2);
 
-    // Enable refund if current time is before 12 hours of booking time
+    // Enable refund if current time is before 2 hours of booking time
     setCanRefund(currentTime < timeBeforeBooking);
   }, [booking.date]);
 
@@ -122,11 +120,13 @@ export default function BookingDetail() {
                 </Link>
               </div>
               <div className="col-6 text-right">
-                <Link to={`/refund?${booking._id}`}>
-                  <button className="btn btn-success" type="button" disabled={!canRefund}>
-                    Refund
-                  </button>
-                </Link>
+                {booking.status === "Proccess" && (
+                  <Link to={`/refund?${booking._id}`}>
+                    <button className="btn btn-success" type="button" disabled={!canRefund}>
+                      Refund
+                    </button>
+                  </Link>
+                )}
               </div>
             </div>
           </form>

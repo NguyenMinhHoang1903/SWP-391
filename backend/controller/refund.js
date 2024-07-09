@@ -1,5 +1,5 @@
 const Refund = require("../models/refundModel");
-//const Booking = require("../models/bookingModel");
+const Booking = require("../models/bookingModel");
 
 const indexRefund = (req, res) => {
   res.send("<h1>This is Refund page</h1>");
@@ -7,15 +7,22 @@ const indexRefund = (req, res) => {
 
 // CREATE
 const createRefund = async (req, res) => {
-  //let query = { bookingID: req.body.bookingID };
+  const id = req.params.id;
 
-  //const existingBookingID = await Refund.findOne(query);
+  try {
+    const existingBooking = await Booking.findById(id);
+    if (!existingBooking) {
+      return res.status(404).json({ success: false, message: "Booking not found" });
+    }
 
-  //if (existingBookingID) res.json({ message: 0 });
-  /*else*/ {
+    const existingRefund = await Refund.findOne({ bookingID: id });
+    if (existingRefund) {
+      return res.status(400).json({ success: false, message: "Refund already requested for this booking" });
+    }
+
     const newRefundData = {
       userName: req.body.userName,
-      //bookingID: req.body.bookingID,
+      bookingID: id,
       reason: req.body.reason,
       bank: req.body.bank,
       bankNumber: req.body.bankNumber,
@@ -25,61 +32,18 @@ const createRefund = async (req, res) => {
     };
 
     const newRefund = new Refund(newRefundData);
-  try {
     const result = await newRefund.save();
+
+    await Booking.updateOne({ _id: id }, { status: "Cancelled" });
+
     res.status(201).json({ success: true, message: "Refund created successfully", data: result });
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, message: "Failed to create refund" });
   }
-  }
 };
-
-// Uncomment the other functions if needed
-/*
-const readAllRefund = async (req, res) => {
-  await Refund.find()
-    .sort({ userName: 1 })
-    .then((result) => {
-      res.send(result);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
-
-const readOneRefund = async (req, res) => {
-  let query = { _id: req.params.id.toString() };
-
-  await Refund.findOne(query)
-    .then((result) => {
-      res.send(result);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
-
-const readAllServiceOfRefund = async (req, res) => {
-  let query1 = { _id: req.params.id.toString() };
-  const refund = await Refund.findOne(query1);
-
-  let query2 = { _id: { $in: refund.bookingID } };
-  await Booking.find(query2)
-    .sort({ name: 1 })
-    .then((result) => {
-      res.send(result);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
-*/
 
 module.exports = {
   indexRefund,
   createRefund,
-  // readAllRefund,
-  // readOneRefund,
-  // readAllServiceOfRefund,
 };

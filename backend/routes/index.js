@@ -14,6 +14,7 @@ const deleteUser = require('../controller/deleteUser')
 const updateUser = require('../controller/updateUser')
 const updateProfile = require('../controller/updateProfile')
 const updatePassword = require('../controller/changePassword')
+const updateBooking = require('../controller/updateBooking')
 
 // Booking Import
 const booking = require('../controller/booking');
@@ -63,6 +64,7 @@ router.get('/bookings/read/:id', booking.readOneBooking);
 router.get('/myBooking/read', myBooking.allMyBooking);
 router.get('/myBooking/readOne/:id', myBooking.readOneBooking);
 router.get('/listBooking/read', listBooking.allListBooking);
+router.post("/update-booking", updateBooking);
 
 // Refund Router
 router.post('/refund/createOne/:id', refund.createRefund);

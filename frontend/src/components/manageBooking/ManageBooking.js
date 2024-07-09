@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import SummaryApi from "../../common";
 import { format } from 'date-fns';
+import Tooltip from "@mui/material/Tooltip";
+import { IconButton, Zoom } from "@mui/material";
 import EventTwoToneIcon from '@mui/icons-material/EventTwoTone';
 import SubjectTwoToneIcon from '@mui/icons-material/SubjectTwoTone';
 import PaymentsTwoToneIcon from '@mui/icons-material/PaymentsTwoTone';
@@ -110,19 +112,15 @@ export default function ManageBooking() {
                       <td style={{ textAlign: "right" }}>{data?.total}</td>
                       <td style={{ textAlign: "center" }}>{data?.status}</td>
                       <td>
-                        <Link to={{
-                          pathname: `/mybooking/${data._id}`,
-                          state: { ...data }
-                        }}>
-                          <button
-                          /*className="edit"
-                          onClick={() => {
-                            setUpdateUserDetails(data);
-                            setOpenUpdateRole(true);
-                          }}*/
-                          >
-                            <SubjectTwoToneIcon />
-                          </button>
+                      <Link
+                          className="update-button"
+                          to={`/ManageBookingDetail?${data._id}`}
+                        >
+                          <Tooltip TransitionComponent={Zoom} arrow>
+                            <IconButton>
+                              <SubjectTwoToneIcon />
+                            </IconButton>
+                          </Tooltip>
                         </Link>
                       </td>
                     </tr>

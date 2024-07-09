@@ -145,7 +145,7 @@ export default function MyBooking() {
                       <td style={{ textAlign: "center" }}>{formattedDate}</td>
                       <td style={{ textAlign: "center" }}>{formattedTime}</td>
                       <td style={{ textAlign: "right" }}>{data?.total}</td>
-                      <td className={`status-${data?.status}`}>{data?.status}</td>
+                      <td className={`status-${data?.status}`} style={{ textAlign: "center" }}>{data?.status}</td>
                       <td>
                         <Link
                           className="update-button"

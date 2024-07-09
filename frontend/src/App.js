@@ -11,8 +11,6 @@ import { Container } from "react-bootstrap";
 import SummaryApi from "./common";
 import Context from "./context";
 import { Loader } from "./loader/Loader";
-import ManageBooking from "./components/manageBooking/ManageBooking";
-import ManageRefund from "./components/manageRefund/ManageRefund";
 
 // Components
 const Header = lazy(() => import("./components/layouts/Header"));
@@ -55,10 +53,16 @@ const ChangePassword = lazy(() =>
   import("./components/template/ChangePassword")
 );
 const SpeedDialBox = lazy(() => import("./components/layouts/SpeedDialBox"));
+
 const BookingDetail = lazy(() => import("./components/template/BookingDetail"));
+const ManageBooking = lazy(() => import("./components/manageBooking/ManageBooking"));
+const ManageBookingDetail = lazy(() => import("./components/manageBooking/bookingDetail"));
 const MyBookingList = lazy(() => import("./components/myBooking/bookingList"))
 const MyBookingDetail = lazy(() => import("./components/myBooking/bookingDetail"));
+
 const Refund = lazy(() => import("./components/template/Refund"));
+const ManageRefund = lazy(() => import("./components/manageRefund/ManageRefund"));
+
 const Home = lazy(() => import("./components/template/Home"));
 const Footer = lazy(() => import("./components/layouts/Footer"));
 
@@ -269,6 +273,19 @@ function App() {
                         <PrivateRoute>
                           <Suspense fallback={<Loader />}>
                             <ManageBooking />
+                          </Suspense>
+                        </PrivateRoute>
+                      </Suspense>
+                    }
+                  />
+
+                  <Route
+                    path="/ManageBookingDetail"
+                    element={
+                      <Suspense fallback={<Loader />}>
+                        <PrivateRoute>
+                          <Suspense fallback={<Loader />}>
+                            <ManageBookingDetail />
                           </Suspense>
                         </PrivateRoute>
                       </Suspense>

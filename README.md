@@ -47,8 +47,7 @@ Book an appointment at Pet's Spa Service for a luxurious pampering experience fo
 | Member | Use Cases |
 |---|---|
 | Huỳnh Minh Khôi | UC01, UC03, UC05 |
-| Đoàn Nguyễn Thúy Hà | UC06, UC13, UC14 |
+| Đoàn Nguyễn Thúy Hà | UC08, UC13, UC14 |
 | Nguyễn Minh Hoàng | UC07, UC29 |
-| Tạ Minh Đức | UC19, UC26 |
-| Nguyễn Thái Thuận | UC08, UC28 |
+| Tạ Minh Đức | UC19, UC26 UC06, UC28 |
 | Cao Minh Quý | UC12, UC30 |

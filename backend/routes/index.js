@@ -47,9 +47,6 @@ router.post("/update-user", updateUser);
 router.post("/update-profile", updateProfile);
 router.post("/update-password", updatePassword);
 
-
-
-
 // Google Router 
 router.get("/login/success",userGoogleLogin)
 router.get("/login/failed",userGoogleLoginFaile)
@@ -60,6 +57,7 @@ router.get("/google/callback",userGoogleCallBack)
 router.post('/bookings/create', booking.createBooking);
 router.get('/bookings/read/:id', booking.readOneBooking);
 router.get('/myBooking/read', myBooking.allMyBooking);
+router.get('/myBooking/readOne/:id', myBooking.readOneBooking);
 
 // Refund Router
 router.post('/refund/create', refund.createRefund);

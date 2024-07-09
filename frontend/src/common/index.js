@@ -64,6 +64,10 @@ const SummaryApi =  {
     allMyBooking : {
         url : `${backendDomin}/api/myBooking/read`,
         method : 'get'
+    },
+    myBooking : {
+        url : `${backendDomin}/api/myBooking/read/:id`,
+        method : 'get'
     }
 }
 export default SummaryApi

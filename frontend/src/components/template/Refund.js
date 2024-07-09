@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { Link, useLocation } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import AccountBalanceRoundedIcon from '@mui/icons-material/AccountBalanceRounded';
+import { IconButton, Zoom } from "@mui/material";
 import AddCardRoundedIcon from '@mui/icons-material/AddCardRounded';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -16,6 +18,7 @@ import WorkIcon from '@mui/icons-material/Work';
 import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import PersonIcon from '@mui/icons-material/Person';
+import CloseTwoToneIcon from '@mui/icons-material/CloseTwoTone';
 import { Tooltip } from 'react-tooltip'; // Updated import
 import SummaryApi from "../../common/index";
 
@@ -164,12 +167,27 @@ const RefundPage = () => {
   return (
     <div className='contentRefundPage'>
       <div className='container'>
+      <div className="text-right">
+      <Link
+                        className="update-button"
+                        to={{
+                          pathname: `/mybooking/${data._id}`,
+                          state: { ...data }
+                        }}
+                      >
+                        <Tooltip TransitionComponent={Zoom} arrow>
+                          <IconButton>
+                            <CloseTwoToneIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+                </div>
         <div className='container-heading'><h1>Refund Information</h1></div>
         <form onSubmit={handleSubmit}>
           <div className='refund'>
             <div className='refund-details'>
               <div className='input-group mb-3'>
-                <div className="input-group-addon">Reason</div>
+                <div className="input-group-addon" style={{ textAlign: "left" }}>Reason</div>
                 <Autocomplete
                   {...reasonProps}
                   id="reason-select"
@@ -197,7 +215,7 @@ const RefundPage = () => {
               </div>
 
               <div className='input-group mb-3'>
-                <div className="input-group-addon">Bank Account</div>
+                <div className="input-group-addon" style={{ textAlign: "left" }}>Bank Account</div>
                 <Autocomplete
                   {...defaultProps}
                   id="disable-close-on-select"
@@ -233,7 +251,7 @@ const RefundPage = () => {
               </div>
 
               <div className='input-group mb-3'>
-                <div className="input-group-addon">Card number</div>
+                <div className="input-group-addon" style={{ textAlign: "left" }}>Card number</div>
                 <TextField
                   id="standard-basic" variant="standard"
                   type='text'
@@ -256,7 +274,7 @@ const RefundPage = () => {
               </div>
 
               <div className='input-group mb-3'>
-                <div className="input-group-addon">Card holder</div>
+                <div className="input-group-addon" style={{ textAlign: "left" }}>Card holder</div>
                 <TextField
                   id="standard-basic" variant="standard"
                   type='text'
@@ -277,7 +295,7 @@ const RefundPage = () => {
               </div>
 
               <div className='input-group mb-3'>
-                <div className="input-group-addon">Refunded amount</div>
+                <div className="input-group-addon" style={{ textAlign: "left" }}>Refunded amount</div>
                 <TextField
                   id="standard-basic" variant="standard"
                   type='text'
@@ -324,7 +342,9 @@ const RefundPage = () => {
               </div>
             </div>
           </div>
-          <button className='btn btn-success' type='submit' disabled={!data.agree}>Accept</button>
+                <div className="text-right">
+                <button className='btn btn-success' type='submit' disabled={!data.agree}>Accept</button>
+                </div>
         </form>
       </div>
     </div>

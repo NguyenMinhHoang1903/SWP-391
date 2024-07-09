@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import SummaryApi from "../../common";
+import Tooltip from "@mui/material/Tooltip";
 import { format } from 'date-fns';
+import { IconButton, Zoom } from "@mui/material";
 import EventTwoToneIcon from '@mui/icons-material/EventTwoTone';
 import SubjectTwoToneIcon from '@mui/icons-material/SubjectTwoTone';
 import PaymentsTwoToneIcon from '@mui/icons-material/PaymentsTwoTone';
@@ -10,7 +12,7 @@ import NumbersTwoToneIcon from '@mui/icons-material/NumbersTwoTone';
 import PetsTwoToneIcon from '@mui/icons-material/PetsTwoTone';
 import { Link } from "react-router-dom";
 
-export default function ManageStaff() {
+export default function MyBooking() {
   const user = useSelector((state) => state?.user?.user);
   const dispatch = useDispatch();
   const [MyBookingList, setAllBooking] = useState([]);
@@ -119,17 +121,20 @@ export default function ManageStaff() {
                       <td style={{ textAlign: "right" }}>{data?.total}</td>
                       <td style={{ textAlign: "center" }}>{data?.status}</td>
                       <td>
-                        <Link to="/mybooking">
-                        <button
-                          /*className="edit"
-                          onClick={() => {
-                            setUpdateUserDetails(data);
-                            setOpenUpdateRole(true);
-                          }}*/
-                        >
-                          <SubjectTwoToneIcon />
-                        </button>
-                        </Link>
+                      <Link
+                        className="update-button"
+                        to={{
+                          pathname: `/mybooking/${data._id}`,
+                          state: { ...data }
+                        }}
+                      >
+                        <Tooltip TransitionComponent={Zoom} arrow>
+                          <IconButton>
+                            <SubjectTwoToneIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
+
                       </td>
                     </tr>
                   );

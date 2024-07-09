@@ -220,9 +220,7 @@ const Header = () => {
                         </div>
                       </Link>
                       <Link className="profile" to ="/myBookingList">
-                            <div class="dropdown-item">
-                            <MdHistory /> My Booking
-                            </div>
+                            <div class="dropdown-item"><MdHistory /> My Booking</div>
                       </Link>
                       <Collapse in={openManageLink}>
                         <div>

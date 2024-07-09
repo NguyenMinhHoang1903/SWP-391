@@ -22,6 +22,9 @@ const refund = require('../controller/refund');
 const myBooking = require('../controller/myBooking')
 const listBooking = require('../controller/listBooking')
 
+const listRefund = require('../controller/listRefund')
+
+
 // Service Import
 const service = require('../controller/service');
 
@@ -65,6 +68,8 @@ router.get('/listBooking/read', listBooking.allListBooking);
 router.post('/refund/create', refund.createRefund);
 //router.get('/refund/read', refund.readAllRefund);
 //router.get('/refund/readOne/:id', refund.readOneRefund);
+router.get('/listRefund/read', listRefund.allListRefund);
+
 
 // Service Router
 router.get('/', service.indexService);

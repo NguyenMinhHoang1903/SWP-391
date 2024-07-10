@@ -96,6 +96,10 @@ function App() {
     return user ? children : <Navigate to="/login" />;
   };
 
+  const CustomerRoute = ({ children }) => {
+    return user?.role === "CUSTOMER" ? children : <Navigate to="/" />;
+  };
+
   const AdminRoute = ({ children }) => {
     return user?.role === "ADMIN" ? children : <Navigate to="/" />;
   };
@@ -175,11 +179,11 @@ function App() {
                     path="/booking"
                     element={
                       <Suspense fallback={<Loader />}>
-                        <PrivateRoute>
+                        <CustomerRoute>
                           <Suspense fallback={<Loader />}>
                             <Booking />
                           </Suspense>
-                        </PrivateRoute>
+                        </CustomerRoute>
                       </Suspense>
                     }
                   />

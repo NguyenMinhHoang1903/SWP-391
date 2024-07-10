@@ -1541,15 +1541,31 @@ form .input-field {
   to {transform: translateX(0);}
 }
 
+
 .manageService-component .container {
-  background-color: rgb(185,114,74);
-  width: 70%;
-  margin-bottom: 30px;
-  margin-top: 30px;
-  padding: 40px 50px;
-  border-radius: 20px;
+  padding-bottom: 30px;
+  padding-top: 30px;
   animation: 1s ease-in-out component-motion;
 }
+
+.manageService-component .heading {
+  position: relative;
+  width: 100%;
+  height: 15vh;
+  margin-bottom: 30px;
+  padding: 10px;
+}
+
+.manageService-component .heading video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+
 
 /* Back Button */
 .manageService-component .back-button {
@@ -1558,18 +1574,12 @@ form .input-field {
 }
 
 /* Heading */
-.manageService-component .heading {
+.manageService-component .heading-center {
+  color: white;
   font-size: 3rem;
   font-weight: 500;
 }
 
-/* Video */
-.manageService-component .heading-video {
-  width: 100%;
-  border-radius: 20px;
-  border: 10px solid white;
-  margin-bottom: 30px;
-}
 
 /* Dropdown Toggle */
 .manageService-component tbody .dropdown-toggle {
@@ -1615,9 +1625,7 @@ form .input-field {
   transition: .2s;
 }
 .manageService-component .add-button .add-button-Link:hover {
-  color: rgb(0, 201, 170);
-  background-color: white;
-  box-shadow: 5px 5px 10px rgb(0, 0, 0, 0.3);
+  box-shadow: 0 0 10px rgb(0, 0, 0, 0.3);
 }
 .manageService-component .add-button .add-button-Link:active {
   opacity: .7;

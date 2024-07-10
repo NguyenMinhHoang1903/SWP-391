@@ -2,14 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Modal, Dropdown, Row, Col, Table } from "react-bootstrap";
 import toast from "react-hot-toast";
-import {
-  Box,
-  IconButton,
-  InputAdornment,
-  TextField,
-  Tooltip,
-  Zoom,
-} from "@mui/material";
+import { Box, IconButton, TextField, Tooltip, Zoom } from "@mui/material";
 import ContentPasteSearchIcon from "@mui/icons-material/ContentPasteSearch";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -18,7 +11,8 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import TooltipDefault from "@mui/material/Tooltip";
 import SendIcon from "@mui/icons-material/Send";
 import { Button } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
+import { storage } from "../../common/FirebaseConfig";
+import { ref, deleteObject } from "firebase/storage";
 
 export default function ManageService() {
   const [services, setServices] = useState([]);
@@ -27,6 +21,17 @@ export default function ManageService() {
   const [showDesc, setShowDesc] = useState(false);
   const [desc, setDesc] = useState("");
   const [query, setQuery] = useState("");
+  const [url, setUrl] = useState("");
+  const [imageName, setImageName] = useState("");
+  const [serviceName, setServiceName] = useState("");
+
+  // Currency functions
+  const formattedPrice = (price) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(price);
+  };
 
   // Close modal
   const handleClose = () => {
@@ -38,9 +43,13 @@ export default function ManageService() {
   const handleShow = (service, nameButton) => {
     if (nameButton === "delete") {
       setDeleteId(service._id);
+      setUrl(service.imageUrl);
+      setImageName(service.imageName);
+      setServiceName(service.name);
       setShowDelete(true);
     } else if (nameButton === "desc") {
       setDesc(service.desc);
+      setUrl(service.imageUrl);
       setShowDesc(true);
     }
   };
@@ -56,6 +65,21 @@ export default function ManageService() {
   // Delete one service by ID
   const deleteService = async () => {
     setShowDelete(false);
+
+    // Create a reference to the file to delete
+    const serviceRef = ref(
+      storage,
+      `${serviceName}/${serviceName}/${imageName}`
+    );
+    // Delete the image
+    deleteObject(serviceRef)
+      .then(() => {
+        console.log("Deleted image");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
     await fetch(`http://localhost:5000/api/services/delete/${deleteId}`, {
       method: "DELETE",
     })
@@ -71,7 +95,9 @@ export default function ManageService() {
   const search = () => {
     if (services) {
       return services.filter((service) =>
-        keys.some((key) => service[key].toString().toLowerCase().includes(query))
+        keys.some((key) =>
+          service[key].toString().toLowerCase().includes(query)
+        )
       );
     }
   };
@@ -92,8 +118,8 @@ export default function ManageService() {
       <div className="manageService-component">
         <div className="container-fluid">
           <div className="container">
-            <div className="row">
-              <div className="col-2">
+            <div className="heading row align-items-center">
+              <div className="col-5">
                 {/* Back Button */}
                 <Link to="/">
                   <TooltipDefault title="Back">
@@ -103,26 +129,16 @@ export default function ManageService() {
                   </TooltipDefault>
                 </Link>
               </div>
-              <div className="col-4">
-                <div className="heading">Service List</div>
+              <div className="col-5">
+                <div className="heading-center">Service List</div>
               </div>
-              {/* Video */}
+
+              {/* Manage Service Button */}
               <div className="col-2">
-                <video
-                  className="heading-video"
-                  src="assets/videos/video-3.webm"
-                  muted
-                  autoPlay
-                  loop
-                ></video>
-              </div>
-              <div className="col-4 ">
-                {/* Manage Service Button */}
                 <Button
                   sx={{
                     bgcolor: "rgb(0, 201, 170)",
                     ":hover": { bgcolor: "rgb(0, 201, 170)" },
-                    marginLeft: 17,
                   }}
                   className="heading-button"
                   variant="contained"
@@ -136,6 +152,14 @@ export default function ManageService() {
                   </Link>
                 </Button>
               </div>
+
+              <video
+                className="heading-video"
+                src="assets/videos/video-6.webm"
+                muted
+                autoPlay
+                loop
+              ></video>
             </div>
 
             {/* Search */}
@@ -149,14 +173,7 @@ export default function ManageService() {
               <TextField
                 sx={{ bgcolor: "white" }}
                 variant="outlined"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon />
-                    </InputAdornment>
-                  ),
-                }}
-                placeholder="Search name of service"
+                label="Search name of service"
                 onChange={(e) => {
                   setQuery(e.target.value);
                 }}
@@ -177,8 +194,16 @@ export default function ManageService() {
                 {search().map((service) => (
                   <tr key={service._id}>
                     <td>{service.name}</td>
-                    <td>{service.priceByWeight.map((value, index) => (<div key={index} >{value.price}</div>) )}</td>
-                    <td>{service.priceByWeight.map((value, index) => (<div key={index} >{value.weight}</div>) )}</td>
+                    <td>
+                      {service.priceByWeight.map((value, index) => (
+                        <div key={index}>{formattedPrice(value.price)}</div>
+                      ))}
+                    </td>
+                    <td>
+                      {service.priceByWeight.map((value, index) => (
+                        <div key={index}>{value.weight}</div>
+                      ))}
+                    </td>
                     <td>
                       <Dropdown autoClose="outside">
                         <Dropdown.Toggle
@@ -251,6 +276,7 @@ export default function ManageService() {
             </div>
           </div>
         </div>
+
         {/* Delete Box */}
         <Modal show={showDelete} onHide={handleClose} centered>
           <Modal.Body>
@@ -281,11 +307,16 @@ export default function ManageService() {
 
         {/* Description Box */}
         <Modal show={showDesc} onHide={handleClose} centered>
-          <Modal.Header closeButton>
-            <Modal.Title>Service Description</Modal.Title>
-          </Modal.Header>
           <Modal.Body>
-            <p>{desc}</p>
+            <img
+              className="mb-2"
+              src={url}
+              alt=""
+              style={{ width: "100%" }}
+              loading="lazy"
+            />
+            <h5>Description</h5>
+            <p style={{ textIndent: 15 }}>{desc}</p>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>

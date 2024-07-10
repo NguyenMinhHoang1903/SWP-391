@@ -85,7 +85,7 @@ router.post('/services/update', service.updateOneService);
 router.get('/combos', combo.indexCombo);
 router.post('/combos/create', combo.createCombo);
 router.get('/combos/read', combo.readAllCombo);
-router.get('/combos/readOne/:id', combo.readOneCombo);
+router.get('/combos/readOne/:name', combo.readOneCombo);
 router.get('/combos/read/:id', combo.readAllServiceOfCombo);
 router.delete('/combos/delete/:id', combo.deleteOneCombo);
 router.post('/combos/update', combo.updateOneCombo);

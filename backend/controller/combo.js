@@ -55,6 +55,7 @@ const readAllCombo = async (req, res) => {
 // Read one combo
 const readOneCombo = async (req, res) => {
   let query = { name: req.params.name };
+  console.log(req.params.name);
 
   await Combo.findOne(query)
     .then((result) => {
@@ -99,8 +100,10 @@ const updateOneCombo = async (req, res) => {
   const oldName = req.body.oldName;
   const name = req.body.name;
   let query = { name: name };
-  console.log(oldName);
+
   const existingCombo = await Combo.findOne(query);
+  console.log(existingCombo);
+
 
   if (existingCombo && existingCombo.name !== oldName) res.json({ message: 0 });
   else {

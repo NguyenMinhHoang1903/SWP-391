@@ -227,17 +227,10 @@ export default function ManageCombo() {
               <TextField
                 sx={{ bgcolor: "white" }}
                 variant="outlined"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon />
-                    </InputAdornment>
-                  ),
-                }}
-                placeholder="Search name of combo"
                 onChange={(e) => {
                   setQuery(e.target.value);
                 }}
+                label="Search name of service..."
               />
             </Box>
 

@@ -215,7 +215,7 @@ export default function AddCombo() {
   return (
     <>
       <div className="addCombo-component">
-        <video src="assets/videos/video-6.webm" muted autoPlay loop></video>
+        <video src="assets/videos/video-7.webm" muted autoPlay loop></video>
 
         <div className="container">
           <div className="row ">

@@ -6,8 +6,24 @@ import { useFormik } from "formik";
 import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { IconButton } from "@mui/material";
+import {
+  Backdrop,
+  Button,
+  CircularProgress,
+  IconButton,
+  TextField,
+} from "@mui/material";
 import TooltipDefault from "@mui/material/Tooltip";
+import { styled } from "@mui/material/styles";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { storage } from "../../common/FirebaseConfig";
+import {
+  getDownloadURL,
+  listAll,
+  ref,
+  uploadBytes,
+  deleteObject,
+} from "firebase/storage";
 
 // Utility function to get next day's date
 const getNextDayDate = () => {
@@ -21,6 +37,8 @@ export default function UpdateCombo() {
   const navigate = useNavigate();
   const location = useLocation();
   const [services, setServices] = useState([]);
+  const [combo, setCombo] = useState("");
+  const [openBackDrop, setOpenBackDrop] = useState("");
 
   const formik = useFormik({
     initialValues: {
@@ -31,38 +49,76 @@ export default function UpdateCombo() {
       endDate: "",
       desc: "",
       serviceId: [],
+      image: "",
+      imageUrl: "",
       agree: false,
     },
     onSubmit: (values) => {
       const { startDate, endDate } = values;
       const validStartDate = startDate;
       const validEndDate = endDate;
-
-      fetch("http://localhost:5000/api/combos/update", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          oldName: formik.values.oldName,
-          name: values.name,
-          price: Number(values.price),
-          startDate: validStartDate,
-          endDate: validEndDate,
-          desc: values.desc,
-          serviceId: values.serviceId,
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.message === 0) {
-            toast.error("Update Unsuccessfully");
-          } else {
-            toast.success("Update Successfully");
-            navigate("/manageCombo");
-          }
+      console.log(combo.name + " " + combo.imageName);
+      setOpenBackDrop(true);
+      // Create a reference to the file to delete
+      const comboRef = ref(
+        storage,
+        `${combo.name}/${combo.name}/${combo.imageName}`
+      );
+      // Delete old image
+      deleteObject(comboRef)
+        .then(() => {
+          // Store new image in firebase storage
+          const imgRef = ref(
+            storage,
+            `${values.name}/${values.name}/${values.image.name}`
+          );
+          uploadBytes(imgRef, values.image);
         })
-        .catch((err) => console.log(err));
+        .catch((error) => {
+          console.log(error);
+        });
+
+      // Call API
+      setTimeout(() => {
+        if (values.image) {
+          // Get download URL and set to imageUrl
+          listAll(ref(storage, `${values.name}/${values.name}`)).then(
+            (images) => {
+              images.items.forEach((imageRef) => {
+                getDownloadURL(imageRef).then((url) => {
+                  fetch("http://localhost:5000/api/combos/update", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      oldName: formik.values.oldName,
+                      name: values.name,
+                      price: Number(values.price),
+                      startDate: validStartDate,
+                      endDate: validEndDate,
+                      desc: values.desc,
+                      serviceId: values.serviceId,
+                      imageName: values.image.name,
+                      imageUrl: url,
+                    }),
+                  })
+                    .then((res) => res.json())
+                    .then((data) => {
+                      if (data.message === 0) {
+                        toast.error("Update Unsuccessfully");
+                      } else {
+                        toast.success("Update Successfully");
+                        navigate("/manageCombo");
+                      }
+                    })
+                    .catch((err) => console.log(err));
+                });
+              });
+            }
+          );
+        }
+      }, 2000);
     },
     validationSchema: Yup.object({
       name: Yup.string()
@@ -81,7 +137,6 @@ export default function UpdateCombo() {
               return true; // No services selected or price is not set, so no comparison needed
             }
             const totalServicePrice = services.reduce((total, service) => {
-
               if (serviceId.includes(service._id)) {
                 return total + service.priceByWeight[0].price;
               }
@@ -158,24 +213,16 @@ export default function UpdateCombo() {
 
   useEffect(() => {
     let isFetched = true;
-    const passedId = location.search.substring(1);
+    const passedName = location.search.substring(1);
+    formik.setFieldValue("oldName", passedName);
 
     // Read one combo by id
     async function readOneCombo() {
-      await fetch(`http://localhost:5000/api/combos/readOne/${passedId}`)
+      await fetch(`http://localhost:5000/api/combos/readOne/${passedName}`)
         .then((res) => res.json())
         .then((json) => {
           if (isFetched) {
-            formik.setValues({
-              oldName: json.name,
-              name: json.name,
-              price: json.price,
-              startDate: json.startDate,
-              endDate: json.endDate,
-              desc: json.desc,
-              serviceId: json.serviceId,
-              agree: false,
-            });
+            setCombo(json);
           }
         })
         .catch((err) => console.log(err));
@@ -189,28 +236,29 @@ export default function UpdateCombo() {
     };
   }, []);
 
+  // Image Theme Settings
+  const VisuallyHiddenInput = styled("input")({
+    clip: "rect(0 0 0 0)",
+    clipPath: "inset(50%)",
+    height: 1,
+    overflow: "hidden",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    whiteSpace: "nowrap",
+    width: 1,
+  });
+
   return (
     <>
-      <div className="updateCombo-component">
-        <div className="container">
-          {
-          services.map((service) => {console.log(service.name)})
-          }
-          <div className="row">
-            {/* Video */}
-            <div className="col">
-              <video
-                src="assets/videos/video-2.mp4"
-                muted
-                autoPlay
-                loop
-              ></video>
-            </div>
+      <div className="addCombo-component">
+        <video src="assets/videos/video-7.webm" muted autoPlay loop></video>
 
-            {/* Form */}
+        <div className="container">
+          <div className="row ">
             <div className="col form">
               {/* Heading */}
-              <div className="row mb-3">
+              <div className="row mb-2">
                 {/* Back Button */}
                 <div className="col-3">
                   <Link to="/manageCombo">
@@ -222,21 +270,23 @@ export default function UpdateCombo() {
                   </Link>
                 </div>
                 <div className="col-9">
-                  <div className="heading">UPDATE COMBO</div>
+                  <div className="heading ms-4">Update Combo</div>
                 </div>
               </div>
 
+              {/* Form */}
               <form onSubmit={formik.handleSubmit}>
                 {/* Input Name */}
-                <div className="row mb-3">
-                  <label>Name</label>
+                <div className="row mb-4">
                   <a
                     data-tooltip-id="name-tooltip"
                     data-tooltip-content={formik.errors.name}
                     data-tooltip-variant="warning"
                     data-tooltip-place="right"
                   >
-                    <input
+                    <TextField
+                      label="Name"
+                      variant="outlined"
                       onChange={formik.handleChange}
                       type="text"
                       name="name"
@@ -247,15 +297,16 @@ export default function UpdateCombo() {
                 <Tooltip id="name-tooltip" isOpen={true} imperativeModeOnly />
 
                 {/* Input Price */}
-                <div className="row mb-3">
-                  <label>Price</label>
+                <div className="row mb-4">
                   <a
                     data-tooltip-id="price-tooltip"
                     data-tooltip-content={formik.errors.price}
                     data-tooltip-variant="warning"
                     data-tooltip-place="right"
                   >
-                    <input
+                    <TextField
+                      label="Price"
+                      variant="outlined"
                       onChange={formik.handleChange}
                       onKeyDown={handleKeyDown}
                       type="text"
@@ -280,6 +331,7 @@ export default function UpdateCombo() {
                       type="date"
                       name="startDate"
                       value={formik.values.startDate}
+                      minDate={getNextDayDate()}
                     />
                   </a>
                 </div>
@@ -303,7 +355,7 @@ export default function UpdateCombo() {
                       type="date"
                       name="endDate"
                       value={formik.values.endDate}
-                      minDate={formik.values.startDate || getNextDayDate()}
+                      minDate={formik.values.startDate}
                     />
                   </a>
                 </div>
@@ -315,25 +367,27 @@ export default function UpdateCombo() {
 
                 {/* Input Desc */}
                 <div className="row mb-3">
-                  <label>Description</label>
                   <a
                     data-tooltip-id="desc-tooltip"
                     data-tooltip-content={formik.errors.desc}
                     data-tooltip-variant="warning"
                     data-tooltip-place="right"
                   >
-                    <input
+                    <TextField
+                      label="Description"
+                      variant="outlined"
                       onChange={formik.handleChange}
                       type="text"
                       name="desc"
                       value={formik.values.desc}
+                      fullWidth
                     />
                   </a>
                 </div>
                 <Tooltip id="desc-tooltip" isOpen={true} imperativeModeOnly />
 
                 {/* Choose Service */}
-                <div className="row mb-3">
+                <div className="row mb-4">
                   <label>Service</label>
                   <a
                     data-tooltip-id="services-tooltip"
@@ -342,20 +396,17 @@ export default function UpdateCombo() {
                     data-tooltip-place="right"
                   >
                     {services.map((service) => (
-                      <div className="form-check" key={service._id}>
+                      <div class="form-check" key={service._id}>
                         <input
-                          className="form-check-input"
+                          class="form-check-input"
                           type="checkbox"
                           name="serviceId"
                           onChange={formik.handleChange}
                           value={service._id}
-                          checked={formik.values.serviceId.includes(
-                            service._id
-                          )}
                         />
                         <div className="row">
                           <div className="col">
-                            <label className="form-check-label">
+                            <label class="form-check-label">
                               {service.name}
                             </label>
                           </div>
@@ -370,25 +421,59 @@ export default function UpdateCombo() {
                   imperativeModeOnly
                 />
 
+                {/* Input Image */}
+                <div className="row align-items-center mb-3">
+                  <div className="col">
+                    <Button
+                      sx={{
+                        bgcolor: "rgb(0, 201, 170)",
+                        ":hover": { bgcolor: "rgb(0, 201, 170)" },
+                        marginBottom: 2,
+                      }}
+                      component="label"
+                      role={undefined}
+                      variant="contained"
+                      tabIndex={-1}
+                      startIcon={<CloudUploadIcon />}
+                    >
+                      Upload file
+                      <VisuallyHiddenInput
+                        type="file"
+                        name="image"
+                        accept="image/*"
+                        onChange={(e) =>
+                          formik.setFieldValue(
+                            "image",
+                            e.currentTarget.files[0]
+                          )
+                        }
+                      />
+                    </Button>
+                  </div>
+                  <div className="col text-black h5">
+                    {formik.values.image.name}
+                  </div>
+                </div>
+
                 {/* Switch */}
-                <div className="row mb-3">
+                <div className="row mb-4">
                   <a
                     data-tooltip-id="agree-tooltip"
                     data-tooltip-content={formik.errors.agree}
                     data-tooltip-variant="warning"
                     data-tooltip-place="right"
                   >
-                    <div className="form-check form-switch">
+                    <div class="form-check form-switch">
                       <input
-                        className="form-check-input"
+                        class="form-check-input"
                         name="agree"
                         type="checkbox"
                         id="switch"
-                        checked={formik.values.agree}
+                        value={formik.values.agree}
                         onChange={formik.handleChange}
                       />
-                      <label className="form-check-label" htmlFor="switch">
-                        Check this button to update
+                      <label class="form-check-label" for="switch">
+                        Check this button to add
                       </label>
                     </div>
                   </a>
@@ -407,6 +492,13 @@ export default function UpdateCombo() {
             </div>
           </div>
         </div>
+
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={openBackDrop}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
       </div>
     </>
   );

@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import SummaryApi from "../../common";
 import { format, isToday } from 'date-fns';
-import Tooltip from "@mui/material/Tooltip";
-import { IconButton, Zoom } from "@mui/material";
+import { Box, IconButton, TextField, Tooltip, Zoom } from "@mui/material";
 import EventTwoToneIcon from '@mui/icons-material/EventTwoTone';
 import SubjectTwoToneIcon from '@mui/icons-material/SubjectTwoTone';
 import PaymentsTwoToneIcon from '@mui/icons-material/PaymentsTwoTone';
@@ -14,12 +13,13 @@ import { Link } from "react-router-dom";
 import { TiEdit } from "react-icons/ti";
 import ChangeBookingRole from "./updateBooking";
 
+
 export default function ManageBooking() {
   const [bookingList, setBookingList] = useState([]);
   const [openUpdateRole, setOpenUpdateRole] = useState(false);
+  const [query, setQuery] = useState("");
   const [filteredStatus, setFilteredStatus] = useState("All");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [showToday, setShowToday] = useState(false);
+
 
   const [updateBookingDetails, setUpdateBookingDetails] = useState({
     userName: "",
@@ -27,9 +27,11 @@ export default function ManageBooking() {
     _id: "",
   });
 
+
   useEffect(() => {
     fetchAllBooking();
   }, []);
+
 
   const fetchAllBooking = async () => {
     try {
@@ -38,9 +40,11 @@ export default function ManageBooking() {
         credentials: 'include',
       });
 
+
       const dataResponse = await fetchData.json();
       if (dataResponse.success) {
         const sortBookings = dataResponse.data;
+        // Sort bookings by date in ascending order (oldest to newest)
         sortBookings.sort((a, b) => new Date(b.date) - new Date(a.date));
         setBookingList(sortBookings);
       } else {
@@ -51,36 +55,47 @@ export default function ManageBooking() {
     }
   };
 
+
   const handleFilterChange = (event) => {
     setFilteredStatus(event.target.value);
   };
 
-  const handleSearchChange = (event) => {
-    setSearchQuery(event.target.value);
-  };
 
-  const handleShowToday = () => {
-    setShowToday(!showToday);
-  };
+  const keys = ["userName", "petName", "status"];
+
 
   const filterBookings = (booking) => {
-    const matchesStatus = filteredStatus === "All" || booking.status === filteredStatus;
-    const matchesSearch = searchQuery === "" || 
-                          booking.userName.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          booking.petName.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesToday = !showToday || isToday(new Date(booking.date));
-    return matchesStatus && matchesSearch && matchesToday;
+    if (filteredStatus === "All") {
+      return true;
+    } else {
+      return booking.status === filteredStatus;
+    }
   };
 
-  const countTodayBookings = (bookings) => {
-    return bookings.filter(booking => isToday(new Date(booking.date))).length;
-  };
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('vi-VN').format(amount);
   };
 
-  const todayBookingCount = countTodayBookings(bookingList);
+
+  const search = (data) => {
+    if (query) {
+      return data.filter((item) =>
+        keys.some((key) =>
+          item[key].toString().toLowerCase().includes(query.toLowerCase())
+        )
+      );
+    }
+    return data;
+  };
+
+
+  const filteredAndSearchedBookings = search(bookingList.filter(filterBookings));
+
+
+  const todayBookings = bookingList.filter(booking => isToday(new Date(booking.date)));
+  const todayBookingsCount = todayBookings.length;
+
 
   return (
     <div className="manageStaff-component">
@@ -100,18 +115,115 @@ export default function ManageBooking() {
                 />
               </div>
             </div>
-            
+            {/* Display today's bookings count */}
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                marginBottom: 3,
+              }}
+            >
+              <div>Today's Bookings: {todayBookingsCount}</div>
+            </Box>
+
+
+            {/* Display today's bookings list */}
+            {todayBookingsCount > 0 && (
+              <div className="today-bookings">
+                <h3>Today's Bookings</h3>
+                <table>
+                  <thead>
+                    <tr>
+                      <th style={{ textAlign: "center" }}>
+                        <NumbersTwoToneIcon /> No.
+                      </th>
+                      <th style={{ textAlign: "center" }}>
+                        <AccountBoxOutlinedIcon /> Customer's Name
+                      </th>
+                      <th style={{ textAlign: "center" }}>
+                        <PetsTwoToneIcon /> Pet's Name
+                      </th>
+                      <th style={{ textAlign: "center" }}>
+                        <EventTwoToneIcon /> Date
+                      </th>
+                      <th style={{ textAlign: "center" }}>
+                        <EventTwoToneIcon /> Time
+                      </th>
+                      <th style={{ textAlign: "center" }}>
+                        <PaymentsTwoToneIcon /> Total
+                      </th>
+                      <th style={{ textAlign: "center" }}>
+                        <SubjectTwoToneIcon /> Status
+                      </th>
+                      <th>
+                        <SubjectTwoToneIcon /> Detail
+                      </th>
+                      <th>Edit</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {todayBookings.map((data, index) => {
+                      const date = new Date(data?.date);
+                      const formattedDate = format(date, 'yyyy-MM-dd');
+                      const formattedTime = format(date, 'HH:mm');
+                      return (
+                        <tr key={data?._id}>
+                          <td style={{ textAlign: "center" , color: "black"}}>{index + 1}</td>
+                          <td style={{ textAlign: "center" , color: "black"}}>{data?.userName}</td>
+                          <td style={{ textAlign: "center" , color: "black"}}>{data?.petName}</td>
+                          <td style={{ textAlign: "center" , color: "black"}}>{formattedDate}</td>
+                          <td style={{ textAlign: "center" , color: "black"}}>{formattedTime}</td>
+                          <td style={{ textAlign: "right" , color: "black"}}>{formatCurrency(data?.total)}</td>
+                          <td className={`status-${data?.status}`} style={{ textAlign: "center" }}>{data?.status}</td>
+                          <td>
+                            <Link
+                              className="update-button"
+                              to={`/ManageBookingDetail?${data._id}`}
+                            >
+                              <Tooltip TransitionComponent={Zoom} arrow>
+                                <IconButton>
+                                  <SubjectTwoToneIcon />
+                                </IconButton>
+                              </Tooltip>
+                            </Link>
+                          </td>
+                          <td>
+                            <button
+                              className="edit"
+                              onClick={() => {
+                                setUpdateBookingDetails(data);
+                                setOpenUpdateRole(true);
+                              }}
+                            >
+                              <TiEdit />
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+
             {/* Filter bar */}
             <div className="row justify-content-end mb-3">
-              <div className="col-auto">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Search by Customer or Pet"
-                  value={searchQuery}
-                  onChange={handleSearchChange}
-                />
-              </div>
+              {/* Search */}
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                marginBottom: 3,
+              }}
+            >
+              <TextField
+                sx={{ bgcolor: "white" }}
+                variant="outlined"
+                label="Search by Customer's or Pet's Name"
+                onChange={(e) => setQuery(e.target.value)}
+              />
+            </Box>
               <div className="col-auto">
                 <select
                   className="form-select"
@@ -125,20 +237,7 @@ export default function ManageBooking() {
                   <option value="CANCELLED">Cancelled</option>
                 </select>
               </div>
-              <div className="col-auto">
-                <button className="btn btn-primary" onClick={handleShowToday}>
-                  {showToday ? "Show All" : "Show Today's Bookings"}
-                </button>
-              </div>
             </div>
-
-            {/* Today's booking count */}
-            <div className="row mb-3">
-              <div className="col-auto">
-                <h5>Today's Bookings: {todayBookingCount}</h5>
-              </div>
-            </div>
-
             <table>
               <thead>
                 <tr>
@@ -170,12 +269,12 @@ export default function ManageBooking() {
                 </tr>
               </thead>
               <tbody>
-                {bookingList.filter(filterBookings).map((data, index) => {
+                {filteredAndSearchedBookings.map((data, index) => {
                   const date = new Date(data?.date);
                   const formattedDate = format(date, 'yyyy-MM-dd');
                   const formattedTime = format(date, 'HH:mm');
                   return (
-                    <tr key={data?.userName}>
+                    <tr key={data?._id}>
                       <td style={{ textAlign: "center" }}>{index + 1}</td>
                       <td style={{ textAlign: "center" }}>{data?.userName}</td>
                       <td style={{ textAlign: "center" }}>{data?.petName}</td>

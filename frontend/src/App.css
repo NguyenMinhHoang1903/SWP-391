@@ -2205,3 +2205,24 @@ button:hover {
 .row .form-select{
   width: 100px;
 }
+
+/* Show list Service & Combo */
+.showServiceCombo .card-img {
+  border-radius: 30px;
+}
+
+.showServiceCombo .listService {
+  padding-bottom: 30px;
+  padding-top: 30px;
+  padding-left: 30px;
+  justify-items: center;
+}
+
+.showServiceCombo .text-center {
+  background-color: rgb(185, 114, 74);
+  border-radius: 30px;
+}
+
+.showServiceCombo-component {
+  padding: 30px;
+}

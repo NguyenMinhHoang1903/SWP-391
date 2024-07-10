@@ -1,6 +1,7 @@
 import Product from "../layouts/Products";
 import Container from "../layouts/Container";
-import ExerciseSpaShop from "../services/ExerciseSpaShop";
+import ShowListService from "../services/ShowListService";
+import ShowListCombo from "../services/ShowListCombo";
 
 
 const Home = () =>{
@@ -14,7 +15,10 @@ const Home = () =>{
                 <Product/>
             </div>
             <div class="block">
-                <ExerciseSpaShop/>
+                <ShowListService/>
+            </div>
+            <div class="block">
+                <ShowListCombo/>
             </div>
             <div class="block">
                 <Container/>

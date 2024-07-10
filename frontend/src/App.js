@@ -11,6 +11,8 @@ import { Container } from "react-bootstrap";
 import SummaryApi from "./common";
 import Context from "./context";
 import { Loader } from "./loader/Loader";
+import ShowListCombo from "./components/services/ShowListCombo";
+import ShowListService from "./components/services/ShowListService";
 
 // Components
 const Header = lazy(() => import("./components/layouts/Header"));
@@ -37,9 +39,7 @@ const UpdateService = lazy(() =>
 const ManageCombo = lazy(() => import("./components/manageCombo/ManageCombo"));
 const AddCombo = lazy(() => import("./components/manageCombo/AddCombo"));
 const UpdateCombo = lazy(() => import("./components/manageCombo/UpdateCombo"));
-const ExerciseSpaShop = lazy(() =>
-  import("./components/services/ExerciseSpaShop")
-);
+
 const UserProfile = lazy(() => import("./components/template/UserProfile"));
 const Washing = lazy(() => import("./components/details/Washing"));
 const Spinner = lazy(() => import("./components/Spinner/Spinner"));
@@ -153,7 +153,15 @@ function App() {
                     path="/serviceslist"
                     element={
                       <Suspense fallback={<Loader />}>
-                        <ExerciseSpaShop />
+                        <ShowListService />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="/serviceslist"
+                    element={
+                      <Suspense fallback={<Loader />}>
+                        <ShowListCombo />
                       </Suspense>
                     }
                   />

@@ -4,9 +4,6 @@ import SummaryApi from "../../common";
 import moment from "moment";
 import { TiEdit } from "react-icons/ti";
 import ChangeUserRole from "./updateStaff";
-import { Link } from "react-router-dom";
-import SendIcon from "@mui/icons-material/Send";
-import { Button } from "@mui/material";
 
 export default function ManageStaff() {
   const [allUser, setAllUsers] = useState([]);

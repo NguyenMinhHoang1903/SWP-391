@@ -201,7 +201,7 @@ export default function AddService() {
                 </Link>
               </div>
               <div className="col-9">
-                <div className="heading">ADD NEW SERVICE</div>
+                <div className="heading ms-3">Add New Service</div>
               </div>
             </div>
 

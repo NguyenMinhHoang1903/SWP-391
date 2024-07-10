@@ -43,6 +43,9 @@ export default function BookingSpa() {
   const [priceIndex, setPriceIndex] = useState(0);
   const navigate = useNavigate();
   const user = useSelector((state) => state?.user?.user);
+  const [startDate, setStartDate] = useState(
+    setHours(setMinutes(new Date(), 0), 20),
+  );
 
   const formik = useFormik({
     initialValues: {
@@ -112,7 +115,7 @@ export default function BookingSpa() {
       petType: Yup.string()
         .matches(/^[a-zA-Z\s]*$/, "Require.")
         .required("Require."),
-      weight: Yup.number().min(1, "Require.").required(),
+      weight: Yup.number().min(1, "Require.").required("Require."),
       services: isRequired
         ? Yup.array().notRequired()
         : Yup.array().min(
@@ -204,13 +207,11 @@ export default function BookingSpa() {
         });
       } else toast.error("Please enter a weight before selecting services");
     }
-    console.log(total);
     if (formik.values.combo) {
       listCombo.map((combo) => {
         if (combo.name === formik.values.combo) total += Number(combo.price);
       });
     }
-    console.log(total);
 
     formik.setFieldValue("total", total);
   };
@@ -322,6 +323,27 @@ export default function BookingSpa() {
       }
     });
   };
+
+  // Currency functions
+  const formattedPrice = (price) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(price);
+  };
+
+  // Disable passed time
+  const filterPassedTime = (time) => {
+    const currentDate = new Date();
+    const selectedDate = new Date(time);
+
+    return currentDate.getTime() < selectedDate.getTime();
+  };
+
+  // Handle time if that time is over 5 staffs
+  const handleTimeOver5 = (time) => {
+    
+  }
 
   useEffect(() => {
     readAllService();
@@ -473,7 +495,8 @@ export default function BookingSpa() {
                       showTimeSelect
                       timeIntervals={15}
                       dateFormat="yyyy/MM/dd h:mm aa"
-                      minTime={setHours(setMinutes(new Date(), 0), 8)}
+                      filterTime={filterPassedTime}
+                      minTime={setHours(setMinutes(new Date(), 45), 7)}
                       maxTime={setHours(setMinutes(new Date(), 0), 20)}
                       isClearable
                     />
@@ -529,9 +552,10 @@ export default function BookingSpa() {
                           <div className="col">
                             <label class="form-check-label">
                               {service.priceByWeight.length === 1
-                                ? service.priceByWeight[0].price
-                                : service.priceByWeight[priceIndex].price}{" "}
-                              VND
+                                ? formattedPrice(service.priceByWeight[0].price)
+                                : formattedPrice(
+                                    service.priceByWeight[priceIndex].price
+                                  )}{" "}
                             </label>
                           </div>
                         </div>
@@ -630,9 +654,12 @@ export default function BookingSpa() {
                               <td>{service.name}</td>
                               <td>
                                 {service.priceByWeight.length === 1
-                                  ? service.priceByWeight[0].price
-                                  : service.priceByWeight[priceIndex]
-                                      .price}{" "}
+                                  ? formattedPrice(
+                                      service.priceByWeight[0].price
+                                    )
+                                  : formattedPrice(
+                                      service.priceByWeight[priceIndex].price
+                                    )}{" "}
                                 VND
                               </td>
                             </tr>
@@ -643,7 +670,7 @@ export default function BookingSpa() {
                   </Collapse>
                 </div>
 
-                <Divider sx={{ border: 2, borderColor: "white" }} />
+                <Divider sx={{ border: 3, borderColor: "white" }} />
 
                 {/* Total */}
                 <Box

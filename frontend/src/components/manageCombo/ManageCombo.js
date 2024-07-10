@@ -7,7 +7,6 @@ import {
   Box,
   CircularProgress,
   IconButton,
-  InputAdornment,
   TextField,
   Zoom,
 } from "@mui/material";
@@ -19,7 +18,6 @@ import WarningIcon from "@mui/icons-material/Warning";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import TooltipDefault from "@mui/material/Tooltip";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import SearchIcon from "@mui/icons-material/Search";
 import { storage } from "../../common/FirebaseConfig";
 import { ref, deleteObject } from "firebase/storage";
 

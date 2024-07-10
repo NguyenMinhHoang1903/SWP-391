@@ -56,6 +56,9 @@ const ChangeUserRole = ({ name, email, role, statusUser, userId, onClose, callFu
       onClose();
       callFunc();
     }
+    else {
+      toast.error(responseData.message);
+    }
   }
 
   const updateUser = async () => {

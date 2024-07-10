@@ -37,9 +37,6 @@ const UpdateService = lazy(() =>
 const ManageCombo = lazy(() => import("./components/manageCombo/ManageCombo"));
 const AddCombo = lazy(() => import("./components/manageCombo/AddCombo"));
 const UpdateCombo = lazy(() => import("./components/manageCombo/UpdateCombo"));
-const TransactionHistory = lazy(() =>
-  import("./components/transactionHistory/TransactionHistory")
-);
 const ExerciseSpaShop = lazy(() =>
   import("./components/services/ExerciseSpaShop")
 );
@@ -478,19 +475,6 @@ function App() {
                             <UpdateCombo />
                           </Suspense>
                         </ManagerRoute>
-                      </Suspense>
-                    }
-                  />
-
-                  <Route
-                    path="/transactionHistory"
-                    element={
-                      <Suspense fallback={<Loader />}>
-                        <PrivateRoute>
-                          <Suspense fallback={<Loader />}>
-                            <TransactionHistory />
-                          </Suspense>
-                        </PrivateRoute>
                       </Suspense>
                     }
                   />

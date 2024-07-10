@@ -138,11 +138,7 @@ const Header = () => {
                         </div>
                       </Collapse>
 
-                      <Link className="profile" to="/transactionHistory">
-                        <div class="dropdown-item">
-                          <MdHistory /> Transaction History{" "}
-                        </div>
-                      </Link>
+                      
                     </ul>
                   </div>
                 ) : (
@@ -234,11 +230,7 @@ const Header = () => {
                           </Link>
                         </div>
                       </Collapse>
-                      {/* <Link className="profile" to="/transactionHistory">
-                        <div class="dropdown-item">
-                          <MdHistory /> Transaction History{" "}
-                        </div>
-                      </Link> */}
+                     
 
                     </ul>
                   </div>

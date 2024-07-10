@@ -242,7 +242,7 @@ export default function UpdateService() {
                 </Link>
               </div>
               <div className="col-9">
-                <div className="heading">UPDATE SERVICE</div>
+                <div className="heading ms-4">Update Service</div>
               </div>
             </div>
 

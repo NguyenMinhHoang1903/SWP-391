@@ -35,6 +35,9 @@ const combo = require('../controller/combo');
 // Feedback Import
 const feedback = require('../controller/feedback');
 
+// Booking Tracker import
+const bookingTracker = require('../controller/bookingTracker');
+
 // Google Login
 const userGoogleLogin = require('../controller/googleauth')
 const userGoogleLoginFaile = require('../controller/googleauth')

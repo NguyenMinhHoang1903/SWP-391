@@ -24,6 +24,12 @@ import {
   uploadBytes,
   deleteObject,
 } from "firebase/storage";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
+import { useParams } from 'react-router-dom';
 
 // Utility function to get next day's date
 const getNextDayDate = () => {
@@ -34,6 +40,7 @@ const getNextDayDate = () => {
 };
 
 export default function UpdateCombo() {
+  const { name } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const [services, setServices] = useState([]);
@@ -45,8 +52,8 @@ export default function UpdateCombo() {
       oldName: "",
       name: "",
       price: "",
-      startDate: "",
-      endDate: "",
+      startDate: dayjs(new Date()),
+      endDate: dayjs(new Date()),
       desc: "",
       serviceId: [],
       image: "",
@@ -57,7 +64,7 @@ export default function UpdateCombo() {
       const { startDate, endDate } = values;
       const validStartDate = startDate;
       const validEndDate = endDate;
-      console.log(combo.name + " " + combo.imageName);
+      
       setOpenBackDrop(true);
       // Create a reference to the file to delete
       const comboRef = ref(
@@ -168,12 +175,6 @@ export default function UpdateCombo() {
     }),
   });
 
-  // Function to handle date changes
-  const handleDateChange = (e) => {
-    const { name, value } = e.target;
-    formik.setFieldValue(name, value); // Update formik values
-  };
-
   const handleKeyDown = (e) => {
     // Allow only numeric keys, backspace, and delete
     const allowedKeys = [
@@ -213,12 +214,11 @@ export default function UpdateCombo() {
 
   useEffect(() => {
     let isFetched = true;
-    const passedName = location.search.substring(1);
-    formik.setFieldValue("oldName", passedName);
+    formik.setFieldValue("oldName", name);
 
     // Read one combo by id
     async function readOneCombo() {
-      await fetch(`http://localhost:5000/api/combos/readOne/${passedName}`)
+      await fetch(`http://localhost:5000/api/combos/readOne/${name}`)
         .then((res) => res.json())
         .then((json) => {
           if (isFetched) {
@@ -317,53 +317,53 @@ export default function UpdateCombo() {
                 </div>
                 <Tooltip id="price-tooltip" isOpen={true} imperativeModeOnly />
 
-                {/* Input Start Date */}
-                <div className="row mb-4">
-                  <label>Start Date</label>
-                  <a
-                    data-tooltip-id="startDate-tooltip"
-                    data-tooltip-content={formik.errors.startDate}
-                    data-tooltip-variant="warning"
-                    data-tooltip-place="right"
-                  >
-                    <input
-                      onChange={handleDateChange}
-                      type="date"
-                      name="startDate"
-                      value={formik.values.startDate}
-                      minDate={getNextDayDate()}
-                    />
-                  </a>
+                {/* Start Date and End Date */}
+                <div className="row mb-3">
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoContainer components={["DatePicker", "DatePicker"]}>
+                      <a
+                        data-tooltip-id="startDate-tooltip"
+                        data-tooltip-content={formik.errors.startDate}
+                        data-tooltip-variant="warning"
+                        data-tooltip-place="left"
+                      >
+                        <DatePicker
+                          label="Start Date"
+                          onChange={(newValue) =>
+                            formik.setFieldValue("startDate", newValue)
+                          }
+                          value={formik.values.startDate}
+                          name="startDate"
+                        />
+                      </a>
+                      <Tooltip
+                        id="startDate-tooltip"
+                        isOpen={true}
+                        imperativeModeOnly
+                      />
+                      <a
+                        data-tooltip-id="endDate-tooltip"
+                        data-tooltip-content={formik.errors.endDate}
+                        data-tooltip-variant="warning"
+                        data-tooltip-place="right"
+                      >
+                        <DatePicker
+                          label="End Date"
+                          onChange={(newValue) =>
+                            formik.setFieldValue("endDate", newValue)
+                          }
+                          value={formik.values.startDate}
+                          name="endDate"
+                        />
+                      </a>
+                      <Tooltip
+                        id="endDate-tooltip"
+                        isOpen={true}
+                        imperativeModeOnly
+                      />
+                    </DemoContainer>
+                  </LocalizationProvider>
                 </div>
-                <Tooltip
-                  id="startDate-tooltip"
-                  isOpen={true}
-                  imperativeModeOnly
-                />
-
-                {/* Input End Date */}
-                <div className="row mb-4">
-                  <label>End Date</label>
-                  <a
-                    data-tooltip-id="endDate-tooltip"
-                    data-tooltip-content={formik.errors.endDate}
-                    data-tooltip-variant="warning"
-                    data-tooltip-place="right"
-                  >
-                    <input
-                      onChange={handleDateChange}
-                      type="date"
-                      name="endDate"
-                      value={formik.values.endDate}
-                      minDate={formik.values.startDate}
-                    />
-                  </a>
-                </div>
-                <Tooltip
-                  id="endDate-tooltip"
-                  isOpen={true}
-                  imperativeModeOnly
-                />
 
                 {/* Input Desc */}
                 <div className="row mb-3">

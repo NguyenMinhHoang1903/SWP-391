@@ -20,6 +20,7 @@ import TooltipDefault from "@mui/material/Tooltip";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { storage } from "../../common/FirebaseConfig";
 import { ref, deleteObject } from "firebase/storage";
+import moment from 'moment';
 
 export default function ManageCombo() {
   const [combos, setCombos] = useState([]);
@@ -146,7 +147,7 @@ export default function ManageCombo() {
   };
 
   // Search
-  const keys = ["name"];
+  const keys = ["name", "price", "startDate", "endDate", "status", "desc"];
   const search = () => {
     if (combos) {
       return combos.filter((combo) =>
@@ -170,10 +171,7 @@ export default function ManageCombo() {
 
   // Currency functions
   const formattedPrice = (price) => {
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    }).format(price);
+    return new Intl.NumberFormat("vi-VN").format(price);
   };
 
   // Start fetching data
@@ -228,7 +226,7 @@ export default function ManageCombo() {
                 onChange={(e) => {
                   setQuery(e.target.value);
                 }}
-                label="Search name of service..."
+                label="Search..."
               />
             </Box>
 
@@ -238,6 +236,8 @@ export default function ManageCombo() {
                 <tr>
                   <th>Name</th>
                   <th>Price (VND)</th>
+                  <th>Start Date</th>
+                  <th>End Date</th>
                   <th>Status</th>
                   <th></th>
                 </tr>
@@ -247,6 +247,8 @@ export default function ManageCombo() {
                   <tr key={combo._id}>
                     <td>{combo.name}</td>
                     <td>{formattedPrice(combo.price)} </td>
+                    <td>{moment(combo.startDate).format('YYYY/MM/DD HH:mm:ss') }</td>
+                    <td>{moment(combo.endDate).format('YYYY/MM/DD HH:mm:ss') }</td>
                     <td style={{ color: getStatusColor(combo.status) }}>
                       {combo.status}
                     </td>
@@ -282,7 +284,7 @@ export default function ManageCombo() {
                           <Dropdown.Item className="dropdown-item">
                             <Link
                               className="update-button"
-                              to={`/updateCombo?${combo.name}`}
+                              to={`/updateCombo/${combo.name}`}
                             >
                               <Tooltip
                                 title="Edit"

@@ -19,6 +19,11 @@ import { styled } from "@mui/material/styles";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { storage } from "../../common/FirebaseConfig";
 import { getDownloadURL, listAll, ref, uploadBytes } from "firebase/storage";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
 
 // Utility function to get next day's date
 const getNextDayDate = () => {
@@ -37,8 +42,8 @@ export default function AddCombo() {
     initialValues: {
       name: "",
       price: "",
-      startDate: "",
-      endDate: "",
+      startDate: dayjs(new Date()),
+      endDate: dayjs(new Date()),
       desc: "",
       serviceId: [],
       image: "",
@@ -168,12 +173,6 @@ export default function AddCombo() {
     }
   };
 
-  // Function to handle date changes
-  const handleDateChange = (e) => {
-    const { name, value } = e.target;
-    formik.setFieldValue(name, value); // Update formik values
-  };
-
   //Read all service
   const readAllService = async () => {
     let isFetched = true;
@@ -189,6 +188,11 @@ export default function AddCombo() {
     return () => {
       isFetched = false;
     };
+  };
+
+  // Currency functions
+  const formattedPrice = (price) => {
+    return new Intl.NumberFormat().format(price);
   };
 
   useEffect(() => {
@@ -221,7 +225,7 @@ export default function AddCombo() {
           <div className="row ">
             <div className="col form">
               {/* Heading */}
-              <div className="row mb-2">
+              <div className="row mb-3">
                 {/* Back Button */}
                 <div className="col-3">
                   <Link to="/manageCombo">
@@ -240,7 +244,7 @@ export default function AddCombo() {
               {/* Form */}
               <form onSubmit={formik.handleSubmit}>
                 {/* Input Name */}
-                <div className="row mb-4">
+                <div className="row mb-3">
                   <a
                     data-tooltip-id="name-tooltip"
                     data-tooltip-content={formik.errors.name}
@@ -260,13 +264,14 @@ export default function AddCombo() {
                 <Tooltip id="name-tooltip" isOpen={true} imperativeModeOnly />
 
                 {/* Input Price */}
-                <div className="row mb-4">
+                <div className="row mb-3">
                   <a
                     data-tooltip-id="price-tooltip"
                     data-tooltip-content={formik.errors.price}
                     data-tooltip-variant="warning"
                     data-tooltip-place="right"
                   >
+                   
                     <TextField
                       label="Price"
                       variant="outlined"
@@ -280,53 +285,53 @@ export default function AddCombo() {
                 </div>
                 <Tooltip id="price-tooltip" isOpen={true} imperativeModeOnly />
 
-                {/* Input Start Date */}
-                <div className="row mb-4">
-                  <label>Start Date</label>
-                  <a
-                    data-tooltip-id="startDate-tooltip"
-                    data-tooltip-content={formik.errors.startDate}
-                    data-tooltip-variant="warning"
-                    data-tooltip-place="right"
-                  >
-                    <input
-                      onChange={handleDateChange}
-                      type="date"
-                      name="startDate"
-                      value={formik.values.startDate}
-                      minDate={getNextDayDate()}
-                    />
-                  </a>
+                {/* Start Date and End Date */}
+                <div className="row mb-3">
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoContainer components={["DatePicker", "DatePicker"]}>
+                      <a
+                        data-tooltip-id="startDate-tooltip"
+                        data-tooltip-content={formik.errors.startDate}
+                        data-tooltip-variant="warning"
+                        data-tooltip-place="left"
+                      >
+                        <DatePicker
+                          label="Start Date"
+                          onChange={(newValue) =>
+                            formik.setFieldValue("startDate", newValue)
+                          }
+                          value={formik.values.startDate}
+                          name="startDate"
+                        />
+                      </a>
+                      <Tooltip
+                        id="startDate-tooltip"
+                        isOpen={true}
+                        imperativeModeOnly
+                      />
+                      <a
+                        data-tooltip-id="endDate-tooltip"
+                        data-tooltip-content={formik.errors.endDate}
+                        data-tooltip-variant="warning"
+                        data-tooltip-place="right"
+                      >
+                        <DatePicker
+                          label="End Date"
+                          onChange={(newValue) =>
+                            formik.setFieldValue("endDate", newValue)
+                          }
+                          value={formik.values.startDate}
+                          name="endDate"
+                        />
+                      </a>
+                      <Tooltip
+                        id="endDate-tooltip"
+                        isOpen={true}
+                        imperativeModeOnly
+                      />
+                    </DemoContainer>
+                  </LocalizationProvider>
                 </div>
-                <Tooltip
-                  id="startDate-tooltip"
-                  isOpen={true}
-                  imperativeModeOnly
-                />
-
-                {/* Input End Date */}
-                <div className="row mb-4">
-                  <label>End Date</label>
-                  <a
-                    data-tooltip-id="endDate-tooltip"
-                    data-tooltip-content={formik.errors.endDate}
-                    data-tooltip-variant="warning"
-                    data-tooltip-place="right"
-                  >
-                    <input
-                      onChange={handleDateChange}
-                      type="date"
-                      name="endDate"
-                      value={formik.values.endDate}
-                      minDate={formik.values.startDate}
-                    />
-                  </a>
-                </div>
-                <Tooltip
-                  id="endDate-tooltip"
-                  isOpen={true}
-                  imperativeModeOnly
-                />
 
                 {/* Input Desc */}
                 <div className="row mb-3">
@@ -350,7 +355,7 @@ export default function AddCombo() {
                 <Tooltip id="desc-tooltip" isOpen={true} imperativeModeOnly />
 
                 {/* Choose Service */}
-                <div className="row mb-4">
+                <div className="row mb-3">
                   <label>Service</label>
                   <a
                     data-tooltip-id="services-tooltip"
@@ -419,7 +424,7 @@ export default function AddCombo() {
                 </div>
 
                 {/* Switch */}
-                <div className="row mb-4">
+                <div className="row mb-3">
                   <a
                     data-tooltip-id="agree-tooltip"
                     data-tooltip-content={formik.errors.agree}

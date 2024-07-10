@@ -8,6 +8,7 @@ const indexRefund = (req, res) => {
 // CREATE
 const createRefund = async (req, res) => {
   const id = req.params.id;
+  console.log("BookingID: "+id);
 
   try {
     const existingBooking = await Booking.findById(id);
@@ -15,7 +16,7 @@ const createRefund = async (req, res) => {
       return res.status(404).json({ success: false, message: "Booking not found" });
     }
 
-    const existingRefund = await Refund.findOne({ bookingID: id });
+    const existingRefund = await Refund.findOne({ bookingId: id });
     if (existingRefund) {
       return res.status(400).json({ success: false, message: "Refund already requested for this booking" });
     }
@@ -31,21 +32,26 @@ const createRefund = async (req, res) => {
       refundAmount = existingBooking.total * 0.7; // 70% refund
     }
 
+    const excessMoney = existingBooking.total - refundAmount;
+
     const newRefundData = {
       userName: req.body.userName,
-      bookingID: id,
+      bookingId: existingBooking._id,
       reason: req.body.reason,
       bank: req.body.bank,
       bankNumber: req.body.bankNumber,
       holder: req.body.holder,
       amount: refundAmount, // Set the calculated refund amount
-      status: req.body.status || "Pending", // Set default status to "Pending"
+      //status: req.body.status || "PENDING", // Set default status to "Pending"
     };
 
     const newRefund = new Refund(newRefundData);
     const result = await newRefund.save();
-
-    await Booking.updateOne({ _id: id }, { status: "Cancelled" });
+    
+    await Booking.updateOne(
+      { _id: id },
+      { $set: { status: "CANCELLED", total: excessMoney } }
+    );
 
     res.status(201).json({ success: true, message: "Refund created successfully", data: result });
   } catch (err) {

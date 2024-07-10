@@ -117,10 +117,19 @@ export default function BookingDetail() {
                 </Link>
               </div>
               <div className="col-6 text-right">
-                {booking.status === "Proccess" && (
+                {booking.status === "PROCCESS" && (
                   <Link to={`/refund?${booking._id}`}>
                     <button className="btn btn-success" type="button" disabled={!canRefund}>
                       Refund
+                    </button>
+                  </Link>
+                )}
+              </div>
+              <div className="col-6 text-right">
+                {booking.status === "PENDING" && (
+                  <Link to={`http://localhost:8888/order/create_payment_url?${booking.total}`}>
+                    <button className="btn btn-success" type="button">
+                      Paying
                     </button>
                   </Link>
                 )}

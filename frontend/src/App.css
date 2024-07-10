@@ -2448,19 +2448,19 @@ button:hover {
 }
 
 /* Booking list*/
-.status-Pending {
+.status-PENDING {
   color: rgba(255, 238, 0, 0.738);
 }
 
-.status-Proccess {
+.status-PROCCESS {
   color: rgba(0, 0, 255, 0.742);
 }
 
-.status-Finished {
+.status-FINISHED {
   color: rgba(0, 128, 0, 0.737);
 }
 
-.status-Cancelled {
+.status-CANCELLED {
   color: rgba(255, 0, 0, 0.616);
 }
 

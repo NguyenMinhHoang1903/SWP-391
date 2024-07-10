@@ -209,7 +209,7 @@ export default function ManageCombo() {
 
               <video
                 className="heading-video"
-                src="assets/videos/video-6.webm"
+                src="assets/videos/video-7.webm"
                 muted
                 autoPlay
                 loop

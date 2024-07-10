@@ -7,8 +7,18 @@ import { useFormik } from "formik";
 import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { IconButton } from "@mui/material";
+import {
+  Backdrop,
+  CircularProgress,
+  Button,
+  IconButton,
+  TextField,
+} from "@mui/material";
 import TooltipDefault from "@mui/material/Tooltip";
+import { styled } from "@mui/material/styles";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { storage } from "../../common/FirebaseConfig";
+import { getDownloadURL, listAll, ref, uploadBytes } from "firebase/storage";
 
 // Utility function to get next day's date
 const getNextDayDate = () => {
@@ -21,6 +31,7 @@ const getNextDayDate = () => {
 export default function AddCombo() {
   const navigate = useNavigate();
   const [services, setServices] = useState([]);
+  const [openBackDrop, setOpenBackDrop] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -30,37 +41,66 @@ export default function AddCombo() {
       endDate: "",
       desc: "",
       serviceId: [],
+      image: "",
+      imageUrl: "",
       agree: false,
     },
     onSubmit: (values) => {
       const { startDate, endDate } = values;
       const validStartDate = startDate;
       const validEndDate = endDate;
+      setOpenBackDrop(true);
 
-      fetch("http://localhost:5000/api/combos/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: values.name,
-          price: Number(values.price),
-          startDate: validStartDate,
-          endDate: validEndDate,
-          desc: values.desc,
-          serviceId: values.serviceId,
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.message === 0) {
-            toast.error("The name is already exists.");
-          } else {
-            toast.success("Add Successfully");
-            navigate("/manageCombo");
-          }
-        })
-        .catch((err) => console.log(err));
+      // Store image in firebase storage
+      const imgRef = ref(
+        storage,
+        `${values.name}/${values.name}/${values.image.name}`
+      );
+      uploadBytes(imgRef, values.image);
+
+      // Get download URL and set to imageUrl
+
+      // Call API
+      setTimeout(() => {
+        if (values.image) {
+          listAll(ref(storage, `${values.name}/${values.name}`)).then(
+            (images) => {
+              images.items.forEach((imageRef) => {
+                getDownloadURL(imageRef).then((url) => {
+                  // Create combo in database
+                  fetch("http://localhost:5000/api/combos/create", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      name: values.name,
+                      price: Number(values.price),
+                      startDate: validStartDate,
+                      endDate: validEndDate,
+                      desc: values.desc,
+                      serviceId: values.serviceId,
+                      imageName: values.image.name,
+                      imageUrl: url,
+                    }),
+                  })
+                    .then((res) => res.json())
+                    .then((data) => {
+                      setOpenBackDrop(false);
+                      if (data.message === 0) {
+                        toast.error("The name is already exists.");
+                      } else {
+                        toast.success("Add Successfully");
+                        navigate("/manageCombo");
+                      }
+                    })
+                    .catch((err) => console.log(err));
+                });
+              });
+            }
+          );
+        }
+      }, 2000);
     },
     validationSchema: Yup.object({
       name: Yup.string()
@@ -159,21 +199,26 @@ export default function AddCombo() {
     };
   }, []);
 
+  // Image Theme Settings
+  const VisuallyHiddenInput = styled("input")({
+    clip: "rect(0 0 0 0)",
+    clipPath: "inset(50%)",
+    height: 1,
+    overflow: "hidden",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    whiteSpace: "nowrap",
+    width: 1,
+  });
+
   return (
     <>
       <div className="addCombo-component">
+        <video src="assets/videos/video-6.webm" muted autoPlay loop></video>
+
         <div className="container">
           <div className="row ">
-            {/* Video */}
-            <div className="col">
-              <video
-                src="assets/videos/video-2.mp4"
-                muted
-                autoPlay
-                loop
-              ></video>
-            </div>
-
             <div className="col form">
               {/* Heading */}
               <div className="row mb-2">
@@ -188,7 +233,7 @@ export default function AddCombo() {
                   </Link>
                 </div>
                 <div className="col-9">
-                  <div className="heading">ADD NEW COMBO</div>
+                  <div className="heading ms-4">Add New Combo</div>
                 </div>
               </div>
 
@@ -196,14 +241,15 @@ export default function AddCombo() {
               <form onSubmit={formik.handleSubmit}>
                 {/* Input Name */}
                 <div className="row mb-4">
-                  <label>Name</label>
                   <a
                     data-tooltip-id="name-tooltip"
                     data-tooltip-content={formik.errors.name}
                     data-tooltip-variant="warning"
                     data-tooltip-place="right"
                   >
-                    <input
+                    <TextField
+                      label="Name"
+                      variant="outlined"
                       onChange={formik.handleChange}
                       type="text"
                       name="name"
@@ -215,14 +261,15 @@ export default function AddCombo() {
 
                 {/* Input Price */}
                 <div className="row mb-4">
-                  <label>Price</label>
                   <a
                     data-tooltip-id="price-tooltip"
                     data-tooltip-content={formik.errors.price}
                     data-tooltip-variant="warning"
                     data-tooltip-place="right"
                   >
-                    <input
+                    <TextField
+                      label="Price"
+                      variant="outlined"
                       onChange={formik.handleChange}
                       onKeyDown={handleKeyDown}
                       type="text"
@@ -283,18 +330,20 @@ export default function AddCombo() {
 
                 {/* Input Desc */}
                 <div className="row mb-3">
-                  <label>Description</label>
                   <a
                     data-tooltip-id="desc-tooltip"
                     data-tooltip-content={formik.errors.desc}
                     data-tooltip-variant="warning"
                     data-tooltip-place="right"
                   >
-                    <input
+                    <TextField
+                      label="Description"
+                      variant="outlined"
                       onChange={formik.handleChange}
                       type="text"
                       name="desc"
                       value={formik.values.desc}
+                      fullWidth
                     />
                   </a>
                 </div>
@@ -335,6 +384,40 @@ export default function AddCombo() {
                   imperativeModeOnly
                 />
 
+                {/* Input Image */}
+                <div className="row align-items-center mb-3">
+                  <div className="col">
+                    <Button
+                      sx={{
+                        bgcolor: "rgb(0, 201, 170)",
+                        ":hover": { bgcolor: "rgb(0, 201, 170)" },
+                        marginBottom: 2,
+                      }}
+                      component="label"
+                      role={undefined}
+                      variant="contained"
+                      tabIndex={-1}
+                      startIcon={<CloudUploadIcon />}
+                    >
+                      Upload file
+                      <VisuallyHiddenInput
+                        type="file"
+                        name="image"
+                        accept="image/*"
+                        onChange={(e) =>
+                          formik.setFieldValue(
+                            "image",
+                            e.currentTarget.files[0]
+                          )
+                        }
+                      />
+                    </Button>
+                  </div>
+                  <div className="col text-black h5">
+                    {formik.values.image.name}
+                  </div>
+                </div>
+
                 {/* Switch */}
                 <div className="row mb-4">
                   <a
@@ -372,6 +455,13 @@ export default function AddCombo() {
             </div>
           </div>
         </div>
+
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={openBackDrop}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
       </div>
     </>
   );

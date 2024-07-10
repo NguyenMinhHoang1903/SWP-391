@@ -15,6 +15,8 @@ const createService = async (req, res) => {
         name: req.body.name,
         priceByWeight: req.body.priceByWeight,
         desc: req.body.desc,
+        imageName: req.body.imageName,
+        imageUrl: req.body.imageUrl,
       });
 
       newService
@@ -41,9 +43,9 @@ const readAllService = async (req, res) => {
 
 // READ ONE SERVICE
 const readOneService = async (req, res) => {
-  const id = req.params.id;
+  const name = req.params.name;
 
-  await Service.findOne({ _id: id })
+  await Service.findOne({ name: name })
     .then((result) => {
       res.send(result);
     })
@@ -81,6 +83,8 @@ const updateOneService = async (req, res) => {
       name: name,
       priceByWeight: req.body.priceByWeight,
       desc: req.body.desc,
+      imageUrl: req.body.imageUrl,
+      imageName: req.body.imageName,
     });
 
     await newService

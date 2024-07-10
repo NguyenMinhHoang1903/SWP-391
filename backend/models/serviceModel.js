@@ -14,6 +14,14 @@ const serviceSchema = new Schema({
         type: String,
         required: true
     },
+    imageUrl: {
+        type: String,
+        required: true
+    },
+    imageName: {
+        type: String,
+        required: true
+    },
 }, { timestamps: true });
 
 const Service = mongoose.model('Service', serviceSchema);

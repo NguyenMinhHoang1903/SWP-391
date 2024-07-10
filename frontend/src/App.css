@@ -1641,35 +1641,35 @@ form .input-field {
   to {transform: translateX(0);}
 }
 
-.addService-component .container {
-  background: rgb(185,114,74);
-  width: 60%;
-  margin-bottom: 30px;
-  margin-top: 30px;
-  border-radius: 20px;
-  box-shadow: 5px 5px 10px rgb(0, 0, 0, 0.15);
-  animation: 1s ease-in-out component-motion;
+.addService-component {
+  position: relative;
+  padding-top: 50px;
+  padding-bottom: 50px;
 }
 
-/* Video */
-.addService-component .col video {
+.addService-component video {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: 100.2%;
+  height: 100%;
   object-fit: cover;
-  margin-left: -12px;
-  border-end-start-radius: 20px;
-  border-start-start-radius: 20px;
-  box-shadow: 0 5px 10px rgb(0, 0, 0, 0.3);
+  z-index: -2;
+}
+
+.addService-component .container {
+  background: white;
+  width: 40%;
+  animation: 1s ease-in-out component-motion;
 }
 
 /* Heading */
 .addService-component .heading {
-  color: black;
+  color: rgb(185,114,74);
   margin-top: 5px;
   font-weight: 500;
   font-size: 2rem;
   font-weight: bold;
-  text-shadow: 0 5px 10px rgb(0, 0, 0, 0.15);
 }
 
 /* Back Button */
@@ -1679,28 +1679,9 @@ form .input-field {
 }
 
 .addService-component .form {
-  padding: 40px 60px;
+  padding: 20px 40px;
 }
 
-/* Input */
-.addService-component .col .row input, .addService-component .col .row select {
-  background-color: rgba(255, 255, 255, 0.85);
-  width: 100%;
-  padding: 10px 20px;
-  border-radius: 15px;
-  border: none;
-  box-shadow: 5px 5px 5px rgb(0, 0, 0, 0.15);
-}
-.addService-component .col .row input:hover {
-  background-color: rgba(255, 255, 255, 0.75);
-}
-
-.addService-component .col .row label {
-  color: white;
-  font-weight: 500;
-  font-size: 1.1rem;
-  margin-bottom: 8px;
-}
 
 /* Switch Input */
 .addService-component .col .row .form-check-input {
@@ -1729,9 +1710,7 @@ form .input-field {
   transition: .2s;
 }
 .addService-component .submit-button:hover {
-  background-color: white;
-  color: rgb(0, 201, 170);
-  box-shadow: 7px 7px 10px rgb(0, 0, 0, 0.3);
+  box-shadow: 5px 0 7px rgb(0, 0, 0, 0.3);
 }
 .addService-component .submit-button:active {
   opacity: .7;
@@ -1747,7 +1726,6 @@ form .input-field {
   box-shadow: none;
 }
 /* Add Service (bottom) */
-
 
 
 /* Update Service (top) */

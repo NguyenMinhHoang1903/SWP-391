@@ -9,6 +9,7 @@ import SubjectTwoToneIcon from '@mui/icons-material/SubjectTwoTone';
 import PaymentsTwoToneIcon from '@mui/icons-material/PaymentsTwoTone';
 import NumbersTwoToneIcon from '@mui/icons-material/NumbersTwoTone';
 import PetsTwoToneIcon from '@mui/icons-material/PetsTwoTone';
+import AccountBoxOutlinedIcon from '@mui/icons-material/AccountBoxOutlined';
 import { Link } from "react-router-dom";
 import { TiEdit } from "react-icons/ti";
 import ChangeBookingRole from "./updateBooking";
@@ -16,7 +17,8 @@ import ChangeBookingRole from "./updateBooking";
 export default function ManageBooking() {
   const [bookingList, setBookingList] = useState([]);
   const [openUpdateRole, setOpenUpdateRole] = useState(false);
-  const [filteredStatus, setFilteredStatus] = useState("All"); // State to store filtered status
+  const [filteredStatus, setFilteredStatus] = useState("All");
+  const [searchQuery, setSearchQuery] = useState(""); // State to store search query
 
   const [updateBookingDetails, setUpdateBookingDetails] = useState({
     userName: "",
@@ -32,6 +34,9 @@ export default function ManageBooking() {
     status: "",
   });
 
+  useEffect(() => {
+    fetchAllBooking();
+  }, []);
 
   const fetchAllBooking = async () => {
     try {
@@ -43,10 +48,8 @@ export default function ManageBooking() {
       const dataResponse = await fetchData.json();
       if (dataResponse.success) {
         const sortBookings = dataResponse.data;
-        // Sort bookings by date in ascending order (oldest to newest)
         sortBookings.sort((a, b) => new Date(b.date) - new Date(a.date));
         setBookingList(sortBookings);
-        // setBookingList(dataResponse.data);
       } else {
         toast.error(dataResponse.message);
       }
@@ -55,24 +58,24 @@ export default function ManageBooking() {
     }
   };
 
-  useEffect(() => {
-    fetchAllBooking();
-  }, []);
-
-  // const [isOpen, setIsOpen] = useState(false);
-  // const toggleMenu = () => {
-  //   setIsOpen(!isOpen);
-  // };
   const handleFilterChange = (event) => {
     setFilteredStatus(event.target.value);
   };
 
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
   const filterBookings = (booking) => {
-    if (filteredStatus === "All") {
-      return true; // Show all bookings if "All" is selected
-    } else {
-      return booking.status === filteredStatus; // Filter by selected status
-    }
+    const matchesStatus = filteredStatus === "All" || booking.status === filteredStatus;
+    const matchesSearch = searchQuery === "" || 
+                          booking.userName.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                          booking.petName.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesStatus && matchesSearch;
+  };
+
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('vi-VN').format(amount);
   };
 
   return (
@@ -97,6 +100,15 @@ export default function ManageBooking() {
             {/* Filter bar */}
             <div className="row justify-content-end mb-3">
               <div className="col-auto">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Search by Customer or Pet"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                />
+              </div>
+              <div className="col-auto">
                 <select
                   className="form-select"
                   value={filteredStatus}
@@ -117,7 +129,7 @@ export default function ManageBooking() {
                     <NumbersTwoToneIcon /> No.
                   </th>
                   <th style={{ textAlign: "center" }}>
-                    <PetsTwoToneIcon /> Customer's Name
+                    <AccountBoxOutlinedIcon /> Customer's Name
                   </th>
                   <th style={{ textAlign: "center" }}>
                     <PetsTwoToneIcon /> Pet's Name
@@ -152,10 +164,8 @@ export default function ManageBooking() {
                       <td style={{ textAlign: "center" }}>{data?.petName}</td>
                       <td style={{ textAlign: "center" }}>{formattedDate}</td>
                       <td style={{ textAlign: "center" }}>{formattedTime}</td>
-                      <td style={{ textAlign: "right" }}>{data?.total}</td>
-                      {/* <td style={{ textAlign: "center" }}>{data?.status}</td> */}
+                      <td style={{ textAlign: "right" }}>{formatCurrency(data?.total)}</td>
                       <td className={`status-${data?.status}`} style={{ textAlign: "center" }}>{data?.status}</td>
-
                       <td>
                         <Link
                           className="update-button"
@@ -168,9 +178,7 @@ export default function ManageBooking() {
                           </Tooltip>
                         </Link>
                       </td>
-
                       <td>
-                        {" "}
                         <button
                           className="edit"
                           onClick={() => {

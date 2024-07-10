@@ -1541,31 +1541,15 @@ form .input-field {
   to {transform: translateX(0);}
 }
 
-
 .manageService-component .container {
-  padding-bottom: 30px;
-  padding-top: 30px;
+  background-color: rgb(185,114,74);
+  width: 70%;
+  margin-bottom: 30px;
+  margin-top: 30px;
+  padding: 40px 50px;
+  border-radius: 20px;
   animation: 1s ease-in-out component-motion;
 }
-
-.manageService-component .heading {
-  position: relative;
-  width: 100%;
-  height: 15vh;
-  margin-bottom: 30px;
-  padding: 10px;
-}
-
-.manageService-component .heading video {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: -2;
-}
-
 
 /* Back Button */
 .manageService-component .back-button {
@@ -1574,12 +1558,18 @@ form .input-field {
 }
 
 /* Heading */
-.manageService-component .heading-center {
-  color: white;
+.manageService-component .heading {
   font-size: 3rem;
   font-weight: 500;
 }
 
+/* Video */
+.manageService-component .heading-video {
+  width: 100%;
+  border-radius: 20px;
+  border: 10px solid white;
+  margin-bottom: 30px;
+}
 
 /* Dropdown Toggle */
 .manageService-component tbody .dropdown-toggle {
@@ -1625,7 +1615,9 @@ form .input-field {
   transition: .2s;
 }
 .manageService-component .add-button .add-button-Link:hover {
-  box-shadow: 0 0 10px rgb(0, 0, 0, 0.3);
+  color: rgb(0, 201, 170);
+  background-color: white;
+  box-shadow: 5px 5px 10px rgb(0, 0, 0, 0.3);
 }
 .manageService-component .add-button .add-button-Link:active {
   opacity: .7;
@@ -1641,35 +1633,35 @@ form .input-field {
   to {transform: translateX(0);}
 }
 
-.addService-component {
-  position: relative;
-  padding-top: 50px;
-  padding-bottom: 50px;
-}
-
-.addService-component video {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: -2;
-}
-
 .addService-component .container {
-  background: white;
-  width: 40%;
+  background: rgb(185,114,74);
+  width: 60%;
+  margin-bottom: 30px;
+  margin-top: 30px;
+  border-radius: 20px;
+  box-shadow: 5px 5px 10px rgb(0, 0, 0, 0.15);
   animation: 1s ease-in-out component-motion;
+}
+
+/* Video */
+.addService-component .col video {
+  width: 100%;
+  height: 100.2%;
+  object-fit: cover;
+  margin-left: -12px;
+  border-end-start-radius: 20px;
+  border-start-start-radius: 20px;
+  box-shadow: 0 5px 10px rgb(0, 0, 0, 0.3);
 }
 
 /* Heading */
 .addService-component .heading {
-  color: rgb(185,114,74);
+  color: black;
   margin-top: 5px;
   font-weight: 500;
   font-size: 2rem;
   font-weight: bold;
+  text-shadow: 0 5px 10px rgb(0, 0, 0, 0.15);
 }
 
 /* Back Button */
@@ -1679,9 +1671,28 @@ form .input-field {
 }
 
 .addService-component .form {
-  padding: 20px 40px;
+  padding: 40px 60px;
 }
 
+/* Input */
+.addService-component .col .row input, .addService-component .col .row select {
+  background-color: rgba(255, 255, 255, 0.85);
+  width: 100%;
+  padding: 10px 20px;
+  border-radius: 15px;
+  border: none;
+  box-shadow: 5px 5px 5px rgb(0, 0, 0, 0.15);
+}
+.addService-component .col .row input:hover {
+  background-color: rgba(255, 255, 255, 0.75);
+}
+
+.addService-component .col .row label {
+  color: white;
+  font-weight: 500;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
 
 /* Switch Input */
 .addService-component .col .row .form-check-input {
@@ -1710,7 +1721,9 @@ form .input-field {
   transition: .2s;
 }
 .addService-component .submit-button:hover {
-  box-shadow: 5px 0 7px rgb(0, 0, 0, 0.3);
+  background-color: white;
+  color: rgb(0, 201, 170);
+  box-shadow: 7px 7px 10px rgb(0, 0, 0, 0.3);
 }
 .addService-component .submit-button:active {
   opacity: .7;
@@ -1728,6 +1741,121 @@ form .input-field {
 /* Add Service (bottom) */
 
 
+
+/* Update Service (top) */
+/* Component */
+@keyframes component-motion {
+  from { transform: translateX(-1300px); }
+  to {transform: translateX(0);}
+}
+
+.updateService-component .container {
+  background: rgb(185,114,74);
+  width: 60%;
+  margin-bottom: 30px;
+  margin-top: 30px;
+  border-radius: 20px;
+  box-shadow: 5px 5px 10px rgb(0, 0, 0, 0.15);
+  animation: 1s ease-in-out component-motion;
+}
+
+/* Video */
+.updateService-component .col video {
+  width: 100%;
+  height: 100.04%;
+  object-fit: cover;
+  margin-left: -12px;
+  border-end-start-radius: 20px;
+  border-start-start-radius: 20px;
+  box-shadow: 0 5px 10px rgb(0, 0, 0, 0.3);
+}
+
+/* Heading */
+.updateService-component .heading {
+  margin-top: 9px;
+  font-size: 1.8rem;
+  font-weight: 500;
+  font-weight: bold;
+}
+
+/* Back Button */
+.updateService-component .back-button {
+  width: 40px;
+  height: 40px;
+}
+
+.updateService-component .form {
+  padding: 40px 80px;
+}
+
+/* Input */
+.updateService-component .col .row input, .updateService-component .col .row select {
+  background-color: rgba(255, 255, 255, 0.85);
+  width: 100%;
+  padding: 10px 20px;
+  border-radius: 15px;
+  border: none;
+  box-shadow: 5px 5px 5px rgb(0, 0, 0, 0.15);
+}
+.updateService-component .col .row input:hover {
+  background-color: rgba(255, 255, 255, 0.75);
+}
+
+.updateService-component .col .row label {
+  color: white;
+  font-weight: 500;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+/* Switch Input */
+.updateService-component .col .row .form-check-input {
+  background-color: white;
+  width: 15%;
+  margin-right: 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: .4s;
+}
+.updateService-component .col .row .form-check-input:checked {
+  background-color: rgb(0, 201, 170);
+}
+
+/* Submit Button */
+.updateService-component .submit-button {
+  background-color: rgb(0, 201, 170);
+  color: white;
+  width: 100%;
+  font-weight: 500;
+  font-size: 1rem;
+  border-radius: 20px;
+  padding: 9px 20px;
+  border: none;
+  margin-bottom: 20px;
+  transition: .2s;
+}
+.updateService-component .submit-button:hover {
+  background-color: white;
+  color: rgb(0, 201, 170);
+  box-shadow: 7px 7px 10px rgb(0, 0, 0, 0.3);
+}
+.updateService-component .submit-button:active {
+  opacity: .7;
+}
+
+.updateService-component .submit-button:disabled {
+  cursor: not-allowed;
+  opacity: .7;
+}
+.updateService-component .submit-button:disabled:hover {
+  background-color: rgb(0, 201, 170);
+  color: white;
+  box-shadow: none;
+}
+/* Update Service (bottom) */
+
+
+
 /* Manage Combo (top) */
 
 @keyframes component-motion {
@@ -1736,27 +1864,13 @@ form .input-field {
 }
 
 .manageCombo-component .container {
-  padding-bottom: 30px;
-  padding-top: 30px;
-  animation: 1s ease-in-out component-motion;
-}
-
-.manageCombo-component .heading {
-  position: relative;
-  width: 100%;
-  height: 15vh;
+  background-color: rgb(185,114,74);
+  width: 80%;
   margin-bottom: 30px;
-  padding: 10px;
-}
-
-.manageCombo-component .heading video {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: -2;
+  margin-top: 30px;
+  padding: 40px 40px;
+  border-radius: 20px;
+  animation: 1s ease-in-out component-motion;
 }
 
 
@@ -1767,11 +1881,20 @@ form .input-field {
 }
 
 /* Heading */
-.manageCombo-component .heading-center {
-  color: white;
-  font-size: 3rem;
+.manageCombo-component .heading {
   font-weight: 500;
+  font-size: 3rem;
+  font-weight: bold;
 }
+
+/* Video Heading */
+.manageCombo-component .heading-video {
+  width: 100%;
+  border-radius: 20px;
+  border: 10px solid white;
+  margin-bottom: 20px;
+}
+
 /* Dropdown Toggle */
 .manageCombo-component tbody .dropdown-toggle {
   background-color: rgb(0, 201, 170);
@@ -1815,12 +1938,15 @@ form .input-field {
   transition: .2s;
 }
 .manageCombo-component .add-button .add-button-Link:hover {
-  box-shadow: 0 0 10px rgb(0, 0, 0, 0.3);
+  color: rgb(0, 201, 170);
+  background-color: white;
+  box-shadow: 5px 5px 10px rgb(0, 0, 0, 0.3);
 }
 .manageCombo-component .add-button .add-button-Link:active {
   opacity: .7;
 }
 /* Manage Combo (bottom) */
+
 
 
 /* Add Combo (top) */
@@ -1830,35 +1956,33 @@ form .input-field {
   to {transform: translateX(0);}
 }
 
-.addCombo-component {
-  position: relative;
-  padding-top: 50px;
-  padding-bottom: 50px;
-}
-
-.addCombo-component video {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: -2;
-}
-
 .addCombo-component .container {
-  background: white;
-  width: 40%;
+  background: rgb(185,114,74);
+  width: 60%;
+  margin-bottom: 30px;
+  margin-top: 30px;
+  border-radius: 20px;
+  box-shadow: 5px 5px 10px rgb(0, 0, 0, 0.15);
   animation: 1s ease-in-out component-motion;
+}
+
+/* Video */
+.addCombo-component .col video {
+  width: 110%;
+  height: 100.04%;
+  object-fit: cover;
+  margin-left: -12px;
+  border-end-start-radius: 20px;
+  border-start-start-radius: 20px;
+  box-shadow: 0 5px 10px rgb(0, 0, 0, 0.3);
 }
 
 /* Heading */
 .addCombo-component .heading {
-  color: rgb(185,114,74);
-  margin-top: 5px;
   font-weight: 500;
   font-size: 2rem;
   font-weight: bold;
+  margin-top: 5px;
 }
 
 /* Back Button */
@@ -1870,6 +1994,27 @@ form .input-field {
 .addCombo-component .form {
   padding: 20px 50px;
 }
+
+/* Input */
+.addCombo-component .col .row input, .addCombo-component .col .row select {
+  background-color: rgba(255, 255, 255, 0.85);
+  width: 100%;
+  padding: 10px 20px;
+  border-radius: 15px;
+  border: none;
+  box-shadow: 5px 5px 5px rgb(0, 0, 0, 0.15);
+}
+.addCombo-component .col .row input:hover {
+  background-color: rgba(255, 255, 255, 0.75);
+}
+
+.addCombo-component .col .row label {
+  color: white;
+  font-weight: 500;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
 
 /* Switch Input */
 .addCombo-component .col .row .form-check-input {
@@ -1899,7 +2044,9 @@ form .input-field {
   transition: .2s;
 }
 .addCombo-component .submit-button:hover {
-  box-shadow: 0 0 10px rgb(0, 0, 0, 0.3);
+  background-color: white;
+  color: rgb(0, 201, 170);
+  box-shadow: 7px 7px 10px rgb(0, 0, 0, 0.3);
 }
 .addCombo-component .submit-button:active {
   opacity: .7;
@@ -1915,6 +2062,121 @@ form .input-field {
   box-shadow: none;
 }
 /* Add Combo (bottom) */
+
+
+
+/* Update Combo (top) */
+/* Component */
+@keyframes component-motion {
+  from { transform: translateX(-1300px); }
+  to {transform: translateX(0);}
+}
+
+.updateCombo-component .container {
+  background: rgb(185,114,74);
+  width: 60%; 
+  margin-bottom: 30px;
+  margin-top: 30px;
+  border-radius: 20px;
+  box-shadow: 5px 5px 10px rgb(0, 0, 0, 0.15);
+  animation: 1s ease-in-out component-motion;
+}
+
+/* Video */
+.updateCombo-component .col video {
+  width: 110%;
+  height: 100.04%;
+  object-fit: cover;
+  margin-left: -12px;
+  border-end-start-radius: 20px;
+  border-start-start-radius: 20px;
+  box-shadow: 0 5px 10px rgb(0, 0, 0, 0.3);
+}
+
+/* Heading */
+.updateCombo-component .heading {
+  font-weight: 500;
+  font-weight: bold;
+  font-size: 2.5rem;
+}
+
+/* Back Button */
+.updateCombo-component .back-button {
+  width: 40px;
+  height: 40px;
+}
+
+.updateCombo-component .form {
+  padding: 40px 50px;
+}
+
+/* Input */
+.updateCombo-component .col .row input, .updateCombo-component .col .row select {
+  background-color: rgba(255, 255, 255, 0.85);
+  width: 100%;
+  padding: 10px 20px;
+  border-radius: 15px;
+  border: none;
+  box-shadow: 5px 5px 5px rgb(0, 0, 0, 0.15);
+}
+.updateCombo-component .col .row input:hover {
+  background-color: rgba(255, 255, 255, 0.75);
+}
+
+.updateCombo-component .col .row label {
+  color: white;
+  font-weight: 500;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+
+/* Switch Input */
+.updateCombo-component .col .row .form-check-input {
+  background-color: white;
+  width: 15%;
+  margin-right: 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: .4s;
+}
+.updateCombo-component .col .row .form-check-input:checked {
+  background-color: rgb(0, 201, 170);
+}
+
+
+/* Submit Button */
+.updateCombo-component .submit-button {
+  background-color: rgb(0, 201, 170);
+  color: white;
+  width: 100%;
+  font-weight: 500;
+  font-size: 1rem;
+  border-radius: 20px;
+  padding: 9px 20px;
+  border: none;
+  margin-bottom: 20px;
+  transition: .2s;
+}
+.updateCombo-component .submit-button:hover {
+  background-color: white;
+  color: rgb(0, 201, 170);
+  box-shadow: 7px 7px 10px rgb(0, 0, 0, 0.3);
+}
+.updateCombo-component .submit-button:active {
+  opacity: .7;
+}
+
+.updateCombo-component .submit-button:disabled {
+  cursor: not-allowed;
+  opacity: .7;
+}
+.updateCombo-component .submit-button:disabled:hover {
+  background-color: rgb(0, 201, 170);
+  color: white;
+  box-shadow: none;
+}
+/* Update Combo (bottom) */
 
 
 
@@ -2186,19 +2448,19 @@ button:hover {
 }
 
 /* Booking list*/
-.status-Pending {
+.status-PENDING {
   color: rgba(255, 238, 0, 0.738);
 }
 
-.status-Proccess {
+.status-PROCESS {
   color: rgba(0, 0, 255, 0.742);
 }
 
-.status-Finished {
+.status-FINISHED {
   color: rgba(0, 128, 0, 0.737);
 }
 
-.status-Cancelled {
+.status-CANCELLED {
   color: rgba(255, 0, 0, 0.616);
 }
 

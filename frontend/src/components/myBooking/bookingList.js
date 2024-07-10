@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import SummaryApi from "../../common";
 import Tooltip from "@mui/material/Tooltip";
@@ -14,7 +14,6 @@ import { Link } from "react-router-dom";
 
 export default function MyBooking() {
   const user = useSelector((state) => state?.user?.user);
-  const dispatch = useDispatch();
   const [MyBookingList, setAllBooking] = useState([]);
   const [filteredStatus, setFilteredStatus] = useState("All"); // State to store filtered status
 
@@ -73,6 +72,10 @@ export default function MyBooking() {
     }
   };
 
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('vi-VN').format(amount);
+  };
+
   return (
     <div className="manageStaff-component">
       <div className="container-fluid">
@@ -100,10 +103,10 @@ export default function MyBooking() {
                   onChange={handleFilterChange}
                 >
                   <option value="All">All</option>
-                  <option value="PENDING">Pending</option>
-                  <option value="PROCESS">Process</option>
-                  <option value="FINISHED">Finished</option>
-                  <option value="CANCELLED">Cancelled</option>
+                  <option value="PENDING">PENDING</option>
+                  <option value="PROCESS">PROCESS</option>
+                  <option value="FINISHED">FINISHED</option>
+                  <option value="CANCELLED">CANCELLED</option>
                 </select>
               </div>
             </div>
@@ -144,7 +147,7 @@ export default function MyBooking() {
                       <td style={{ textAlign: "center" }}>{data?.petName}</td>
                       <td style={{ textAlign: "center" }}>{formattedDate}</td>
                       <td style={{ textAlign: "center" }}>{formattedTime}</td>
-                      <td style={{ textAlign: "right" }}>{data?.total}</td>
+                      <td style={{ textAlign: "right" }}>{formatCurrency(data?.total)}</td>
                       <td className={`status-${data?.status}`} style={{ textAlign: "center" }}>{data?.status}</td>
                       <td>
                         <Link

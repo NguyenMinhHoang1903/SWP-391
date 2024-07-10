@@ -26,6 +26,14 @@ const comboSchema = new Schema({
         type: Array,
         required: true
     },
+    imageUrl: {
+        type: String,
+        required: true
+    },
+    imageName: {
+        type: String,
+        required: true
+    },
 }, { timestamps: true });
 
 const Combo = mongoose.model('Combo', comboSchema);

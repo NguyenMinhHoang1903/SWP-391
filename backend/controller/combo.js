@@ -18,6 +18,8 @@ const createCombo = async (req, res) => {
       price: req.body.price,
       desc: req.body.desc,
       serviceId: req.body.serviceId,
+      imageName: req.body.imageName,
+      imageUrl: req.body.imageUrl,
     };
 
     if (req.body.startDate) {
@@ -32,7 +34,6 @@ const createCombo = async (req, res) => {
     await newCombo
       .save()
       .then((result) => {
-        console.log(result);
         res.send(result);
       })
       .catch((err) => console.log(err));
@@ -53,7 +54,7 @@ const readAllCombo = async (req, res) => {
 
 // Read one combo
 const readOneCombo = async (req, res) => {
-  let query = { _id: req.params.id.toString() }
+  let query = { name: req.params.name };
 
   await Combo.findOne(query)
     .then((result) => {
@@ -71,7 +72,7 @@ const readAllServiceOfCombo = async (req, res) => {
   const combo = await Combo.findOne(query1);
 
   //Find all service by service id that are stored in a combo
-  let query2 = ({ _id: { $in: combo.serviceId } })
+  let query2 = { _id: { $in: combo.serviceId } };
   await Service.find(query2)
     .sort({ name: 1 })
     .then((result) => {
@@ -98,13 +99,13 @@ const updateOneCombo = async (req, res) => {
   const oldName = req.body.oldName;
   const name = req.body.name;
   let query = { name: name };
-
+  console.log(oldName);
   const existingCombo = await Combo.findOne(query);
 
   if (existingCombo && existingCombo.name !== oldName) res.json({ message: 0 });
   else {
     await Combo.deleteOne({ name: oldName })
-      .then(result => console.log("Deleted Combo"))
+      .then((result) => console.log("Deleted Combo"))
       .catch((err) => console.log(err));
 
     const newCombo = await new Combo({
@@ -114,6 +115,8 @@ const updateOneCombo = async (req, res) => {
       endDate: req.body.endDate,
       desc: req.body.desc,
       serviceId: req.body.serviceId,
+      imageName: req.body.imageName,
+      imageUrl: req.body.imageUrl,
     });
 
     await newCombo
@@ -125,7 +128,6 @@ const updateOneCombo = async (req, res) => {
   }
 };
 
-
 module.exports = {
   indexCombo,
   createCombo,
@@ -133,5 +135,5 @@ module.exports = {
   readOneCombo,
   readAllServiceOfCombo,
   deleteOneCombo,
-  updateOneCombo
+  updateOneCombo,
 };

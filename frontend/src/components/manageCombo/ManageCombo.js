@@ -20,6 +20,8 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import TooltipDefault from "@mui/material/Tooltip";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import SearchIcon from "@mui/icons-material/Search";
+import { storage } from "../../common/FirebaseConfig";
+import { ref, deleteObject } from "firebase/storage";
 
 export default function ManageCombo() {
   const [combos, setCombos] = useState([]);
@@ -32,6 +34,9 @@ export default function ManageCombo() {
   const [openBackDrop, setOpenBackDrop] = useState(false);
   const [serviceDesc, setServiceDesc] = useState();
   const [query, setQuery] = useState("");
+  const [url, setUrl] = useState("");
+  const [imageName, setImageName] = useState("");
+  const [comboName, setComboName] = useState("");
 
   // Close modal
   const handleClose = (nameButton) => {
@@ -44,9 +49,14 @@ export default function ManageCombo() {
   const handleShow = (field, nameButton) => {
     if (nameButton === "deleteCombo") {
       setDeleteId(field._id);
+      setUrl(field.imageUrl);
+      setImageName(field.imageName);
+      setComboName(field.name);
       setShowDelete(true);
     } else if (nameButton === "comboDetail") {
       setOpenBackDrop(true);
+      console.log(field.imageUrl);
+      setUrl(field.imageUrl);
       setComboDesc(field.desc);
       readAllServiceByComboId(field._id);
     } else if (nameButton === "serviceDesc") {
@@ -88,6 +98,18 @@ export default function ManageCombo() {
   const deleteCombo = async () => {
     let isFetched = true;
     setShowDelete(false);
+
+    // Create a reference to the file to delete
+    const comboRef = ref(storage, `${comboName}/${comboName}/${imageName}`);
+    // Delete the image
+    deleteObject(comboRef)
+      .then(() => {
+        console.log("Deleted image");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
     await fetch(`http://localhost:5000/api/combos/delete/${deleteId}`, {
       method: "DELETE",
     })
@@ -148,6 +170,14 @@ export default function ManageCombo() {
     }
   }
 
+  // Currency functions
+  const formattedPrice = (price) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(price);
+  };
+
   // Start fetching data
   useEffect(() => {
     let isFetched = true;
@@ -162,9 +192,9 @@ export default function ManageCombo() {
       <div className="manageCombo-component">
         <div className="container-fluid">
           <div className="container">
-            <div className="row">
-              {/* Back Button */}
-              <div className="col-4">
+            <div className="heading row align-items-center">
+              <div className="col-5">
+                {/* Back Button */}
                 <Link to="/manageService">
                   <TooltipDefault title="Back">
                     <IconButton>
@@ -173,20 +203,17 @@ export default function ManageCombo() {
                   </TooltipDefault>
                 </Link>
               </div>
-              <div className="col-6">
-                {/* Heading */}
-                <div className="heading">COMBO LIST</div>
+              <div className="col-7">
+                <div className="heading-center">Combo List</div>
               </div>
-              {/* Video */}
-              <div className="col-2">
-                <video
-                  className="heading-video"
-                  src="assets/videos/video-3.webm "
-                  autoPlay
-                  muted
-                  loop
-                ></video>
-              </div>
+
+              <video
+                className="heading-video"
+                src="assets/videos/video-6.webm"
+                muted
+                autoPlay
+                loop
+              ></video>
             </div>
 
             {/* Search */}
@@ -228,8 +255,10 @@ export default function ManageCombo() {
                 {search().map((combo) => (
                   <tr key={combo._id}>
                     <td>{combo.name}</td>
-                    <td>{combo.price} </td>
-                    <td style={{ color: getStatusColor(combo.status) }}>{combo.status}</td>
+                    <td>{formattedPrice(combo.price)} </td>
+                    <td style={{ color: getStatusColor(combo.status) }}>
+                      {combo.status}
+                    </td>
                     <td>
                       <Dropdown>
                         <Dropdown.Toggle
@@ -262,7 +291,7 @@ export default function ManageCombo() {
                           <Dropdown.Item className="dropdown-item">
                             <Link
                               className="update-button"
-                              to={`/updateCombo?${combo._id}`}
+                              to={`/updateCombo?${combo.name}`}
                             >
                               <Tooltip
                                 title="Edit"
@@ -348,10 +377,18 @@ export default function ManageCombo() {
           onHide={() => handleClose("comboDetail")}
           centered
         >
-          <Modal.Header closeButton>
-            <Modal.Title>Combo Detail</Modal.Title>
-          </Modal.Header>
           <Modal.Body>
+            <img
+              className="mb-2"
+              src={url}
+              alt=""
+              style={{ width: "100%" }}
+              loading="lazy"
+            />
+
+            <h4>Combo Description</h4>
+            <p className="ps-5">{comboDesc}</p>
+
             <Table striped bordered hover size="sm" responsive>
               <thead>
                 <tr>
@@ -365,12 +402,16 @@ export default function ManageCombo() {
                 {listServicesOfCombo.map((service) => (
                   <tr key={service._id}>
                     <td>{service.name}</td>
-                    <td>{service.priceByWeight.map(value => (
-                      <div>{value.price}</div>
-                    ))}</td>
-                    <td>{service.priceByWeight.map(value => (
-                      <div>{value.weight}</div>
-                    ))}</td>
+                    <td>
+                      {service.priceByWeight.map((value) => (
+                        <div>{formattedPrice(value.price)}</div>
+                      ))}
+                    </td>
+                    <td>
+                      {service.priceByWeight.map((value) => (
+                        <div>{value.weight}</div>
+                      ))}
+                    </td>
                     <td>
                       <TooltipDefault title="Open Description">
                         <IconButton
@@ -384,8 +425,6 @@ export default function ManageCombo() {
                 ))}
               </tbody>
             </Table>
-            <h4>Combo Description</h4>
-            <p className="ps-5">{comboDesc}</p>
           </Modal.Body>
           <Modal.Footer>
             <Button

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import SummaryApi from "../../common";
-import { format } from 'date-fns';
+import { format, isToday } from 'date-fns';
 import Tooltip from "@mui/material/Tooltip";
 import { IconButton, Zoom } from "@mui/material";
 import EventTwoToneIcon from '@mui/icons-material/EventTwoTone';
@@ -18,20 +18,13 @@ export default function ManageBooking() {
   const [bookingList, setBookingList] = useState([]);
   const [openUpdateRole, setOpenUpdateRole] = useState(false);
   const [filteredStatus, setFilteredStatus] = useState("All");
-  const [searchQuery, setSearchQuery] = useState(""); // State to store search query
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showToday, setShowToday] = useState(false);
 
   const [updateBookingDetails, setUpdateBookingDetails] = useState({
     userName: "",
     status: "",
     _id: "",
-  });
-
-  const [data, setData] = useState({
-    userName: "",
-    petName: "",
-    date: "",
-    total: "",
-    status: "",
   });
 
   useEffect(() => {
@@ -66,17 +59,28 @@ export default function ManageBooking() {
     setSearchQuery(event.target.value);
   };
 
+  const handleShowToday = () => {
+    setShowToday(!showToday);
+  };
+
   const filterBookings = (booking) => {
     const matchesStatus = filteredStatus === "All" || booking.status === filteredStatus;
     const matchesSearch = searchQuery === "" || 
                           booking.userName.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           booking.petName.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesStatus && matchesSearch;
+    const matchesToday = !showToday || isToday(new Date(booking.date));
+    return matchesStatus && matchesSearch && matchesToday;
+  };
+
+  const countTodayBookings = (bookings) => {
+    return bookings.filter(booking => isToday(new Date(booking.date))).length;
   };
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('vi-VN').format(amount);
   };
+
+  const todayBookingCount = countTodayBookings(bookingList);
 
   return (
     <div className="manageStaff-component">
@@ -121,7 +125,20 @@ export default function ManageBooking() {
                   <option value="CANCELLED">Cancelled</option>
                 </select>
               </div>
+              <div className="col-auto">
+                <button className="btn btn-primary" onClick={handleShowToday}>
+                  {showToday ? "Show All" : "Show Today's Bookings"}
+                </button>
+              </div>
             </div>
+
+            {/* Today's booking count */}
+            <div className="row mb-3">
+              <div className="col-auto">
+                <h5>Today's Bookings: {todayBookingCount}</h5>
+              </div>
+            </div>
+
             <table>
               <thead>
                 <tr>

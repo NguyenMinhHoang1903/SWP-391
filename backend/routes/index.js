@@ -96,4 +96,7 @@ router.post('/combos/update', combo.updateOneCombo);
 // Feedback Router
 router.post('/feedbacks/create', feedback.createFeedback);
 
+// Booking Tracker Router
+router.get('/bookingTracker/track', bookingTracker.trackNumberStaffs);
+
 module.exports = router

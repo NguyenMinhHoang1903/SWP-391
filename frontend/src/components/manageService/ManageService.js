@@ -27,10 +27,7 @@ export default function ManageService() {
 
   // Currency functions
   const formattedPrice = (price) => {
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    }).format(price);
+    return new Intl.NumberFormat("vi-VN").format(price);
   };
 
   // Close modal
@@ -91,7 +88,7 @@ export default function ManageService() {
   };
 
   // Search
-  const keys = ["name"];
+  const keys = ["name", "desc"];
   const search = () => {
     if (services) {
       return services.filter((service) =>
@@ -173,7 +170,7 @@ export default function ManageService() {
               <TextField
                 sx={{ bgcolor: "white" }}
                 variant="outlined"
-                label="Search name of service"
+                label="Search..."
                 onChange={(e) => {
                   setQuery(e.target.value);
                 }}

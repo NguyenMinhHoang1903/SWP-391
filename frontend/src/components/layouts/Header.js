@@ -7,7 +7,7 @@ import { ImProfile } from "react-icons/im";
 import { MdOutlineChangeCircle } from "react-icons/md";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
-import BookTwoToneIcon from '@mui/icons-material/BookTwoTone';
+import BookTwoToneIcon from "@mui/icons-material/BookTwoTone";
 import { MdManageAccounts } from "react-icons/md";
 import { MdHistory } from "react-icons/md";
 import React, { useEffect, useState } from "react";
@@ -20,6 +20,7 @@ const Header = () => {
   const signOut = useSignOut();
   const [openManageLink, setOpenManageLink] = useState(false);
   const [nameLink, setNameLink] = useState("");
+  const [openMyBooking, setOpenMyBooking] = useState(false);
 
   const handleLogout = async () => {
     const fetchData = await fetch(SummaryApi.logout_user.url, {
@@ -57,6 +58,9 @@ const Header = () => {
       } else if (user.role === "STAFF") {
         setOpenManageLink(true);
         setNameLink("/manageBooking");
+      } else if (user.role === "CUSTOMER") {
+        setOpenMyBooking(true);
+        setNameLink("/myBookingList");
       }
     };
 
@@ -123,11 +127,17 @@ const Header = () => {
                           <MdOutlineChangeCircle /> Password
                         </div>
                       </Link>
-                      <Link className="profile" to="/myBookingList">
-                        <div class="dropdown-item">
-                          <BookTwoToneIcon /> My Booking
+
+                      <Collapse in={openMyBooking}>
+                        <div>
+                          <Link className="profile" to={nameLink}>
+                            <div class="dropdown-item">
+                              <BookTwoToneIcon /> My Booking{" "}
+                            </div>
+                          </Link>
                         </div>
-                      </Link>
+                      </Collapse>
+
                       <Collapse in={openManageLink}>
                         <div>
                           <Link className="profile" to={nameLink}>
@@ -137,8 +147,6 @@ const Header = () => {
                           </Link>
                         </div>
                       </Collapse>
-
-                      
                     </ul>
                   </div>
                 ) : (
@@ -218,9 +226,17 @@ const Header = () => {
                           <MdOutlineChangeCircle /> Password
                         </div>
                       </Link>
-                      <Link className="profile" to ="/myBookingList">
-                            <div class="dropdown-item"><MdHistory /> My Booking</div>
-                      </Link>
+
+                      <Collapse in={openMyBooking}>
+                        <div>
+                          <Link className="profile" to={nameLink}>
+                            <div class="dropdown-item">
+                              <BookTwoToneIcon /> My Booking{" "}
+                            </div>
+                          </Link>
+                        </div>
+                      </Collapse>
+
                       <Collapse in={openManageLink}>
                         <div>
                           <Link className="profile" to={nameLink}>
@@ -230,8 +246,6 @@ const Header = () => {
                           </Link>
                         </div>
                       </Collapse>
-                     
-
                     </ul>
                   </div>
                 ) : (

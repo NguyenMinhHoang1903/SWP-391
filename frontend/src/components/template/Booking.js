@@ -32,6 +32,7 @@ import UpdateIcon from "@mui/icons-material/Update";
 import setHours from "date-fns/setHours";
 import setMinutes from "date-fns/setMinutes";
 
+
 export default function BookingSpa() {
   const [listService, setListService] = useState([]);
   const [listCombo, setListCombo] = useState([]);
@@ -43,9 +44,6 @@ export default function BookingSpa() {
   const [priceIndex, setPriceIndex] = useState(0);
   const navigate = useNavigate();
   const user = useSelector((state) => state?.user?.user);
-  const [startDate, setStartDate] = useState(
-    setHours(setMinutes(new Date(), 0), 20),
-  );
 
   const formik = useFormik({
     initialValues: {
@@ -61,46 +59,48 @@ export default function BookingSpa() {
       agree: false,
     },
     onSubmit: (values) => {
-      // Add booking to database
-      fetch("http://localhost:5000/api/bookings/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userName: values.userName,
-          email: values.email,
-          petName: values.petName,
-          petType: values.petType,
-          date: values.date,
-          weight: Number(values.weight),
-          services: values.services,
-          combo: values.combo,
-          total: Number(formik.values.total),
-        }),
+      // Handle time if that time is over 5 staffs
+      fetch(`http://localhost:5000/api/bookingTracker/track`, {
+        method: "GET",
       })
         .then((res) => res.json())
-        .then((data) => {
-          if (data.message === 0) {
-            toast.error("Unsuccessfully");
+        .then((json) => {
+          if (json.message === 0) {
+            toast.error("No more staff for service");
           } else {
-            toast.success("Please check your gmail box or spam box!");
-            setOpenSuccessModal(true);
-            setTimeout(() => {
-              navigate("/bookingDetail", {
-                state: {
-                  userName: formik.values.userName,
-                  email: formik.values.email,
-                  petName: formik.values.petName,
-                  petType: formik.values.petType,
-                  date: formik.values.date,
-                  weight: formik.values.weight,
-                  services: formik.values.services,
-                  combo: formik.values.combo,
-                  total: formik.values.total,
-                },
-              });
-            }, 10000);
+            // Add booking to database
+            fetch("http://localhost:5000/api/bookings/create", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                userName: values.userName,
+                email: values.email,
+                petName: values.petName,
+                petType: values.petType,
+                date: values.date,
+                weight: Number(values.weight),
+                services: values.services,
+                combo: values.combo,
+                total: Number(formik.values.total),
+              }),
+            })
+              .then((res) => res.json())
+              .then((data) => {
+                if (data.message === 0) {
+                  toast.error("Unsuccessfully");
+                } else {
+                  toast.success("Please check your gmail box or spam box!");
+                  setOpenSuccessModal(true);
+                  setTimeout(() => {
+                    navigate("/bookingDetail", {
+                      state: { id: data._id },
+                    });
+                  }, 10000);
+                }
+              })
+              .catch((err) => console.log(err));
           }
         })
         .catch((err) => console.log(err));
@@ -326,10 +326,7 @@ export default function BookingSpa() {
 
   // Currency functions
   const formattedPrice = (price) => {
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    }).format(price);
+    return new Intl.NumberFormat("vi-VN").format(price);
   };
 
   // Disable passed time
@@ -339,11 +336,6 @@ export default function BookingSpa() {
 
     return currentDate.getTime() < selectedDate.getTime();
   };
-
-  // Handle time if that time is over 5 staffs
-  const handleTimeOver5 = (time) => {
-    
-  }
 
   useEffect(() => {
     readAllService();
@@ -506,7 +498,7 @@ export default function BookingSpa() {
 
                 {/* Enter Weight */}
                 <div className="row mb-3">
-                  <label>Weight</label>
+                  <label>Weight (kg)</label>
                   <a
                     data-tooltip-id="weight-tooltip"
                     data-tooltip-content={formik.errors.weight}
@@ -527,7 +519,7 @@ export default function BookingSpa() {
 
                 {/* Select Service */}
                 <div className="row mb-3">
-                  <label>Service</label>
+                  <label>Service (VND)</label>
                   <a
                     data-tooltip-id="services-tooltip"
                     data-tooltip-content={formik.errors.services}
@@ -700,7 +692,7 @@ export default function BookingSpa() {
                       variant="h6"
                       component="div"
                     >
-                      {formik.values.total} VND
+                      {formattedPrice(formik.values.total)} VND
                     </Typography>
                   </Stack>
                 </Box>

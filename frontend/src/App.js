@@ -103,6 +103,10 @@ function App() {
     return user?.role === "ADMIN" ? children : <Navigate to="/" />;
   };
 
+  const StaffRoute = ({ children }) => {
+    return user?.role === "STAFF" ? children : <Navigate to="/" />;
+  };
+
   const ManagerRoute = ({ children }) => {
     return user?.role === "MANAGER" ? children : <Navigate to="/" />;
   };
@@ -271,11 +275,11 @@ function App() {
                     path="/manageBooking"
                     element={
                       <Suspense fallback={<Loader />}>
-                        <PrivateRoute>
+                        <StaffRoute>
                           <Suspense fallback={<Loader />}>
                             <ManageBooking />
                           </Suspense>
-                        </PrivateRoute>
+                        </StaffRoute>
                       </Suspense>
                     }
                   />

@@ -54,6 +54,9 @@ const Header = () => {
       } else if (user.role === "MANAGER") {
         setOpenManageLink(true);
         setNameLink("/manageService");
+      } else if (user.role === "STAFF") {
+        setOpenManageLink(true);
+        setNameLink("/manageBooking");
       }
     };
 

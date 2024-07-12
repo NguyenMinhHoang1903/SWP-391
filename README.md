@@ -40,7 +40,7 @@ Book an appointment at Pet's Spa Service for a luxurious pampering experience fo
 | UC10     | Nguyen Minh Hoang     |
 | UC17     | Nguyen Thai Thuan     |
 | UC21     | Ta Minh Duc           |
-| UC23     | Cao Minh Quy          |
+| UC20     | Cao Minh Quy          |
 
 ### Sprint 2
 

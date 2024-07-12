@@ -39,12 +39,12 @@ export default function ShowListService() {
                             <Col sm={3} key={data._id}>
                                 <div className="listService">
                                     <Card className="card" style={{ width: '18rem' , height: '30rem'}}>
-                                        <Card.Img variant="top" src={data?.imageUrl}  className="card-img"/>
+                                        <Card.Img variant="top" style={{ width: '17.8rem' , height: '14rem'}} src={data?.imageUrl}  className="card-img"/>
 
                                         <Card.Body >
                                             <Card.Title>{data?.name}</Card.Title>
                                             {/* <Card.Text>{data?.priceByWeight}</Card.Text> */}
-                                            <Card.Text>{data?.desc}</Card.Text>
+                                            <Card.Text style={{ width: '16rem' , height: '7rem'}}>{data?.desc}</Card.Text>
                                             <a href="/booking" className="loginContainer btnBooking">Booking</a>
                                         </Card.Body>
                                     </Card>

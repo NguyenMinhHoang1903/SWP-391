@@ -284,7 +284,7 @@ export default function ManageCombo() {
                           <Dropdown.Item className="dropdown-item">
                             <Link
                               className="update-button"
-                              to={`/updateCombo/${combo.name}`}
+                              to={`/updateCombo?${combo._id}`}
                             >
                               <Tooltip
                                 title="Edit"

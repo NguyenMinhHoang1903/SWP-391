@@ -479,7 +479,7 @@ function App() {
                     }
                   />
                   <Route
-                    path="/updateCombo/:name"
+                    path="/updateCombo"
                     element={
                       <Suspense fallback={<Loader />}>
                         <ManagerRoute>

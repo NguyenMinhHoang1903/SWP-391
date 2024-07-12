@@ -29,7 +29,6 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
-import { useParams } from 'react-router-dom';
 
 // Utility function to get next day's date
 const getNextDayDate = () => {
@@ -40,7 +39,6 @@ const getNextDayDate = () => {
 };
 
 export default function UpdateCombo() {
-  const { name } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const [services, setServices] = useState([]);
@@ -49,7 +47,7 @@ export default function UpdateCombo() {
 
   const formik = useFormik({
     initialValues: {
-      oldName: "",
+      oldId: "",
       name: "",
       price: "",
       startDate: dayjs(new Date()),
@@ -64,8 +62,11 @@ export default function UpdateCombo() {
       const { startDate, endDate } = values;
       const validStartDate = startDate;
       const validEndDate = endDate;
-      
-      setOpenBackDrop(true);
+
+      if (values.image) {
+        setOpenBackDrop(true);
+      } else toast.error("Image is required");
+
       // Create a reference to the file to delete
       const comboRef = ref(
         storage,
@@ -99,7 +100,7 @@ export default function UpdateCombo() {
                       "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                      oldName: formik.values.oldName,
+                      oldId: formik.values.oldId,
                       name: values.name,
                       price: Number(values.price),
                       startDate: validStartDate,
@@ -112,10 +113,11 @@ export default function UpdateCombo() {
                   })
                     .then((res) => res.json())
                     .then((data) => {
+                      setOpenBackDrop(false);
                       if (data.message === 0) {
-                        toast.error("Update Unsuccessfully");
+                        toast.error("Updated Unsuccessfully");
                       } else {
-                        toast.success("Update Successfully");
+                        toast.success("Updated Successfully");
                         navigate("/manageCombo");
                       }
                     })
@@ -214,15 +216,22 @@ export default function UpdateCombo() {
 
   useEffect(() => {
     let isFetched = true;
-    formik.setFieldValue("oldName", name);
+    const oldId = location.search.substring(1);
+    formik.setFieldValue("oldId", oldId);
 
     // Read one combo by id
     async function readOneCombo() {
-      await fetch(`http://localhost:5000/api/combos/readOne/${name}`)
+      await fetch(`http://localhost:5000/api/combos/readOne/${oldId}`)
         .then((res) => res.json())
         .then((json) => {
           if (isFetched) {
             setCombo(json);
+            formik.setFieldValue("name", json.name);
+            formik.setFieldValue("price", json.price);
+            formik.setFieldValue("startDate", dayjs(json.startDate));
+            formik.setFieldValue("endDate", dayjs(json.endDate));
+            formik.setFieldValue("desc", json.desc);
+            formik.setFieldValue("serviceId", json.serviceId);
           }
         })
         .catch((err) => console.log(err));
@@ -396,19 +405,23 @@ export default function UpdateCombo() {
                     data-tooltip-place="right"
                   >
                     {services.map((service) => (
-                      <div class="form-check" key={service._id}>
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          name="serviceId"
-                          onChange={formik.handleChange}
-                          value={service._id}
-                        />
-                        <div className="row">
-                          <div className="col">
-                            <label class="form-check-label">
-                              {service.name}
-                            </label>
+                      <div>
+                        <div class="form-check" key={service._id}>
+                          <input
+                            class="form-check-input"
+                            type="checkbox"
+                            name="serviceId"
+                            onChange={formik.handleChange}
+                            value={service._id}
+                            checked={formik.values.serviceId.includes(service._id)}
+                            
+                          />
+                          <div className="row">
+                            <div className="col">
+                              <label class="form-check-label">
+                                {service.name}
+                              </label>
+                            </div>
                           </div>
                         </div>
                       </div>

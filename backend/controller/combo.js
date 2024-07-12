@@ -54,8 +54,7 @@ const readAllCombo = async (req, res) => {
 
 // Read one combo
 const readOneCombo = async (req, res) => {
-  let query = { name: req.params.name };
-  console.log(req.params.name);
+  let query = { _id: req.params.oldId };
 
   await Combo.findOne(query)
     .then((result) => {
@@ -97,18 +96,17 @@ const deleteOneCombo = async (req, res) => {
 
 // UPDATE
 const updateOneCombo = async (req, res) => {
-  const oldName = req.body.oldName;
+  const oldId = req.body.oldId;
   const name = req.body.name;
   let query = { name: name };
 
   const existingCombo = await Combo.findOne(query);
-  console.log(existingCombo);
 
 
-  if (existingCombo && existingCombo.name !== oldName) res.json({ message: 0 });
+  if (existingCombo && existingCombo._id !== oldId) res.json({ message: 0 });
   else {
-    await Combo.deleteOne({ name: oldName })
-      .then((result) => console.log("Deleted Combo"))
+    await Combo.deleteOne({ _id: oldId })
+      .then(() => console.log("Deleted Combo"))
       .catch((err) => console.log(err));
 
     const newCombo = await new Combo({

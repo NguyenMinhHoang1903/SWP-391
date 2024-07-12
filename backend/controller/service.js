@@ -43,9 +43,9 @@ const readAllService = async (req, res) => {
 
 // READ ONE SERVICE
 const readOneService = async (req, res) => {
-  const name = req.params.name;
+  const oldName = req.params.oldName;
 
-  await Service.findOne({ name: name })
+  await Service.findOne({ name: oldName })
     .then((result) => {
       res.send(result);
     })
@@ -70,7 +70,7 @@ const updateOneService = async (req, res) => {
   const oldName = req.body.oldName;
   const name = req.body.name;
   let query = { name: name };
-
+  
   const existingService = await Service.findOne(query);
 
   if (existingService && existingService.name !== oldName) res.json({ message: 0 });

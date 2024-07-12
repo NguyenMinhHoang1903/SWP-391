@@ -229,7 +229,7 @@ export default function ManageService() {
                           <Dropdown.Item className="dropdown-item">
                             <Link
                               className="update-button"
-                              to={`/updateService?${service.name}`}
+                              to={`/updateService/${service.name}`}
                             >
                               <Tooltip
                                 title="Edit"
@@ -310,7 +310,7 @@ export default function ManageService() {
               src={url}
               alt=""
               style={{ width: "100%" }}
-              loading="lazy"
+
             />
             <h5>Description</h5>
             <p style={{ textIndent: 15 }}>{desc}</p>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
 import { useFormik } from "formik";
@@ -25,13 +25,14 @@ import {
   ref,
   uploadBytes,
   deleteObject,
+  getMetadata,
 } from "firebase/storage";
 
 export default function UpdateService() {
+  const { oldName } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
-  const [openBackDrop, setOpenBackDrop] = useState(false);
   const [service, setService] = useState("");
+  const [openBackDrop, setOpenBackDrop] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -40,33 +41,92 @@ export default function UpdateService() {
       priceByWeight: [{ price: "", weight: "" }],
       desc: "",
       image: "",
+      imageName: "",
       imageUrl: "",
       agree: false,
     },
     onSubmit: (values) => {
       let flag = 0;
+      let imageName = "";
+      let imagePathName = "";
 
-      setOpenBackDrop(true);
-      // Create a reference to the file to delete
-      const serviceRef = ref(
-        storage,
-        `${service.name}/${service.name}/${service.imageName}`
-      );
-      // Delete old image
-      deleteObject(serviceRef)
-        .then(() => {
-          // Store new image in firebase storage
-          const imgRef = ref(
-            storage,
-            `${values.name}/${values.name}/${values.image.name}`
-          );
-          uploadBytes(imgRef, values.image);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      // Check if there is a new image
+      if (values.image) {
+        setOpenBackDrop(true);
 
-      
+        imageName = values.image.name;
+        // Create a reference to the file to delete
+        const serviceRef = ref(
+          storage,
+          `${service.name}/${service.name}/${service.imageName}`
+        );
+        // Delete old image
+        deleteObject(serviceRef)
+          .then(() => {
+            // Store new image in firebase storage
+            const imgRef = ref(
+              storage,
+              `${values.name}/${values.name}/${values.image.name}`
+            );
+            uploadBytes(imgRef, values.image);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } else {
+        toast.error("Image is required");
+        return;
+        // imageName = service.imageName;
+        // const oldPath = `${service.name}/${service.name}/${service.imageName}`;
+        // const newPath = `${values.name}/${values.name}/${service.imageName}`;
+
+        // // Create a reference to the file you want to move
+        // const fileRef = ref(storage, oldPath);
+        // // Create a reference to the new location
+        // const newFileRef = ref(storage, newPath);
+        // // Get the download URL of the old file
+
+        // async function getContentType() {
+        //   // Fetch metadata of the old file to get content type
+        //   const metadata = await getMetadata(fileRef);
+        //   const contentType = metadata.contentType;
+        //   return contentType;
+        // }
+        // let contentType = getContentType();
+        // if (contentType) {
+        //   console.log(contentType);
+        // }
+
+        // getDownloadURL(fileRef)
+        //   .then((url) => {
+        //     // Upload the file to the new location
+        //     async function fetchImage() {
+        //       const response = await fetch(url);
+        //       const blob = await response.blob();
+
+        //       return blob;
+        //     }
+        //     let blob = fetchImage();
+        //     return uploadBytes(newFileRef, blob, { contentType });
+        //   })
+        //   .then(() => {
+        //     console.log("File moved successfully");
+        //   })
+        //   .catch((error) => {
+        //     console.error("Error moving file:", error);
+        //   });
+
+        // // Create a reference to the file to delete
+        // const serviceRef = ref(storage, oldPath);
+        // // Delete the image
+        // deleteObject(serviceRef)
+        //   .then(() => {
+        //     console.log("Deleted image");
+        //   })
+        //   .catch((error) => {
+        //     console.log(error);
+        //   });
+      }
 
       //Check if price or weight is em
       values.priceByWeight.map((value) => {
@@ -96,7 +156,7 @@ export default function UpdateService() {
                         name: values.name,
                         priceByWeight: values.priceByWeight,
                         desc: values.desc,
-                        imageName: values.image.name,
+                        imageName: imageName,
                         imageUrl: url,
                       }),
                     })
@@ -106,7 +166,7 @@ export default function UpdateService() {
                         if (data.message === 0) {
                           toast.error("The name is already exists.");
                         } else {
-                          toast.success("Successful Added");
+                          toast.success("Successful Updated");
                           navigate("/manageService");
                         }
                       })
@@ -192,14 +252,21 @@ export default function UpdateService() {
 
   useEffect(() => {
     let isFetched = true;
-    const passedName = location.search.substring(1);
-    formik.setFieldValue("oldName", passedName);
 
     // Read one service by old name
     const readOneService = async () => {
-      await fetch(`http://localhost:5000/api/services/read/${passedName}`)
+      await fetch(`http://localhost:5000/api/services/read/${oldName}`)
         .then((res) => res.json())
-        .then((json) => setService(json))
+        .then((json) => {
+          setService(json);
+          formik.setFieldValue("oldName", json.name);
+          formik.setFieldValue("name", json.name);
+          formik.setFieldValue("priceByWeight", json.priceByWeight);
+          formik.setFieldValue("desc", json.desc);
+          formik.setFieldValue("imageUrl", json.imageUrl);
+          formik.setFieldValue("imageName", json.imageName);
+          formik.setFieldValue("agree", false);
+        })
         .catch((err) => console.log(err));
     };
 
@@ -225,7 +292,7 @@ export default function UpdateService() {
   return (
     <>
       <div className="addService-component">
-        <video src="assets/videos/video-6.webm" muted autoPlay loop></video>
+        <video src="assets/videos/video-7.webm" muted autoPlay loop></video>
 
         <div className="container">
           <div className="col form">
@@ -376,6 +443,7 @@ export default function UpdateService() {
                   >
                     Upload file
                     <VisuallyHiddenInput
+                      src={formik.values.imageUrl}
                       type="file"
                       name="image"
                       accept="image/*"
@@ -385,7 +453,9 @@ export default function UpdateService() {
                     />
                   </Button>
                 </div>
-                <div className="col text-black h5">{formik.values.image.name}</div>
+                <div className="col text-black h5">
+                  {formik.values.image.name}
+                </div>
               </div>
 
               {/* Switch */}

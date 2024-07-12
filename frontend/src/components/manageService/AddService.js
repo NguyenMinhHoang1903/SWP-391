@@ -337,7 +337,7 @@ export default function AddService() {
                     <VisuallyHiddenInput
                       type="file"
                       name="image"
-                      accept="image/*"
+                      accept="*"
                       onChange={(e) =>
                         formik.setFieldValue("image", e.currentTarget.files[0])
                       }

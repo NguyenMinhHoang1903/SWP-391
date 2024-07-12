@@ -442,7 +442,7 @@ function App() {
                     }
                   />
                   <Route
-                    path="/updateService"
+                    path="/updateService/:oldName"
                     element={
                       <Suspense fallback={<Loader />}>
                         <ManagerRoute>

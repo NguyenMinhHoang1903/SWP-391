@@ -27,8 +27,8 @@ Book an appointment at Pet's Spa Service for a luxurious pampering experience fo
 
 | Sprint | Use Cases |
 |---|---|
-| Sprint 1 | UC02, UC04, UC09, UC20, UC25, UC27 |
-| Sprint 2 | UC01, UC03, UC05, UC06, UC07, UC08, UC12, UC13, UC14, UC19, UC26, UC28, UC29, UC30 |
+| Sprint 1 | UC02, UC04, UC09, UC17, UC21, UC23 |
+| Sprint 2 | UC01, UC03, UC05, UC06, UC07, UC08, UC13, UC14, UC18, UC22, UC24, UC25|
 | Sprint 3 |  |
 | Sprint 4 |  |
 ## **Assignment**
@@ -38,16 +38,16 @@ Book an appointment at Pet's Spa Service for a luxurious pampering experience fo
 | UC02     | Huynh Minh Khoi       |
 | UC09     | Doan Nguyen Thuy Ha   |
 | UC04     | Nguyen Minh Hoang     |
-| UC20     | Nguyen Thai Thuan     |
-| UC25     | Ta Minh Duc           |
-| UC27     | Cao Minh Quy          |
+| UC17     | Nguyen Thai Thuan     |
+| UC21     | Ta Minh Duc           |
+| UC23     | Cao Minh Quy          |
 
 ### Sprint 2
 
 | Member | Use Cases |
 |---|---|
 | Huỳnh Minh Khôi | UC01, UC03, UC05 |
-| Đoàn Nguyễn Thúy Hà | UC08, UC13, UC14 |
-| Nguyễn Minh Hoàng | UC07, UC29 |
-| Tạ Minh Đức | UC19, UC26 UC06, UC28 |
-| Cao Minh Quý | UC12, UC30 |
+| Đoàn Nguyễn Thúy Hà | UC08, UC14 |
+| Nguyễn Minh Hoàng | UC07, UC25 |
+| Tạ Minh Đức | UC18, UC22, UC06 |
+| Cao Minh Quý | UC13, UC24 |

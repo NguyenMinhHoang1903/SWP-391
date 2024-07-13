@@ -86,7 +86,7 @@ export default function BookingDetail() {
                   <h3>Total Amount:</h3>
                 </div>
                 <div className="col-md-2 text-right">
-                  <h3>{total} $</h3>
+                  <h3>{total} VND</h3>
                 </div>
               </div>
 

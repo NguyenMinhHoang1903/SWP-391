@@ -349,11 +349,9 @@ function App() {
                     path="/washingservice"
                     element={
                       <Suspense fallback={<Loader />}>
-                        <PrivateRoute>
                           <Suspense fallback={<Loader />}>
                             <Washing />
                           </Suspense>
-                        </PrivateRoute>
                       </Suspense>
                     }
                   />
@@ -361,11 +359,9 @@ function App() {
                     path="/hairdyeservice"
                     element={
                       <Suspense fallback={<Loader />}>
-                        <PrivateRoute>
                           <Suspense fallback={<Loader />}>
                             <HairDye />
                           </Suspense>
-                        </PrivateRoute>
                       </Suspense>
                     }
                   />
@@ -373,11 +369,9 @@ function App() {
                     path="/trimfurservice"
                     element={
                       <Suspense fallback={<Loader />}>
-                        <PrivateRoute>
                           <Suspense fallback={<Loader />}>
                             <TrimFur />
                           </Suspense>
-                        </PrivateRoute>
                       </Suspense>
                     }
                   />
@@ -385,9 +379,7 @@ function App() {
                     path="/cutnailservice"
                     element={
                       <Suspense fallback={<Loader />}>
-                        <PrivateRoute>
                           <CutNails />
-                        </PrivateRoute>
                       </Suspense>
                     }
                   />

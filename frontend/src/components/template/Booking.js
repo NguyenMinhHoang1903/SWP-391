@@ -63,9 +63,12 @@ export default function BookingSpa() {
       fetch(`http://localhost:5000/api/bookingTracker/track`, {
         method: "GET",
       })
+      fetch(`http://localhost:5000/api/forgotpassword`,{
+        method:"POST"
+      })
         .then((res) => res.json())
         .then((json) => {
-          if (json.message === 0) {
+          if (json.message === 5) {
             toast.error("No more staff for service");
           } else {
             // Add booking to database

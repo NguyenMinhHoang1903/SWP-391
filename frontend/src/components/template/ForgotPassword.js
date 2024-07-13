@@ -1,48 +1,45 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import SummaryApi from '../../common';
+
 const ForgotPassword = () => {
-    const [showPassword, setShowPassword] = useState(false);
-  
+  const [email, setEmail] = useState('');
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
-    const toggleShowPassword = () => {
-      setShowPassword(!showPassword);
-    };
-    return(
-        <body className="forgotBody">
-            <div className='container_forgotpass'>
-            <div className="form-containerForgotPassword forgot">
-                <form className='item_forgot'>
-                    <h1>Create Account</h1>
-                    <input 
-                    type="email" 
-                    placeholder="Enter Email"
-                    />
-                    <input 
-                        type="text" 
-                        placeholder="Enter User Name" 
-                    />
-                    <input 
-                        type={showPassword ? 'text' : 'password'}
-                        name='password'
-                        placeholder="Enter your password" 
-                    />
-                    <input
-                        type={showPassword ? 'text' : 'password'}
-                        placeholder="Confirm your password"
-                        required
-                    />
-                    <div class="checkbox">
-                        <input
-                        type="checkbox"
-                        checked={showPassword}
-                        onChange={toggleShowPassword}
-                        />Show Password
-                    </div>
-                    <button class="btnn">Sign Up</button>
-                </form>
-            </div>
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError(null);
+    setSuccess(null);
 
-            </div>
-        </body>
-    );
-}
-export default ForgotPassword
+    try {
+      const response = await fetch(SummaryApi.forgotpassword.url, { 
+        method: SummaryApi.forgotpassword.method,
+      });
+      setSuccess('Password reset successfully. Check your email for the new password.');
+    } catch (error) {
+      console.error('Error sending reset password request:', error);
+      setError('Error resetting password');
+    }
+  };
+
+  return (
+    <div>
+      <h2>Reset Password</h2>
+      <form onSubmit={handleSubmit}>
+        <label>Email:</label>
+        <input
+          type="email"
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+          required
+        />
+        <button type="submit">Reset Password</button>
+      </form>
+      {error && <div style={{ color: 'red' }}>{error}</div>}
+      {success && <div style={{ color: 'green' }}>{success}</div>}
+    </div>
+  );
+};
+
+export default ForgotPassword;

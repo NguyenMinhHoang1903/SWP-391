@@ -14,10 +14,12 @@ import { FaCircleCheck } from "react-icons/fa6";
 export default function BookingDetail() {
   const user = useSelector((state) => state?.user?.user);
   const [booking, setBooking] = useState("");
+  // const [bookings, setBookings] = useState([]);
   const location = useLocation();
   const passedid = location.search.substring(1);
   const formattedDate = booking.date ? new Date(booking.date).toLocaleString() : '';
   const [canRefund, setCanRefund] = useState(false); // State for enabling/disabling Refund button
+  // const [totalSum, setTotalSum] = useState(0);
 
 
   const readOneBooking = async () => {
@@ -42,6 +44,13 @@ export default function BookingDetail() {
     // Enable refund if current time is before 12 hours of booking time
     setCanRefund(currentTime < timeBeforeBooking);
   }, [booking.date]);
+
+  // useEffect(() => {
+  //   if (bookings.length > 0) {
+  //     const sum = bookings.reduce((acc, curr) => acc + (curr.total || 0), 0);
+  //     setTotalSum(sum);
+  //   }
+  // }, [bookings]);
 
   return (
     <div className="bookingDetail-component">
@@ -122,6 +131,14 @@ export default function BookingDetail() {
                 </Link>
               </div>
             </div>
+            {/* <div className="sum-total row">
+              <div className="col-md-2 text-left">
+                <h3>Sum of All Totals:</h3>
+              </div>
+              <div className="col-md-2 text-right">
+                <h3>{totalSum} VND</h3>
+              </div>
+            </div> */}
           </form>
         </div>
       </div>

@@ -37,6 +37,14 @@ const SummaryApi =  {
         url : `${backendDomin}/api/update-password`,
         method : "post"
     },
+    resetpassword : {
+        url : `${backendDomin}/api/resetPassword`,
+        method : "post"
+    },
+    forgotpassword : {
+        url : `${backendDomin}/api/forgotpassword`,
+        method : "post"
+    },
     google_login_success : {
         url : `${backendDomin}/api/login/success`,
         method : 'get'

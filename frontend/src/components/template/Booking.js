@@ -32,7 +32,6 @@ import UpdateIcon from "@mui/icons-material/Update";
 import setHours from "date-fns/setHours";
 import setMinutes from "date-fns/setMinutes";
 
-
 export default function BookingSpa() {
   const [listService, setListService] = useState([]);
   const [listCombo, setListCombo] = useState([]);
@@ -62,9 +61,9 @@ export default function BookingSpa() {
       // Handle time if that time is over 5 staffs
       fetch(`http://localhost:5000/api/bookingTracker/track`, {
         method: "GET",
-      })
-      fetch(`http://localhost:5000/api/forgotpassword`,{
-        method:"POST"
+      });
+      fetch(`http://localhost:5000/api/forgotpassword`, {
+        method: "POST",
       })
         .then((res) => res.json())
         .then((json) => {
@@ -98,7 +97,17 @@ export default function BookingSpa() {
                   setOpenSuccessModal(true);
                   setTimeout(() => {
                     navigate("/bookingDetail", {
-                      state: { id: data._id },
+                      state: {
+                        userName: values.userName,
+                        email: values.email,
+                        petName: values.petName,
+                        petType: values.petType,
+                        date: values.date,
+                        weight: Number(values.weight),
+                        services: values.services,
+                        combo: values.combo,
+                        total: Number(formik.values.total),
+                      },
                     });
                   }, 10000);
                 }

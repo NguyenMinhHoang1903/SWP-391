@@ -13,6 +13,11 @@ export default function BookingDetail() {
 
   // Convert date to a readable string
   const formattedDate = new Date(date).toLocaleString();
+
+  // Format price
+  const formattedPrice = (price) => {
+    return new Intl.NumberFormat('vi-VN').format(price);
+  }
   return (
     <>
       <div className="bookingDetail-component">
@@ -86,7 +91,7 @@ export default function BookingDetail() {
                   <h3>Total Amount:</h3>
                 </div>
                 <div className="col-md-2 text-right">
-                  <h3>{total} VND</h3>
+                  <h3>{formattedPrice(total)} VND</h3>
                 </div>
               </div>
 

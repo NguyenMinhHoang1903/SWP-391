@@ -1,18 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "react-tooltip/dist/react-tooltip.css";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import PetsIcon from '@mui/icons-material/Pets';
-import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import MailOutlineIcon from '@mui/icons-material/MailOutline';
-import TodayIcon from '@mui/icons-material/Today';
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import PetsIcon from "@mui/icons-material/Pets";
+import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import MailOutlineIcon from "@mui/icons-material/MailOutline";
+import TodayIcon from "@mui/icons-material/Today";
 import { FaCircleCheck } from "react-icons/fa6";
+import { Button } from "@mui/material";
 
 export default function BookingDetail() {
   const [booking, setBooking] = useState("");
   const location = useLocation();
   const passedid = location.search.substring(1);
-  const formattedDate = booking.date ? new Date(booking.date).toLocaleString() : '';
+  const formattedDate = booking.date
+    ? new Date(booking.date).toLocaleString()
+    : "";
   const [canRefund, setCanRefund] = useState(false); // State for enabling/disabling Refund button
 
   const readOneBooking = async () => {
@@ -20,6 +23,11 @@ export default function BookingDetail() {
       .then((res) => res.json())
       .then((json) => setBooking(json.data))
       .catch((err) => console.log(err));
+  };
+
+  // Format price
+  const formattedPrice = (price) => {
+    return new Intl.NumberFormat("vi-VN").format(price);
   };
 
   useEffect(() => {
@@ -104,33 +112,47 @@ export default function BookingDetail() {
                 <h3>Total Amount:</h3>
               </div>
               <div className="col-md-2 text-right">
-                <h3>{booking.total} VND</h3>
+                <h3>{formattedPrice(booking.total)} VND</h3>
               </div>
             </div>
 
             <div className="button row">
-              <div className="col-6 text-left">
+              <div className="col-4 text-left">
                 <Link to="/myBookingList">
-                  <button className="btn btn-success" type="button">
+                  <Button
+                    sx={{ ":hover": { bgcolor: "rgb(0, 201, 170)" } }}
+                    variant="contained"
+                    type="button"
+                  >
                     <ArrowBackIcon />
-                  </button>
+                  </Button>
                 </Link>
               </div>
-              <div className="col-6 text-right">
+              <div className="col-4 text-right">
                 {booking.status === "PROCESS" && (
                   <Link to={`/refund?${booking._id}`}>
-                    <button className="btn btn-success" type="button" disabled={!canRefund}>
+                    <button
+                      className="btn btn-success"
+                      type="button"
+                      disabled={!canRefund}
+                    >
                       Refund
                     </button>
                   </Link>
                 )}
               </div>
-              <div className="col-6 text-right">
+              <div className="col-4 text-right">
                 {booking.status === "PENDING" && (
-                  <Link to={`http://localhost:8888/order/create_payment_url?${booking.total}`}>
-                    <button className="btn btn-success" type="button">
+                  <Link
+                    to={`http://localhost:8888/order/create_payment_url?${booking.total}`}
+                  >
+                    <Button
+                      sx={{ ":hover": { bgcolor: "rgb(0, 201, 170)" } }}
+                      variant="contained"
+                      type="button"
+                    >
                       Paying
-                    </button>
+                    </Button>
                   </Link>
                 )}
               </div>

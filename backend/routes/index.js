@@ -87,7 +87,7 @@ router.get('/listRefund/read', listRefund.allListRefund);
 router.get('/', service.indexService);
 router.post('/services/create', service.createService);
 router.get('/services/read', service.readAllService);
-router.get('/services/read/:oldName', service.readOneService);
+router.get('/services/read/:oldId', service.readOneService);
 router.delete('/services/delete/:id', service.deleteOneService);
 router.post('/services/update', service.updateOneService);
 

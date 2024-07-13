@@ -2046,11 +2046,11 @@ form .input-field {
 }
 
 /* Service list */
-.service-list {
+.bookingDetail-component .service-list {
   margin-bottom: 20px;
 }
 
-.service {
+.bookingDetail-component .service {
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
@@ -2060,11 +2060,11 @@ form .input-field {
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
-.service div {
+.bookingDetail-component .service div {
   margin-right: 10px;
 }
 
-button {
+.bookingDetail-component button {
   padding: 5px 10px;
   background-color: transparent;
   color: #080808;
@@ -2073,39 +2073,39 @@ button {
   cursor: pointer;
 }
 
-button:hover {
+.bookingDetail-component button:hover {
   color: #f4f4f4;
 }
 
-.total {
+.bookingDetail-component .total {
   margin-top: 20px;
   font-size: 1.2em;
   font-weight: bold;
 }
 
-.total h3 {
+.bookingDetail-component .total h3 {
   margin: 0;
   font-size: 20px;
 }
 
 
-.total .text-left {
+.bookingDetail-component .total .text-left {
   text-align: left;
 }
 
-.total .text-right {
+.bookingDetail-component .total .text-right {
   text-align: left;
 }
 
-.button {
+.bookingDetail-component .button {
   padding-top: 10px;
 }
 
-.button .text-left {
+.bookingDetail-component .button .text-left {
   text-align: left;
 }
 
-.button .text-right {
+.bookingDetail-component .button .text-right {
   text-align: right;
 }
 

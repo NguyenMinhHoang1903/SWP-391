@@ -229,7 +229,7 @@ export default function ManageService() {
                           <Dropdown.Item className="dropdown-item">
                             <Link
                               className="update-button"
-                              to={`/updateService/${service.name}`}
+                              to={`/updateService?${service._id}`}
                             >
                               <Tooltip
                                 title="Edit"

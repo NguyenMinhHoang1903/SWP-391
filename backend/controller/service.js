@@ -43,9 +43,9 @@ const readAllService = async (req, res) => {
 
 // READ ONE SERVICE
 const readOneService = async (req, res) => {
-  const oldName = req.params.oldName;
+  const oldId = req.params.oldId;
 
-  await Service.findOne({ name: oldName })
+  await Service.findOne({ _id: oldId })
     .then((result) => {
       res.send(result);
     })
@@ -67,15 +67,15 @@ const deleteOneService = async (req, res) => {
 
 // UPDATE
 const updateOneService = async (req, res) => {
-  const oldName = req.body.oldName;
+  const oldId = req.body.oldId;
   const name = req.body.name;
   let query = { name: name };
   
   const existingService = await Service.findOne(query);
 
-  if (existingService && existingService.name !== oldName) res.json({ message: 0 });
+  if (existingService && existingService._id !== oldId) res.json({ message: 0 });
   else {
-    await Service.deleteOne({ name: oldName })
+    await Service.deleteOne({ _id: oldId })
       .then(result => console.log("Deleted Service"))
       .catch((err) => console.log(err));
 

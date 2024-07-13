@@ -45,6 +45,11 @@ export default function BookingDetail() {
     setCanRefund(currentTime < timeBeforeBooking);
   }, [booking.date]);
 
+  // Format price
+  const formattedPrice = (price) => {
+    return new Intl.NumberFormat('vi-VN').format(price);
+  }
+
   // useEffect(() => {
   //   if (bookings.length > 0) {
   //     const sum = bookings.reduce((acc, curr) => acc + (curr.total || 0), 0);
@@ -58,7 +63,7 @@ export default function BookingDetail() {
       <div className="contentBookDetail">
         <div className="containerBookDetail">
           <div className="container-heading">
-            <h1>Booking Detail</h1>
+            <h1>Booking Detail1</h1>
           </div>
           <form>
             <div className="infor">
@@ -118,7 +123,7 @@ export default function BookingDetail() {
                 <h3>Total Amount:</h3>
               </div>
               <div className="col-md-2 text-right">
-                <h3>{booking.total} VND</h3>
+                <h3>{formattedPrice(booking.total)} VND</h3>
               </div>
             </div>
 

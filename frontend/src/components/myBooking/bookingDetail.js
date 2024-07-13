@@ -142,7 +142,7 @@ export default function BookingDetail() {
                 )}
               </div>
               <div className="col-4 text-right">
-                {booking.status === "PENDING" && (
+                {booking.status === "PROCESS" && (
                   <Link
                     to={`http://localhost:8888/order/create_payment_url?${booking.total}`}
                   >

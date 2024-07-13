@@ -52,14 +52,24 @@ const ChangePassword = lazy(() =>
 const SpeedDialBox = lazy(() => import("./components/layouts/SpeedDialBox"));
 
 const BookingDetail = lazy(() => import("./components/template/BookingDetail"));
-const ManageBooking = lazy(() => import("./components/manageBooking/ManageBooking"));
-const ManageBookingDetail = lazy(() => import("./components/manageBooking/bookingDetail"));
-const MyBookingList = lazy(() => import("./components/myBooking/bookingList"))
-const MyBookingDetail = lazy(() => import("./components/myBooking/bookingDetail"));
-const UpdateBooking = lazy(() => import("./components/manageBooking/updateBooking"));
+const ManageBooking = lazy(() =>
+  import("./components/manageBooking/ManageBooking")
+);
+const ManageBookingDetail = lazy(() =>
+  import("./components/manageBooking/bookingDetail")
+);
+const MyBookingList = lazy(() => import("./components/myBooking/bookingList"));
+const MyBookingDetail = lazy(() =>
+  import("./components/myBooking/bookingDetail")
+);
+const UpdateBooking = lazy(() =>
+  import("./components/manageBooking/updateBooking")
+);
 
 const Refund = lazy(() => import("./components/template/Refund"));
-const ManageRefund = lazy(() => import("./components/manageRefund/ManageRefund"));
+const ManageRefund = lazy(() =>
+  import("./components/manageRefund/ManageRefund")
+);
 
 const Home = lazy(() => import("./components/template/Home"));
 const Footer = lazy(() => import("./components/layouts/Footer"));
@@ -177,7 +187,9 @@ function App() {
                     path="/feedback"
                     element={
                       <Suspense fallback={<Loader />}>
-                        <Feedback />
+                        <PrivateRoute>
+                          <Feedback />
+                        </PrivateRoute>
                       </Suspense>
                     }
                   />
@@ -226,7 +238,8 @@ function App() {
                         <PrivateRoute>
                           <Suspense fallback={<Loader />}>
                             <OTPVerification />
-                          </Suspense>PrivateRoute
+                          </Suspense>
+                          PrivateRoute
                         </PrivateRoute>
                       </Suspense>
                     }
@@ -349,9 +362,9 @@ function App() {
                     path="/washingservice"
                     element={
                       <Suspense fallback={<Loader />}>
-                          <Suspense fallback={<Loader />}>
-                            <Washing />
-                          </Suspense>
+                        <Suspense fallback={<Loader />}>
+                          <Washing />
+                        </Suspense>
                       </Suspense>
                     }
                   />
@@ -359,9 +372,9 @@ function App() {
                     path="/hairdyeservice"
                     element={
                       <Suspense fallback={<Loader />}>
-                          <Suspense fallback={<Loader />}>
-                            <HairDye />
-                          </Suspense>
+                        <Suspense fallback={<Loader />}>
+                          <HairDye />
+                        </Suspense>
                       </Suspense>
                     }
                   />
@@ -369,9 +382,9 @@ function App() {
                     path="/trimfurservice"
                     element={
                       <Suspense fallback={<Loader />}>
-                          <Suspense fallback={<Loader />}>
-                            <TrimFur />
-                          </Suspense>
+                        <Suspense fallback={<Loader />}>
+                          <TrimFur />
+                        </Suspense>
                       </Suspense>
                     }
                   />
@@ -379,7 +392,7 @@ function App() {
                     path="/cutnailservice"
                     element={
                       <Suspense fallback={<Loader />}>
-                          <CutNails />
+                        <CutNails />
                       </Suspense>
                     }
                   />
@@ -500,7 +513,6 @@ function App() {
                 <Suspense fallback={<Loader />}>
                   <SpeedDialBox />
                 </Suspense>
-
               </Context.Provider>
             </>
           )}

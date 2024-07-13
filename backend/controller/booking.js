@@ -40,7 +40,7 @@ const createBooking = async (req, res) => {
     services: services,
     combo: combo,
     total: total,
-    status: "PENDING",
+    status: "PROCESS",
   });
 
   await newBooking

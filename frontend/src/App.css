@@ -2186,9 +2186,6 @@ form .input-field {
 }
 
 /* Booking list*/
-.status-PENDING {
-  color: rgba(255, 238, 0, 0.738);
-}
 
 .status-PROCESS {
   color: rgba(0, 0, 255, 0.742);

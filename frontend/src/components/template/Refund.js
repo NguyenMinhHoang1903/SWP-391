@@ -36,7 +36,7 @@ const RefundPage = () => {
     holder: "",
     amount: "",
     agree: false,
-    status: "Pending"
+    status: "PROCESS"
   });
 
   useEffect(() => {

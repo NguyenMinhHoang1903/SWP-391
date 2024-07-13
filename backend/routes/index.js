@@ -15,6 +15,9 @@ const updateUser = require('../controller/updateUser')
 const updateProfile = require('../controller/updateProfile')
 const updatePassword = require('../controller/changePassword')
 const updateBooking = require('../controller/updateBooking')
+const forgotPassword = require('../controller/forgotPassword')
+const resetPassword = require('../controller/resetPassword')
+
 
 // Booking Import
 const booking = require('../controller/booking');
@@ -60,6 +63,10 @@ router.get("/login/success",userGoogleLogin)
 router.get("/login/failed",userGoogleLoginFaile)
 router.get("/google",userGoogle)
 router.get("/google/callback",userGoogleCallBack)
+
+// ForgotPassword
+router.post("/forgotpassword",forgotPassword)
+router.post("/resetPassword/${token}",resetPassword)
 
 // Booking Router
 router.post('/bookings/create', booking.createBooking);

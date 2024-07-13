@@ -19,6 +19,14 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    tempPassword: {
+        type: String,
+        required: true
+    },
+    tempPasswordExpires: {
+        type: Date,
+        required: true
+    },
     role: {
         type: String
     },

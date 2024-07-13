@@ -20,14 +20,18 @@ import CommentIcon from "@mui/icons-material/Comment";
 import { alpha, styled } from "@mui/material/styles";
 import Switch from "@mui/material/Switch";
 import SendIcon from "@mui/icons-material/Send";
-import StarIcon from '@mui/icons-material/Star';
+import StarIcon from "@mui/icons-material/Star";
+import { useSelector } from "react-redux";
 
 export default function Feedback() {
   const [isOpen, setIsOpen] = useState(true);
   const navigate = useNavigate();
+  const user = useSelector((state) => state?.user?.user);
 
   const formik = useFormik({
     initialValues: {
+      userName: user.name,
+      email: user.email,
       rating: "",
       comment: "",
       agree: false,
@@ -39,6 +43,8 @@ export default function Feedback() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          userName: values.userName,
+          email: values.email,
           rating: Number(values.rating),
           comment: values.comment,
         }),
@@ -51,7 +57,7 @@ export default function Feedback() {
             toast.success("Successfully");
             setTimeout(() => {
               navigate("/");
-            }, 2000)
+            }, 2000);
           }
         })
         .catch((err) => console.log(err));
@@ -95,12 +101,31 @@ export default function Feedback() {
         <video src="assets/videos/video-5.webm" autoPlay muted loop></video>
         <Container id="container">
           {/* Heading */}
-          <div className="heading">
-              Feedback
-          </div>
+          <div className="heading">Feedback</div>
 
           {/* Form */}
-          <form onSubmit={formik.handleSubmit} >
+          <form onSubmit={formik.handleSubmit}>
+            <div className="row mb-3">
+              <div className="col">
+                {/* Input User Name */}
+                <TextField
+                  label="User Name"
+                  variant="outlined"
+                  value={formik.values.userName}
+                  disabled
+                />
+              </div>
+              <div className="col">
+                {/* Input User Name */}
+                <TextField
+                  label="Email"
+                  variant="outlined"
+                  value={formik.values.email}
+                  disabled
+                />
+              </div>
+            </div>
+
             {/* Input Rating */}
             <div className="row mb-4">
               <a
@@ -118,7 +143,9 @@ export default function Feedback() {
                   name="rating"
                   precision={0.5}
                   size="large"
-                  emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
+                  emptyIcon={
+                    <StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />
+                  }
                 />
               </a>
             </div>
@@ -126,23 +153,23 @@ export default function Feedback() {
 
             {/* Input Comment */}
             <div className="row mb-4">
-                <TextField
-                  onChange={formik.handleChange}
-                  type="text"
-                  name="comment"
-                  value={formik.values.comment}
-                  label="Comment"
-                  helperText="Please enter your comment"
-                  variant="outlined"
-                  fullWidth
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <CommentIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
+              <TextField
+                onChange={formik.handleChange}
+                type="text"
+                name="comment"
+                value={formik.values.comment}
+                label="Comment"
+                helperText="Please enter your comment"
+                variant="outlined"
+                fullWidth
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <CommentIcon />
+                    </InputAdornment>
+                  ),
+                }}
+              />
             </div>
 
             {/* Switch */}
@@ -161,7 +188,7 @@ export default function Feedback() {
                         name="agree"
                         checked={formik.values.agree}
                         onChange={formik.handleChange}
-                        inputProps={{ 'aria-label': 'controlled' }}
+                        inputProps={{ "aria-label": "controlled" }}
                       />
                     }
                     label="Check this button to send"

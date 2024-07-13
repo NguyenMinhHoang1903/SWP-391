@@ -25,7 +25,7 @@ export default function ShowListService() {
     if(name === "Hair dye") return '/hairdyeservice';
     if(name === "Trim fur") return '/trimfurservice';
     if(name === "Washing body") return '/washingservice';
-    return '/';
+    return '/booking';
   }
 
   // Start fetching all service

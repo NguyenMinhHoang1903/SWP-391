@@ -12,7 +12,7 @@ function generateRandomPassword() {
 }
 
 const forgotPassword = async (req, res) => {
-  const { email } = req.body;
+  const { email, userName } = req.body;
 
   try {
     const user = await User.findOne({ email });
@@ -34,7 +34,12 @@ const forgotPassword = async (req, res) => {
       },
       to: req.body.email,
       subject: 'Password Reset',
-      text: `Your new password is: ${newPassword}.Please login and change your password within 10 minutes.`,
+      html: `
+      <b>Hello: ${email}</b>
+      <p>Your new password is: ${newPassword}</p>
+      <p>Please login and change your password within 10 minutes.</p>
+      <p>Pet Spa</p>
+      `,
     };
 
     // Debugging information

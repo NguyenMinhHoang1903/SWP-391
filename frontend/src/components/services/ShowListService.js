@@ -52,20 +52,20 @@ export default function ShowListService() {
                 <div className="listService">
                   <Card
                     className="card"
-                    style={{ width: "100%" }}
+                    style={{ width: "19.2rem", height: "35rem" }}
                   >
                     <Card.Img
                       variant="top"
-                      style={{ width: "100%"}}
+                      style={{ width: "19rem", height: "12rem" }}
                       src={data.imageUrl}
                       className="card-img"
                     />
                     <Card.Body>
-                      <Card.Title>{data.name}</Card.Title>
-                      <Card.Text>{data.priceByWeight.map((value) => (
+                      <Card.Title style={{ width: "10rem", height: "1rem" }}>{data.name}</Card.Title>
+                      <Card.Text style={{ width: "10rem", height: "4rem" }}>{data.priceByWeight.map((value) => (
                         <div key={value} >{formattedPrice(value.price)} VND</div>
                       ))}</Card.Text>
-                      <Card.Text style={{ width: "16rem", height: "7rem" }}>
+                      <Card.Text style={{ width: "16rem", height: "9rem" }}>
                         {data.desc}
                       </Card.Text>
                       <a href={handleNameLink(data.name)} className="loginContainer btnBooking">

@@ -61,18 +61,18 @@ export default function ShowListCombo() {
             {combos.map((data, index) => (
               <Col sm={4} key={data._id}>
                 <div className="listService">
-                  <Card style={{ width: "18rem", height: "30rem" }}>
+                  <Card style={{ width: "19.2rem", height: "35rem" }}>
                     <Card.Img
                       variant="top"
-                      style={{ width: "100%" }}
+                      style={{ width: "19rem", height: "12rem" }}
                       src={data.imageUrl}
                       className="card-img"
                     />
 
                     <Card.Body>
-                      <Card.Title>{data.name}</Card.Title>
-                      <Card.Text>{formattedPrice(data.price)} VND</Card.Text>
-                      <Card.Text style={{ width: "16rem", height: "7rem" }}>
+                      <Card.Title style={{ width: "10rem", height: "1rem" }}>{data.name}</Card.Title>
+                      <Card.Text style={{ width: "10rem", height: "4rem" }}>{formattedPrice(data.price)} VND</Card.Text>
+                      <Card.Text style={{ width: "16rem", height: "9rem" }}>
                         {data.desc}
                       </Card.Text>
                       <a href="/booking" className="loginContainer btnBooking">

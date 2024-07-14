@@ -158,9 +158,9 @@ const Header = () => {
             <div>
               <div>
                 {user?._id ? (
-                  <div onClick={handleLogout} className="login-button">
+                  <button onClick={handleLogout} className="login-button">
                     Logout
-                  </div>
+                  </button>
                 ) : (
                   <div>
                     <Link className="login-button" to="login">

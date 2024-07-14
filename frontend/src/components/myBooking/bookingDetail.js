@@ -107,7 +107,7 @@ export default function BookingDetail() {
               )}
             </div>
 
-            <div className="total row">
+            <div className="total row mb-3">
               <div className="col-md-2 text-left">
                 <h3>Total Amount:</h3>
               </div>
@@ -128,16 +128,17 @@ export default function BookingDetail() {
                   </Button>
                 </Link>
               </div>
-              <div className="col-4 text-right">
+              <div className="col-4">
                 {booking.status === "PROCESS" && (
-                  <Link to={`/refund?${booking._id}`}>
-                    <button
-                      className="btn btn-success"
+                  <Link style={{color: "rgb(0, 201, 170)"}} to={`/refund?${booking._id}`}>
+                    <Button
+                      sx={{ bgcolor: "rgb(0, 201, 170)" ,":hover": { bgcolor: "rgb(0, 201, 170)" } }}
+                      variant="contained"
                       type="button"
                       disabled={!canRefund}
                     >
                       Refund
-                    </button>
+                    </Button>
                   </Link>
                 )}
               </div>

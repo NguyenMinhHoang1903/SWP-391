@@ -193,8 +193,8 @@ export default function ManageCombo() {
                 {/* Back Button */}
                 <Link to="/manageService">
                   <TooltipDefault title="Back">
-                    <IconButton>
-                      <ArrowBackIcon className="back-button" />
+                    <IconButton sx={{ marginLeft: 2 }} >
+                      <ArrowBackIcon sx={{color: 'white'}} className="back-button" />
                     </IconButton>
                   </TooltipDefault>
                 </Link>

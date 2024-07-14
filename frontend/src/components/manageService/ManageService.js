@@ -120,8 +120,8 @@ export default function ManageService() {
                 {/* Back Button */}
                 <Link to="/">
                   <TooltipDefault title="Back">
-                    <IconButton>
-                      <ArrowBackIcon className="back-button" />
+                    <IconButton sx={{ marginLeft: 2 }} >
+                      <ArrowBackIcon sx={{color: 'white'}} className="back-button" />
                     </IconButton>
                   </TooltipDefault>
                 </Link>

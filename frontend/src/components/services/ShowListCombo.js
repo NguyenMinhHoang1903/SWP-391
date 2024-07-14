@@ -36,11 +36,10 @@ export default function ShowListCombo() {
     };
   };
 
-   // Currency functions
-   const formattedPrice = (price) => {
+  // Currency functions
+  const formattedPrice = (price) => {
     return new Intl.NumberFormat("vi-VN").format(price);
   };
-
 
   // Start fetching all service
   useEffect(() => {
@@ -65,7 +64,7 @@ export default function ShowListCombo() {
                   <Card style={{ width: "18rem", height: "30rem" }}>
                     <Card.Img
                       variant="top"
-                      style={{ width: "17.8rem", height: "12rem" }}
+                      style={{ width: "100%" }}
                       src={data.imageUrl}
                       className="card-img"
                     />

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import SummaryApi from "../../common";
@@ -11,12 +11,13 @@ import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDMF5sjf2c4h2fl5RGVbZYHWY_LCAvIocc",
-  authDomain: "login-58187.firebaseapp.com",
-  projectId: "login-58187",
-  storageBucket: "login-58187.appspot.com",
-  messagingSenderId: "329617442969",
-  appId: "1:329617442969:web:04af9b386c1b8336751008"
+  apiKey: "AIzaSyATtcnryN20LxyhcgRgh4eVyVVzPOVQ_fU",
+  authDomain: "pet-spa---swp391.firebaseapp.com",
+  projectId: "pet-spa---swp391",
+  storageBucket: "pet-spa---swp391.appspot.com",
+  messagingSenderId: "349131660919",
+  appId: "1:349131660919:web:a7ec8626ad3a07c6faf072",
+  measurementId: "G-MVVZK4PHLY",
 };
 
 // Initialize Firebase
@@ -31,6 +32,7 @@ const Login = () => {
   const navigate = useNavigate();
   const { fetchUserDetails } = useContext(Context);
   const [showPassword, setShowPassword] = useState(false);
+
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -128,7 +130,7 @@ const Login = () => {
       .then((result) => {
         const user = result.user;
         dispatch(setUserDetails({ name: user.displayName, email: user.email, role: "CUSTOMER" }));
-        toast.success("Sign in with your Google account successfully")
+        toast.success("Sign in with your Google account successfully");
         navigate("/");
       })
       .catch((error) => {

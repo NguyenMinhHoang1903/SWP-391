@@ -20,6 +20,7 @@ import { styled } from "@mui/material/styles";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { storage } from "../../common/FirebaseConfig";
 import { getDownloadURL, listAll, ref, uploadBytes } from "firebase/storage";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 export default function AddService() {
   const navigate = useNavigate();
@@ -181,215 +182,247 @@ export default function AddService() {
     width: 1,
   });
 
+  // Theme settings
+  const theme = createTheme({
+    components: {
+      MuiTextField: {
+        styleOverrides: {
+          root: {
+            "& .MuiOutlinedInput-root": {
+              "&:hover fieldset": {
+                borderColor: "rgb(0, 201, 170)",
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: "rgb(0, 201, 170)",
+              },
+            },
+            "& .MuiInputLabel-root.Mui-focused": {
+              color: "rgb(0, 201, 170)",
+            },
+          },
+        },
+      },
+    },
+  });
+
   return (
     <>
       <div className="addService-component">
-        <video src="assets/videos/video-6.webm" muted autoPlay loop></video>
+        <ThemeProvider theme={theme}>
+          <video src="assets/videos/video-6.webm" muted autoPlay loop></video>
 
-        <div className="container">
-          <div className="col form">
-            {/* Heading */}
-            <div className="row mb-4">
-              {/* Back Button */}
-              <div className="col-3">
-                <Link to="/manageService">
-                  <TooltipDefault title="Back">
-                    <IconButton>
-                      <ArrowBackIcon className="back-button" />
-                    </IconButton>
-                  </TooltipDefault>
-                </Link>
-              </div>
-              <div className="col-9">
-                <div className="heading ms-3">Add New Service</div>
-              </div>
-            </div>
-
-            {/* Form */}
-            <form onSubmit={formik.handleSubmit}>
-              {/* Input Name */}
-              <div className="row mb-3">
-                <a
-                  data-tooltip-id="name-tooltip"
-                  data-tooltip-content={formik.errors.name}
-                  data-tooltip-variant="warning"
-                  data-tooltip-place="right"
-                >
-                  <TextField
-                    onChange={formik.handleChange}
-                    type="text"
-                    name="name"
-                    value={formik.values.name}
-                    label="Name"
-                    variant="outlined"
-                  />
-                </a>
-              </div>
-              <Tooltip id="name-tooltip" isOpen={true} imperativeModeOnly />
-
-              {/* Input Price and Weight */}
-              <div className="row mb-3">
-                <a
-                  data-tooltip-id="priceByWeight-tooltip"
-                  data-tooltip-content={formik.errors.priceByWeight}
-                  data-tooltip-variant="warning"
-                  data-tooltip-place="right"
-                >
-                  {formik.values.priceByWeight.map((value, index) => (
-                    <div className="row mb-3" key={index}>
-                      <div className="col-4">
-                        <TextField
-                          type="text"
-                          onChange={(e) => handlePrice(e.target.value, index)}
-                          onKeyDown={handleKeyDown}
-                          value={value.price}
-                          label="Price (VND)"
-                          variant="outlined"
-                        />
-                      </div>
-                      <div className="col-4">
-                        <TextField
-                          type="text"
-                          onChange={(e) => handleWeight(e.target.value, index)}
-                          onKeyDown={handleKeyDown}
-                          value={value.weight}
-                          label="Weight (kg)"
-                          variant="outlined"
-                        />
-                      </div>
-                      <div className="col-2">
-                        <TooltipDefault title="Click me to add this one to list">
-                          <Button
-                            sx={{
-                              bgcolor: "rgb(0, 201, 170)",
-                              ":hover": { bgcolor: "rgb(0, 201, 170)" },
-                              width: 20,
-                              paddingRight: 3,
-                            }}
-                            variant="contained"
-                            endIcon={<AddIcon />}
-                            onClick={() => handlePriceByWeight()}
-                          ></Button>
-                        </TooltipDefault>
-                      </div>
-                      <div className="col-2">
-                        <TooltipDefault title="Click me to remove this one">
-                          <Button
-                            sx={{
-                              bgcolor: "rgb(0, 201, 170)",
-                              ":hover": { bgcolor: "rgb(0, 201, 170)" },
-                              width: 5,
-                              paddingRight: 3,
-                            }}
-                            variant="contained"
-                            endIcon={<RemoveIcon />}
-                            onClick={() => removeEachPriceByWeight(index)}
-                          ></Button>
-                        </TooltipDefault>
-                      </div>
-                    </div>
-                  ))}
-                </a>
-              </div>
-              <Tooltip
-                id="priceByWeight-tooltip"
-                isOpen={true}
-                imperativeModeOnly
-              />
-
-              {/* Input Desc */}
-              <div className="row mb-3">
-                <a
-                  data-tooltip-id="desc-tooltip"
-                  data-tooltip-content={formik.errors.desc}
-                  data-tooltip-variant="warning"
-                  data-tooltip-place="right"
-                >
-                  <TextField
-                    onChange={formik.handleChange}
-                    type="text"
-                    name="desc"
-                    value={formik.values.desc}
-                    fullWidth
-                    label="Description"
-                    variant="outlined"
-                  />
-                </a>
-              </div>
-              <Tooltip id="desc-tooltip" isOpen={true} imperativeModeOnly />
-
-              {/* Input Image */}
-              <div className="row align-items-center mb-3">
-                <div className="col">
-                  <Button
-                    sx={{
-                      bgcolor: "rgb(0, 201, 170)",
-                      ":hover": { bgcolor: "rgb(0, 201, 170)" },
-                      marginBottom: 2,
-                    }}
-                    component="label"
-                    role={undefined}
-                    variant="contained"
-                    tabIndex={-1}
-                    startIcon={<CloudUploadIcon />}
-                  >
-                    Upload file
-                    <VisuallyHiddenInput
-                      type="file"
-                      name="image"
-                      accept="*"
-                      onChange={(e) =>
-                        formik.setFieldValue("image", e.currentTarget.files[0])
-                      }
-                    />
-                  </Button>
+          <div className="container">
+            <div className="col form">
+              {/* Heading */}
+              <div className="row mb-4">
+                {/* Back Button */}
+                <div className="col-3">
+                  <Link to="/manageService">
+                    <TooltipDefault title="Back">
+                      <IconButton>
+                        <ArrowBackIcon className="back-button" />
+                      </IconButton>
+                    </TooltipDefault>
+                  </Link>
                 </div>
-                <div className="col text-black h4">{formik.values.image.name}</div>
+                <div className="col-9">
+                  <div className="heading ms-3">Add New Service</div>
+                </div>
               </div>
 
-              {/* Switch */}
-              <div className="row mb-3">
-                <a
-                  data-tooltip-id="agree-tooltip"
-                  data-tooltip-content={formik.errors.agree}
-                  data-tooltip-variant="warning"
-                  data-tooltip-place="right"
-                >
-                  <div class="form-check form-switch">
-                    <input
-                      class="form-check-input"
-                      name="agree"
-                      type="checkbox"
-                      id="switch"
-                      value={formik.values.agree}
+              {/* Form */}
+              <form onSubmit={formik.handleSubmit}>
+                {/* Input Name */}
+                <div className="row mb-3">
+                  <a
+                    data-tooltip-id="name-tooltip"
+                    data-tooltip-content={formik.errors.name}
+                    data-tooltip-variant="warning"
+                    data-tooltip-place="right"
+                  >
+                    <TextField
                       onChange={formik.handleChange}
+                      type="text"
+                      name="name"
+                      value={formik.values.name}
+                      label="Name"
+                      variant="outlined"
                     />
-                    <label class="form-check-label" for="switch">
-                      Check this button to add
-                    </label>
+                  </a>
+                </div>
+                <Tooltip id="name-tooltip" isOpen={true} imperativeModeOnly />
+
+                {/* Input Price and Weight */}
+                <div className="row mb-3">
+                  <a
+                    data-tooltip-id="priceByWeight-tooltip"
+                    data-tooltip-content={formik.errors.priceByWeight}
+                    data-tooltip-variant="warning"
+                    data-tooltip-place="right"
+                  >
+                    {formik.values.priceByWeight.map((value, index) => (
+                      <div className="row mb-3" key={index}>
+                        <div className="col-4">
+                          <TextField
+                            type="text"
+                            onChange={(e) => handlePrice(e.target.value, index)}
+                            onKeyDown={handleKeyDown}
+                            value={value.price}
+                            label="Price (VND)"
+                            variant="outlined"
+                          />
+                        </div>
+                        <div className="col-4">
+                          <TextField
+                            type="text"
+                            onChange={(e) =>
+                              handleWeight(e.target.value, index)
+                            }
+                            onKeyDown={handleKeyDown}
+                            value={value.weight}
+                            label="Weight (kg)"
+                            variant="outlined"
+                          />
+                        </div>
+                        <div className="col-2">
+                          <TooltipDefault title="Click me to add this one to list">
+                            <Button
+                              sx={{
+                                bgcolor: "rgb(0, 201, 170)",
+                                ":hover": { bgcolor: "rgb(0, 201, 170)" },
+                                width: 20,
+                                paddingRight: 3,
+                              }}
+                              variant="contained"
+                              endIcon={<AddIcon />}
+                              onClick={() => handlePriceByWeight()}
+                            ></Button>
+                          </TooltipDefault>
+                        </div>
+                        <div className="col-2">
+                          <TooltipDefault title="Click me to remove this one">
+                            <Button
+                              sx={{
+                                bgcolor: "rgb(0, 201, 170)",
+                                ":hover": { bgcolor: "rgb(0, 201, 170)" },
+                                width: 5,
+                                paddingRight: 3,
+                              }}
+                              variant="contained"
+                              endIcon={<RemoveIcon />}
+                              onClick={() => removeEachPriceByWeight(index)}
+                            ></Button>
+                          </TooltipDefault>
+                        </div>
+                      </div>
+                    ))}
+                  </a>
+                </div>
+                <Tooltip
+                  id="priceByWeight-tooltip"
+                  isOpen={true}
+                  imperativeModeOnly
+                />
+
+                {/* Input Desc */}
+                <div className="row mb-3">
+                  <a
+                    data-tooltip-id="desc-tooltip"
+                    data-tooltip-content={formik.errors.desc}
+                    data-tooltip-variant="warning"
+                    data-tooltip-place="right"
+                  >
+                    <TextField
+                      onChange={formik.handleChange}
+                      type="text"
+                      name="desc"
+                      value={formik.values.desc}
+                      fullWidth
+                      label="Description"
+                      variant="outlined"
+                    />
+                  </a>
+                </div>
+                <Tooltip id="desc-tooltip" isOpen={true} imperativeModeOnly />
+
+                {/* Input Image */}
+                <div className="row align-items-center mb-3">
+                  <div className="col">
+                    <Button
+                      sx={{
+                        bgcolor: "rgb(0, 201, 170)",
+                        ":hover": { bgcolor: "rgb(0, 201, 170)" },
+                        marginBottom: 2,
+                      }}
+                      component="label"
+                      role={undefined}
+                      variant="contained"
+                      tabIndex={-1}
+                      startIcon={<CloudUploadIcon />}
+                    >
+                      Upload file
+                      <VisuallyHiddenInput
+                        type="file"
+                        name="image"
+                        accept="*"
+                        onChange={(e) =>
+                          formik.setFieldValue(
+                            "image",
+                            e.currentTarget.files[0]
+                          )
+                        }
+                      />
+                    </Button>
                   </div>
-                </a>
-              </div>
-              <Tooltip id="agree-tooltip" isOpen={true} imperativeModeOnly />
+                  <div className="col text-black h4">
+                    {formik.values.image.name}
+                  </div>
+                </div>
 
-              {/* Submit Button */}
-              <button
-                className="submit-button"
-                type="submit"
-                disabled={!(formik.dirty && formik.isValid)}
-              >
-                ADD
-              </button>
-            </form>
+                {/* Switch */}
+                <div className="row mb-3">
+                  <a
+                    data-tooltip-id="agree-tooltip"
+                    data-tooltip-content={formik.errors.agree}
+                    data-tooltip-variant="warning"
+                    data-tooltip-place="right"
+                  >
+                    <div class="form-check form-switch">
+                      <input
+                        class="form-check-input"
+                        name="agree"
+                        type="checkbox"
+                        id="switch"
+                        value={formik.values.agree}
+                        onChange={formik.handleChange}
+                      />
+                      <label class="form-check-label" for="switch">
+                        Check this button to add
+                      </label>
+                    </div>
+                  </a>
+                </div>
+                <Tooltip id="agree-tooltip" isOpen={true} imperativeModeOnly />
+
+                {/* Submit Button */}
+                <button
+                  className="submit-button"
+                  type="submit"
+                  disabled={!(formik.dirty && formik.isValid)}
+                >
+                  ADD
+                </button>
+              </form>
+            </div>
           </div>
-        </div>
 
-        <Backdrop
-          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={openBackDrop}
-        >
-          <CircularProgress color="inherit" />
-        </Backdrop>
+          <Backdrop
+            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            open={openBackDrop}
+          >
+            <CircularProgress color="inherit" />
+          </Backdrop>
+        </ThemeProvider>
       </div>
     </>
   );

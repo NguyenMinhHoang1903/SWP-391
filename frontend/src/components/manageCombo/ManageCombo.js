@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Modal, Button, Dropdown, Table, Col, Row } from "react-bootstrap";
+import { Modal, Dropdown, Table, Col, Row } from "react-bootstrap";
 import toast from "react-hot-toast";
 import {
   Backdrop,
@@ -9,18 +9,20 @@ import {
   IconButton,
   TextField,
   Zoom,
+  Button,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Tooltip from "@mui/material/Tooltip";
 import EditIcon from "@mui/icons-material/Edit";
 import ContentPasteSearchIcon from "@mui/icons-material/ContentPasteSearch";
-import WarningIcon from "@mui/icons-material/Warning";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import TooltipDefault from "@mui/material/Tooltip";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { storage } from "../../common/FirebaseConfig";
 import { ref, deleteObject } from "firebase/storage";
-import moment from 'moment';
+import moment from "moment";
+import WarningAmberOutlinedIcon from "@mui/icons-material/WarningAmberOutlined";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 export default function ManageCombo() {
   const [combos, setCombos] = useState([]);
@@ -39,7 +41,7 @@ export default function ManageCombo() {
 
   // Close modal
   const handleClose = (nameButton) => {
-    if (nameButton === "delete") setShowDelete(false);
+    if (nameButton === "deleteCombo") setShowDelete(false);
     else if (nameButton === "comboDetail") setShowDetail(false);
     else if (nameButton === "serviceDesc") setShowDesc(false);
   };
@@ -183,6 +185,29 @@ export default function ManageCombo() {
     };
   }, []);
 
+ // Theme settings
+ const theme = createTheme({
+  components: {
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          "& .MuiOutlinedInput-root": {
+            "&:hover fieldset": {
+              borderColor: "rgb(0, 201, 170)",
+            },
+            "&.Mui-focused fieldset": {
+              borderColor: "rgb(0, 201, 170)",
+            },
+          },
+          "& .MuiInputLabel-root.Mui-focused": {
+            color: "rgb(0, 201, 170)",
+          },
+        },
+      },
+    },
+  },
+});
+
   return (
     <>
       <div className="manageCombo-component">
@@ -193,8 +218,11 @@ export default function ManageCombo() {
                 {/* Back Button */}
                 <Link to="/manageService">
                   <TooltipDefault title="Back">
-                    <IconButton sx={{ marginLeft: 2 }} >
-                      <ArrowBackIcon sx={{color: 'white'}} className="back-button" />
+                    <IconButton sx={{ marginLeft: 2 }}>
+                      <ArrowBackIcon
+                        sx={{ color: "white" }}
+                        className="back-button"
+                      />
                     </IconButton>
                   </TooltipDefault>
                 </Link>
@@ -220,14 +248,16 @@ export default function ManageCombo() {
                 marginBottom: 3,
               }}
             >
-              <TextField
-                sx={{ bgcolor: "white" }}
-                variant="outlined"
-                onChange={(e) => {
-                  setQuery(e.target.value);
-                }}
-                label="Search..."
-              />
+              <ThemeProvider theme={theme}>
+                <TextField
+                  sx={{ bgcolor: "white" }}
+                  variant="outlined"
+                  onChange={(e) => {
+                    setQuery(e.target.value);
+                  }}
+                  label="Search..."
+                />
+              </ThemeProvider>
             </Box>
 
             {/* Table */}
@@ -247,8 +277,12 @@ export default function ManageCombo() {
                   <tr key={combo._id}>
                     <td>{combo.name}</td>
                     <td>{formattedPrice(combo.price)} </td>
-                    <td>{moment(combo.startDate).format('YYYY/MM/DD HH:mm:ss') }</td>
-                    <td>{moment(combo.endDate).format('YYYY/MM/DD HH:mm:ss') }</td>
+                    <td>
+                      {moment(combo.startDate).format("YYYY/MM/DD HH:mm:ss")}
+                    </td>
+                    <td>
+                      {moment(combo.endDate).format("YYYY/MM/DD HH:mm:ss")}
+                    </td>
                     <td style={{ color: getStatusColor(combo.status) }}>
                       {combo.status}
                     </td>
@@ -336,27 +370,35 @@ export default function ManageCombo() {
           centered
         >
           <Modal.Body>
-            <Row className="justify-content-md-center mt-4">
-              <Col lg="1" className="mt-1">
+            <Row className="justify-content-md-center mb-3">
+              <Col md="auto">
                 <Tooltip title="Warning">
-                  <WarningIcon />
+                  <WarningAmberOutlinedIcon
+                    sx={{ fontSize: 110 }}
+                    color="warning"
+                    TransitionComponent={Zoom}
+                  />
                 </Tooltip>
               </Col>
-              <Col lg="5">
+            </Row>
+            <Row className="justify-content-md-center">
+              <Col md="auto">
                 <h3>Are you sure?</h3>
               </Col>
             </Row>
           </Modal.Body>
           <Modal.Footer>
             <Button
-              variant="secondary"
+              variant="outlined"
+              color="inherit"
               onClick={() => handleClose("deleteCombo")}
             >
               Close
             </Button>
             <Button
-              variant="danger"
-              id="delete-button"
+              sx={{ marginLeft: 2 }}
+              color="error"
+              variant="contained"
               onClick={() => deleteCombo()}
             >
               DELETE

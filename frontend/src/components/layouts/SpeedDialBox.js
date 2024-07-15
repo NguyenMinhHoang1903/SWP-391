@@ -37,8 +37,18 @@ export default function SpeedDialBox() {
         }}
       >
         <SpeedDial
-          ariaLabel="SpeedDial basic example"
-          sx={{ position: "absolute", bottom: 16, right: 16 }}
+          ariaLabel="SpeedDial"
+          sx={{
+            position: "absolute",
+            bottom: 16,
+            right: 16,
+            "& .MuiFab-primary": {
+              bgcolor: "rgb(0, 201, 170)",
+              "&:hover": {
+                bgcolor: "rgb(0, 201, 170)",
+              },
+            },
+          }}
           icon={<SpeedDialIcon />}
         >
           {actions.map((action) => (

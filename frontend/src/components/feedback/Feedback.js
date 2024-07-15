@@ -22,6 +22,7 @@ import Switch from "@mui/material/Switch";
 import SendIcon from "@mui/icons-material/Send";
 import StarIcon from "@mui/icons-material/Star";
 import { useSelector } from "react-redux";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 export default function Feedback() {
   const [isOpen, setIsOpen] = useState(true);
@@ -94,121 +95,147 @@ export default function Feedback() {
       backgroundColor: "#00C9AA",
     },
   }));
+
+  // Theme settings
+  const theme = createTheme({
+    components: {
+      MuiTextField: {
+        styleOverrides: {
+          root: {
+            "& .MuiOutlinedInput-root": {
+              "&:hover fieldset": {
+                borderColor: "rgb(0, 201, 170)",
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: "rgb(0, 201, 170)",
+              },
+            },
+            "& .MuiInputLabel-root.Mui-focused": {
+              color: "rgb(0, 201, 170)",
+            },
+          },
+        },
+      },
+    },
+  });
+
   return (
     <>
       <div className="feedback-component">
-        {/* Video */}
-        <video src="assets/videos/video-5.webm" autoPlay muted loop></video>
-        <Container id="container">
-          {/* Heading */}
-          <div className="heading">Feedback</div>
+        <ThemeProvider theme={theme}>
+          {/* Video */}
+          <video src="assets/videos/video-5.webm" autoPlay muted loop></video>
+          <Container id="container">
+            {/* Heading */}
+            <div className="heading">Feedback</div>
 
-          {/* Form */}
-          <form onSubmit={formik.handleSubmit}>
-            <div className="row mb-3">
-              <div className="col">
-                {/* Input User Name */}
-                <TextField
-                  label="User Name"
-                  variant="outlined"
-                  value={formik.values.userName}
-                  disabled
-                />
-              </div>
-              <div className="col">
-                {/* Input User Name */}
-                <TextField
-                  label="Email"
-                  variant="outlined"
-                  value={formik.values.email}
-                  disabled
-                />
-              </div>
-            </div>
-
-            {/* Input Rating */}
-            <div className="row mb-4">
-              <a
-                data-tooltip-id="rating-tooltip"
-                data-tooltip-content={formik.errors.rating}
-                data-tooltip-variant="warning"
-                data-tooltip-place="right"
-              >
-                <Typography variant="h6" gutterBottom>
-                  Rating
-                </Typography>
-                <Rating
-                  onChange={formik.handleChange}
-                  value={formik.values.rating}
-                  name="rating"
-                  precision={0.5}
-                  size="large"
-                  emptyIcon={
-                    <StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />
-                  }
-                />
-              </a>
-            </div>
-            <Tooltip id="rating-tooltip" isOpen={isOpen} imperativeModeOnly />
-
-            {/* Input Comment */}
-            <div className="row mb-4">
-              <TextField
-                onChange={formik.handleChange}
-                type="text"
-                name="comment"
-                value={formik.values.comment}
-                label="Comment"
-                helperText="Please enter your comment"
-                variant="outlined"
-                fullWidth
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <CommentIcon />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </div>
-
-            {/* Switch */}
-            <div className="row mb-3">
-              <a
-                data-tooltip-id="agree-tooltip"
-                data-tooltip-content={formik.errors.agree}
-                data-tooltip-variant="warning"
-                data-tooltip-place="right"
-              >
-                <FormGroup>
-                  <FormControlLabel
-                    control={
-                      <GreenSwitch
-                        {...label}
-                        name="agree"
-                        checked={formik.values.agree}
-                        onChange={formik.handleChange}
-                        inputProps={{ "aria-label": "controlled" }}
-                      />
-                    }
-                    label="Check this button to send"
+            {/* Form */}
+            <form onSubmit={formik.handleSubmit}>
+              <div className="row mb-3">
+                <div className="col">
+                  {/* Input User Name */}
+                  <TextField
+                    label="User Name"
+                    variant="outlined"
+                    value={formik.values.userName}
+                    disabled
                   />
-                </FormGroup>
-              </a>
-            </div>
-            <Tooltip id="agree-tooltip" isOpen={isOpen} imperativeModeOnly />
+                </div>
+                <div className="col">
+                  {/* Input User Name */}
+                  <TextField
+                    label="Email"
+                    variant="outlined"
+                    value={formik.values.email}
+                    disabled
+                  />
+                </div>
+              </div>
 
-            {/* Send Button */}
-            <GreenButton
-              type="submit"
-              disabled={!(formik.dirty && formik.isValid)}
-              variant="contained"
-              endIcon={<SendIcon />}
-            >
-              Send
-            </GreenButton>
-          </form>
-        </Container>
+              {/* Input Rating */}
+              <div className="row mb-4">
+                <a
+                  data-tooltip-id="rating-tooltip"
+                  data-tooltip-content={formik.errors.rating}
+                  data-tooltip-variant="warning"
+                  data-tooltip-place="right"
+                >
+                  <Typography variant="h6" gutterBottom>
+                    Rating
+                  </Typography>
+                  <Rating
+                    onChange={formik.handleChange}
+                    value={formik.values.rating}
+                    name="rating"
+                    precision={0.5}
+                    size="large"
+                    emptyIcon={
+                      <StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />
+                    }
+                  />
+                </a>
+              </div>
+              <Tooltip id="rating-tooltip" isOpen={isOpen} imperativeModeOnly />
+
+              {/* Input Comment */}
+              <div className="row mb-4">
+                <TextField
+                  onChange={formik.handleChange}
+                  type="text"
+                  name="comment"
+                  value={formik.values.comment}
+                  label="Comment"
+                  helperText="Please enter your comment"
+                  variant="outlined"
+                  fullWidth
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <CommentIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </div>
+
+              {/* Switch */}
+              <div className="row mb-3">
+                <a
+                  data-tooltip-id="agree-tooltip"
+                  data-tooltip-content={formik.errors.agree}
+                  data-tooltip-variant="warning"
+                  data-tooltip-place="right"
+                >
+                  <FormGroup>
+                    <FormControlLabel
+                      control={
+                        <GreenSwitch
+                          {...label}
+                          name="agree"
+                          checked={formik.values.agree}
+                          onChange={formik.handleChange}
+                          inputProps={{ "aria-label": "controlled" }}
+                        />
+                      }
+                      label="Check this button to send"
+                    />
+                  </FormGroup>
+                </a>
+              </div>
+              <Tooltip id="agree-tooltip" isOpen={isOpen} imperativeModeOnly />
+
+              {/* Send Button */}
+              <GreenButton
+                type="submit"
+                disabled={!(formik.dirty && formik.isValid)}
+                variant="contained"
+                endIcon={<SendIcon />}
+              >
+                Send
+              </GreenButton>
+            </form>
+          </Container>
+        </ThemeProvider>
       </div>
     </>
   );

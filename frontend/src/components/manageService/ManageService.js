@@ -2,17 +2,24 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Modal, Dropdown, Row, Col, Table } from "react-bootstrap";
 import toast from "react-hot-toast";
-import { Box, IconButton, TextField, Tooltip, Zoom } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  TextField,
+  Tooltip,
+  Zoom,
+  Button,
+} from "@mui/material";
 import ContentPasteSearchIcon from "@mui/icons-material/ContentPasteSearch";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import WarningIcon from "@mui/icons-material/Warning";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import TooltipDefault from "@mui/material/Tooltip";
 import SendIcon from "@mui/icons-material/Send";
-import { Button } from "@mui/material";
 import { storage } from "../../common/FirebaseConfig";
 import { ref, deleteObject } from "firebase/storage";
+import WarningAmberOutlinedIcon from "@mui/icons-material/WarningAmberOutlined";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 export default function ManageService() {
   const [services, setServices] = useState([]);
@@ -110,6 +117,29 @@ export default function ManageService() {
     };
   }, []);
 
+ // Theme settings
+ const theme = createTheme({
+  components: {
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          "& .MuiOutlinedInput-root": {
+            "&:hover fieldset": {
+              borderColor: "rgb(0, 201, 170)",
+            },
+            "&.Mui-focused fieldset": {
+              borderColor: "rgb(0, 201, 170)",
+            },
+          },
+          "& .MuiInputLabel-root.Mui-focused": {
+            color: "rgb(0, 201, 170)",
+          },
+        },
+      },
+    },
+  },
+});
+
   return (
     <>
       <div className="manageService-component">
@@ -120,8 +150,11 @@ export default function ManageService() {
                 {/* Back Button */}
                 <Link to="/">
                   <TooltipDefault title="Back">
-                    <IconButton sx={{ marginLeft: 2 }} >
-                      <ArrowBackIcon sx={{color: 'white'}} className="back-button" />
+                    <IconButton sx={{ marginLeft: 2 }}>
+                      <ArrowBackIcon
+                        sx={{ color: "white" }}
+                        className="back-button"
+                      />
                     </IconButton>
                   </TooltipDefault>
                 </Link>
@@ -167,14 +200,15 @@ export default function ManageService() {
                 marginBottom: 3,
               }}
             >
-              <TextField
-                sx={{ bgcolor: "white" }}
-                variant="outlined"
-                label="Search..."
-                onChange={(e) => {
-                  setQuery(e.target.value);
-                }}
-              />
+              <ThemeProvider theme={theme}>
+                <TextField
+                  variant="outlined"
+                  label="Search..."
+                  onChange={(e) => {
+                    setQuery(e.target.value);
+                  }}
+                />
+              </ThemeProvider>
             </Box>
 
             {/* Table */}
@@ -277,24 +311,31 @@ export default function ManageService() {
         {/* Delete Box */}
         <Modal show={showDelete} onHide={handleClose} centered>
           <Modal.Body>
-            <Row className="justify-content-md-center mt-4">
-              <Col lg="1" className="mt-1">
+            <Row className="justify-content-md-center mb-3">
+              <Col md="auto">
                 <Tooltip title="Warning">
-                  <WarningIcon />
+                  <WarningAmberOutlinedIcon
+                    sx={{ fontSize: 110 }}
+                    color="warning"
+                    TransitionComponent={Zoom}
+                  />
                 </Tooltip>
               </Col>
-              <Col lg="5">
+            </Row>
+            <Row className="justify-content-md-center">
+              <Col md="auto">
                 <h3>Are you sure?</h3>
               </Col>
             </Row>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
+            <Button variant="outlined" color="inherit" onClick={handleClose}>
               Close
             </Button>
             <Button
-              variant="danger"
-              id="delete-button"
+              sx={{ marginLeft: 2 }}
+              color="error"
+              variant="contained"
               onClick={() => deleteService()}
             >
               DELETE
@@ -305,13 +346,7 @@ export default function ManageService() {
         {/* Description Box */}
         <Modal show={showDesc} onHide={handleClose} centered>
           <Modal.Body>
-            <img
-              className="mb-2"
-              src={url}
-              alt=""
-              style={{ width: "100%" }}
-
-            />
+            <img className="mb-2" src={url} alt="" style={{ width: "100%" }} />
             <h5>Description</h5>
             <p style={{ textIndent: 15 }}>{desc}</p>
           </Modal.Body>

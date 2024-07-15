@@ -24,6 +24,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 // Utility function to get next day's date
 const getNextDayDate = () => {
@@ -216,257 +217,289 @@ export default function AddCombo() {
     width: 1,
   });
 
+  // Theme settings
+  const theme = createTheme({
+    components: {
+      MuiTextField: {
+        styleOverrides: {
+          root: {
+            "& .MuiOutlinedInput-root": {
+              "&:hover fieldset": {
+                borderColor: "rgb(0, 201, 170)",
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: "rgb(0, 201, 170)",
+              },
+            },
+            "& .MuiInputLabel-root.Mui-focused": {
+              color: "rgb(0, 201, 170)",
+            },
+          },
+        },
+      },
+    },
+  });
+
   return (
     <>
       <div className="addCombo-component">
-        <video src="assets/videos/video-7.webm" muted autoPlay loop></video>
+        <ThemeProvider theme={theme}>
+          <video src="assets/videos/video-7.webm" muted autoPlay loop></video>
 
-        <div className="container">
-          <div className="row ">
-            <div className="col form">
-              {/* Heading */}
-              <div className="row mb-3">
-                {/* Back Button */}
-                <div className="col-3">
-                  <Link to="/manageCombo">
-                    <TooltipDefault title="Back">
-                      <IconButton>
-                        <ArrowBackIcon className="back-button" />
-                      </IconButton>
-                    </TooltipDefault>
-                  </Link>
-                </div>
-                <div className="col-9">
-                  <div className="heading ms-4">Add New Combo</div>
-                </div>
-              </div>
-
-              {/* Form */}
-              <form onSubmit={formik.handleSubmit}>
-                {/* Input Name */}
+          <div className="container">
+            <div className="row ">
+              <div className="col form">
+                {/* Heading */}
                 <div className="row mb-3">
-                  <a
-                    data-tooltip-id="name-tooltip"
-                    data-tooltip-content={formik.errors.name}
-                    data-tooltip-variant="warning"
-                    data-tooltip-place="right"
-                  >
-                    <TextField
-                      label="Name"
-                      variant="outlined"
-                      onChange={formik.handleChange}
-                      type="text"
-                      name="name"
-                      value={formik.values.name}
-                    />
-                  </a>
+                  {/* Back Button */}
+                  <div className="col-3">
+                    <Link to="/manageCombo">
+                      <TooltipDefault title="Back">
+                        <IconButton>
+                          <ArrowBackIcon className="back-button" />
+                        </IconButton>
+                      </TooltipDefault>
+                    </Link>
+                  </div>
+                  <div className="col-9">
+                    <div className="heading ms-4">Add New Combo</div>
+                  </div>
                 </div>
-                <Tooltip id="name-tooltip" isOpen={true} imperativeModeOnly />
 
-                {/* Input Price */}
-                <div className="row mb-3">
-                  <a
-                    data-tooltip-id="price-tooltip"
-                    data-tooltip-content={formik.errors.price}
-                    data-tooltip-variant="warning"
-                    data-tooltip-place="right"
-                  >
-                   
-                    <TextField
-                      label="Price"
-                      variant="outlined"
-                      onChange={formik.handleChange}
-                      onKeyDown={handleKeyDown}
-                      type="text"
-                      name="price"
-                      value={formik.values.price}
-                    />
-                  </a>
-                </div>
-                <Tooltip id="price-tooltip" isOpen={true} imperativeModeOnly />
-
-                {/* Start Date and End Date */}
-                <div className="row mb-3">
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer components={["DatePicker", "DatePicker"]}>
-                      <a
-                        data-tooltip-id="startDate-tooltip"
-                        data-tooltip-content={formik.errors.startDate}
-                        data-tooltip-variant="warning"
-                        data-tooltip-place="left"
-                      >
-                        <DatePicker
-                          label="Start Date"
-                          onChange={(newValue) =>
-                            formik.setFieldValue("startDate", newValue)
-                          }
-                          value={formik.values.startDate}
-                          name="startDate"
-                        />
-                      </a>
-                      <Tooltip
-                        id="startDate-tooltip"
-                        isOpen={true}
-                        imperativeModeOnly
+                {/* Form */}
+                <form onSubmit={formik.handleSubmit}>
+                  {/* Input Name */}
+                  <div className="row mb-3">
+                    <a
+                      data-tooltip-id="name-tooltip"
+                      data-tooltip-content={formik.errors.name}
+                      data-tooltip-variant="warning"
+                      data-tooltip-place="right"
+                    >
+                      <TextField
+                        label="Name"
+                        variant="outlined"
+                        onChange={formik.handleChange}
+                        type="text"
+                        name="name"
+                        value={formik.values.name}
                       />
-                      <a
-                        data-tooltip-id="endDate-tooltip"
-                        data-tooltip-content={formik.errors.endDate}
-                        data-tooltip-variant="warning"
-                        data-tooltip-place="right"
-                      >
-                        <DatePicker
-                          label="End Date"
-                          onChange={(newValue) =>
-                            formik.setFieldValue("endDate", newValue)
-                          }
-                          value={formik.values.startDate}
-                          name="endDate"
-                        />
-                      </a>
-                      <Tooltip
-                        id="endDate-tooltip"
-                        isOpen={true}
-                        imperativeModeOnly
+                    </a>
+                  </div>
+                  <Tooltip id="name-tooltip" isOpen={true} imperativeModeOnly />
+
+                  {/* Input Price */}
+                  <div className="row mb-3">
+                    <a
+                      data-tooltip-id="price-tooltip"
+                      data-tooltip-content={formik.errors.price}
+                      data-tooltip-variant="warning"
+                      data-tooltip-place="right"
+                    >
+                      <TextField
+                        label="Price"
+                        variant="outlined"
+                        onChange={formik.handleChange}
+                        onKeyDown={handleKeyDown}
+                        type="text"
+                        name="price"
+                        value={formik.values.price}
                       />
-                    </DemoContainer>
-                  </LocalizationProvider>
-                </div>
+                    </a>
+                  </div>
+                  <Tooltip
+                    id="price-tooltip"
+                    isOpen={true}
+                    imperativeModeOnly
+                  />
 
-                {/* Input Desc */}
-                <div className="row mb-3">
-                  <a
-                    data-tooltip-id="desc-tooltip"
-                    data-tooltip-content={formik.errors.desc}
-                    data-tooltip-variant="warning"
-                    data-tooltip-place="right"
-                  >
-                    <TextField
-                      label="Description"
-                      variant="outlined"
-                      onChange={formik.handleChange}
-                      type="text"
-                      name="desc"
-                      value={formik.values.desc}
-                      fullWidth
-                    />
-                  </a>
-                </div>
-                <Tooltip id="desc-tooltip" isOpen={true} imperativeModeOnly />
-
-                {/* Choose Service */}
-                <div className="row mb-3">
-                  <label>Service</label>
-                  <a
-                    data-tooltip-id="services-tooltip"
-                    data-tooltip-content={formik.errors.serviceId}
-                    data-tooltip-variant="warning"
-                    data-tooltip-place="right"
-                  >
-                    {services.map((service) => (
-                      <div class="form-check" key={service._id}>
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          name="serviceId"
-                          onChange={formik.handleChange}
-                          value={service._id}
+                  {/* Start Date and End Date */}
+                  <div className="row mb-3">
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DemoContainer components={["DatePicker", "DatePicker"]}>
+                        <a
+                          data-tooltip-id="startDate-tooltip"
+                          data-tooltip-content={formik.errors.startDate}
+                          data-tooltip-variant="warning"
+                          data-tooltip-place="left"
+                        >
+                          <DatePicker
+                            label="Start Date"
+                            onChange={(newValue) =>
+                              formik.setFieldValue("startDate", newValue)
+                            }
+                            value={formik.values.startDate}
+                            name="startDate"
+                          />
+                        </a>
+                        <Tooltip
+                          id="startDate-tooltip"
+                          isOpen={true}
+                          imperativeModeOnly
                         />
-                        <div className="row">
-                          <div className="col">
-                            <label class="form-check-label">
-                              {service.name}
-                            </label>
+                        <a
+                          data-tooltip-id="endDate-tooltip"
+                          data-tooltip-content={formik.errors.endDate}
+                          data-tooltip-variant="warning"
+                          data-tooltip-place="right"
+                        >
+                          <DatePicker
+                            label="End Date"
+                            onChange={(newValue) =>
+                              formik.setFieldValue("endDate", newValue)
+                            }
+                            value={formik.values.startDate}
+                            name="endDate"
+                          />
+                        </a>
+                        <Tooltip
+                          id="endDate-tooltip"
+                          isOpen={true}
+                          imperativeModeOnly
+                        />
+                      </DemoContainer>
+                    </LocalizationProvider>
+                  </div>
+
+                  {/* Input Desc */}
+                  <div className="row mb-3">
+                    <a
+                      data-tooltip-id="desc-tooltip"
+                      data-tooltip-content={formik.errors.desc}
+                      data-tooltip-variant="warning"
+                      data-tooltip-place="right"
+                    >
+                      <TextField
+                        label="Description"
+                        variant="outlined"
+                        onChange={formik.handleChange}
+                        type="text"
+                        name="desc"
+                        value={formik.values.desc}
+                        fullWidth
+                      />
+                    </a>
+                  </div>
+                  <Tooltip id="desc-tooltip" isOpen={true} imperativeModeOnly />
+
+                  {/* Choose Service */}
+                  <div className="row mb-3">
+                    <label>Service</label>
+                    <a
+                      data-tooltip-id="services-tooltip"
+                      data-tooltip-content={formik.errors.serviceId}
+                      data-tooltip-variant="warning"
+                      data-tooltip-place="right"
+                    >
+                      {services.map((service) => (
+                        <div class="form-check" key={service._id}>
+                          <input
+                            class="form-check-input"
+                            type="checkbox"
+                            name="serviceId"
+                            onChange={formik.handleChange}
+                            value={service._id}
+                          />
+                          <div className="row">
+                            <div className="col">
+                              <label class="form-check-label">
+                                {service.name}
+                              </label>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
-                  </a>
-                </div>
-                <Tooltip
-                  id="services-tooltip"
-                  isOpen={true}
-                  imperativeModeOnly
-                />
-
-                {/* Input Image */}
-                <div className="row align-items-center mb-3">
-                  <div className="col">
-                    <Button
-                      sx={{
-                        bgcolor: "rgb(0, 201, 170)",
-                        ":hover": { bgcolor: "rgb(0, 201, 170)" },
-                        marginBottom: 2,
-                      }}
-                      component="label"
-                      role={undefined}
-                      variant="contained"
-                      tabIndex={-1}
-                      startIcon={<CloudUploadIcon />}
-                    >
-                      Upload file
-                      <VisuallyHiddenInput
-                        type="file"
-                        name="image"
-                        accept="image/*"
-                        onChange={(e) =>
-                          formik.setFieldValue(
-                            "image",
-                            e.currentTarget.files[0]
-                          )
-                        }
-                      />
-                    </Button>
+                      ))}
+                    </a>
                   </div>
-                  <div className="col text-black h5">
-                    {formik.values.image.name}
-                  </div>
-                </div>
+                  <Tooltip
+                    id="services-tooltip"
+                    isOpen={true}
+                    imperativeModeOnly
+                  />
 
-                {/* Switch */}
-                <div className="row mb-3">
-                  <a
-                    data-tooltip-id="agree-tooltip"
-                    data-tooltip-content={formik.errors.agree}
-                    data-tooltip-variant="warning"
-                    data-tooltip-place="right"
-                  >
-                    <div class="form-check form-switch">
-                      <input
-                        class="form-check-input"
-                        name="agree"
-                        type="checkbox"
-                        id="switch"
-                        value={formik.values.agree}
-                        onChange={formik.handleChange}
-                      />
-                      <label class="form-check-label" for="switch">
-                        Check this button to add
-                      </label>
+                  {/* Input Image */}
+                  <div className="row align-items-center mb-3">
+                    <div className="col">
+                      <Button
+                        sx={{
+                          bgcolor: "rgb(0, 201, 170)",
+                          ":hover": { bgcolor: "rgb(0, 201, 170)" },
+                          marginBottom: 2,
+                        }}
+                        component="label"
+                        role={undefined}
+                        variant="contained"
+                        tabIndex={-1}
+                        startIcon={<CloudUploadIcon />}
+                      >
+                        Upload file
+                        <VisuallyHiddenInput
+                          type="file"
+                          name="image"
+                          accept="image/*"
+                          onChange={(e) =>
+                            formik.setFieldValue(
+                              "image",
+                              e.currentTarget.files[0]
+                            )
+                          }
+                        />
+                      </Button>
                     </div>
-                  </a>
-                </div>
-                <Tooltip id="agree-tooltip" isOpen={true} imperativeModeOnly />
+                    <div className="col text-black h5">
+                      {formik.values.image.name}
+                    </div>
+                  </div>
 
-                {/* Submit Button */}
-                <button
-                  className="submit-button"
-                  type="submit"
-                  disabled={!(formik.dirty && formik.isValid)}
-                >
-                  ADD
-                </button>
-              </form>
+                  {/* Switch */}
+                  <div className="row mb-3">
+                    <a
+                      data-tooltip-id="agree-tooltip"
+                      data-tooltip-content={formik.errors.agree}
+                      data-tooltip-variant="warning"
+                      data-tooltip-place="right"
+                    >
+                      <div class="form-check form-switch">
+                        <input
+                          class="form-check-input"
+                          name="agree"
+                          type="checkbox"
+                          id="switch"
+                          value={formik.values.agree}
+                          onChange={formik.handleChange}
+                        />
+                        <label class="form-check-label" for="switch">
+                          Check this button to add
+                        </label>
+                      </div>
+                    </a>
+                  </div>
+                  <Tooltip
+                    id="agree-tooltip"
+                    isOpen={true}
+                    imperativeModeOnly
+                  />
+
+                  {/* Submit Button */}
+                  <button
+                    className="submit-button"
+                    type="submit"
+                    disabled={!(formik.dirty && formik.isValid)}
+                  >
+                    ADD
+                  </button>
+                </form>
+              </div>
             </div>
           </div>
-        </div>
 
-        <Backdrop
-          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={openBackDrop}
-        >
-          <CircularProgress color="inherit" />
-        </Backdrop>
+          <Backdrop
+            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            open={openBackDrop}
+          >
+            <CircularProgress color="inherit" />
+          </Backdrop>
+        </ThemeProvider>
       </div>
     </>
   );

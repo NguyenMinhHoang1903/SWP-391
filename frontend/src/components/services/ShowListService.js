@@ -63,7 +63,10 @@ export default function ShowListService() {
                     <Card.Body>
                       <Card.Title style={{ width: "10rem", height: "1rem" }}>{data.name}</Card.Title>
                       <Card.Text style={{ width: "10rem", height: "4rem" }}>{data.priceByWeight.map((value) => (
-                        <div key={value} >{formattedPrice(value.price)} VND</div>
+                        <div key={value} className="row">
+                          <div className="col-7">{formattedPrice(value.price)} VND</div>
+                          <div className="col-5">{formattedPrice(value.weight)} KG</div>
+                        </div>
                       ))}</Card.Text>
                       <Card.Text style={{ width: "16rem", height: "9rem" }}>
                         {data.desc}

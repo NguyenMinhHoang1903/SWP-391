@@ -127,7 +127,7 @@ const Login = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
         const user = result.user;
-        dispatch(setUserDetails({ name: user.displayName, email: user.email }));
+        dispatch(setUserDetails({ name: user.displayName, email: user.email, role: "CUSTOMER" }));
         toast.success("Sign in with your Google account successfully")
         navigate("/");
       })

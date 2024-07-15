@@ -13,6 +13,7 @@ import Context from "./context";
 import { Loader } from "./loader/Loader";
 import ShowListCombo from "./components/services/ShowListCombo";
 import ShowListService from "./components/services/ShowListService";
+import LoginWithGoogle from "./components/template/FireBaseLoginWithGoogle";
 
 // Components
 const Header = lazy(() => import("./components/layouts/Header"));
@@ -183,6 +184,14 @@ function App() {
                       </Suspense>
                     }
                   />
+                  {/* <Route
+                    path="/loginwithgoogle"
+                    element={
+                      <Suspense fallback={<Loader />}>
+                        <LoginWithGoogle/>
+                      </Suspense>
+                    }
+                  /> */}
                   <Route
                     path="/feedback"
                     element={

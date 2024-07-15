@@ -10,7 +10,7 @@ const Home = () =>{
     </style>
     return(
         <div class='homepage view'>
-            <h1 style={{textAlign: 'center', marginTop: '60px', marginBottom: '20px'}}>Pet's Spa </h1>
+            <h1 style={{textAlign: 'center', marginTop: '60px', marginBottom: '20px'}}>Pet Spa </h1>
             <div class="block col-12 p-20">
                 <Product/>
             </div>

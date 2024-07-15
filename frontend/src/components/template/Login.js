@@ -1,13 +1,33 @@
 import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import SummaryApi from "../../common";
 import { toast } from "react-toastify";
 import Context from "../../context";
+import { setUserDetails } from "../../store/userSlice";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
+import { initializeApp } from "firebase/app";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyDMF5sjf2c4h2fl5RGVbZYHWY_LCAvIocc",
+  authDomain: "login-58187.firebaseapp.com",
+  projectId: "login-58187",
+  storageBucket: "login-58187.appspot.com",
+  messagingSenderId: "329617442969",
+  appId: "1:329617442969:web:04af9b386c1b8336751008"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+auth.languageCode = 'en';
+const provider = new GoogleAuthProvider();
 
 const Login = () => {
   const signIn = useSignIn();
-  const [error] = useState("");
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { fetchUserDetails } = useContext(Context);
   const [showPassword, setShowPassword] = useState(false);
@@ -26,6 +46,7 @@ const Login = () => {
   const handleLoginClick = () => {
     setIsActive(false);
   };
+
   // Enter user name and password
   const [data, setData] = useState({
     email: "",
@@ -36,13 +57,10 @@ const Login = () => {
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
-
-    setData((preve) => {
-      return {
-        ...preve,
-        [name]: value,
-      };
-    });
+    setData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -65,7 +83,6 @@ const Login = () => {
         body: JSON.stringify(data),
       });
       const dataApi = await dataResponse.json();
-
       if (dataApi.success) {
         toast.success(dataApi.message);
       }
@@ -89,7 +106,6 @@ const Login = () => {
     });
 
     const dataApiLogin = await dataResponseLogin.json();
-
     if (dataApiLogin.success) {
       // When login successfully, create a cookie
       signIn({
@@ -102,41 +118,23 @@ const Login = () => {
       navigate("/");
       fetchUserDetails();
     }
-
     if (dataApiLogin.error) {
       toast.error(dataApiLogin.message);
     }
   };
-  // const google = () => {
-  //   window.open(SummaryApi.google_profile.url, "_self");
-  // };
 
-  const google = () => {
-    window.open(SummaryApi.google_callback.url, "_self");
+  const handleGoogleLogin = () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const user = result.user;
+        dispatch(setUserDetails({ name: user.displayName, email: user.email }));
+        toast.success("Sign in with your Google account successfully")
+        navigate("/");
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
   };
-
-  // const google = async(e) =>{
-  //   e.preventDefault()
-  //   const dataResponseLoginGoogle = await window(SummaryApi.google_profile.url,{
-  //     method : SummaryApi.google_profile.method,
-  //     credentials : 'include',
-  //     headers : {
-  //       "content-type" : "application/json"
-  //     },
-  //     body : JSON.stringify(data)
-  //   })
-
-  //   const dataApiLoginGoogle = await dataResponseLoginGoogle.json()
-  //   if(dataApiLoginGoogle.success){
-  //     toast.success(dataApiLoginGoogle.message)
-  //     navigate('/')
-  //     fetchUserDetails()
-  //   }
-
-  //   if(dataApiLoginGoogle.error){
-  //     toast.error(dataApiLoginGoogle.message)
-  //   }
-  // }
 
   return (
     <body className="loginBody">
@@ -179,8 +177,7 @@ const Login = () => {
               onChange={handleOnChange}
               required
             />
-            <span>{error && <p className="error">{error}</p>}</span>
-            <div class="checkbox">
+            <div className="checkbox">
               <input
                 type="checkbox"
                 checked={showPassword}
@@ -188,15 +185,14 @@ const Login = () => {
               />
               Show Password
             </div>
-            <button class="btnn">Sign Up</button>
+            <button className="btnn">Sign Up</button>
           </form>
         </div>
         <div className="form-containerLogin Loginsign-in">
           <form onSubmit={handleLogin}>
             <h1>Sign In</h1>
-
-            <div className="loginContainer" onClick={google}>
-              <img src="Google_Icons.png" alt="" />
+            <div className="loginContainer" onClick={handleGoogleLogin}>
+              <img src="Google_Icons.png" alt="Google Icon" />
               <div className="title">Login with Google</div>
             </div>
             <span>or use your account</span>
@@ -214,23 +210,21 @@ const Login = () => {
               onChange={handleOnChange}
               placeholder="Enter your password"
             />
-            <div>
-              <div class="checkbox">
-                <input
-                  type="checkbox"
-                  checked={showPassword}
-                  onChange={toggleShowPassword}
-                />
-                Show Password
-              </div>
+            <div className="checkbox">
+              <input
+                type="checkbox"
+                checked={showPassword}
+                onChange={toggleShowPassword}
+              />
+              Show Password
             </div>
             <Link
-              to={"/forgotpassword"}
+              to="/forgotpassword"
               className="block w-fit ml-auto hover:underline"
             >
-              Forgot password ?
+              Forgot password?
             </Link>
-            <button class="btnn">Sign In</button>
+            <button className="btnn">Sign In</button>
           </form>
         </div>
         <div className="toggle-containerLogin">
@@ -238,16 +232,14 @@ const Login = () => {
             <div className="toggle-panelLogin Logintoggle-left">
               <h1>Welcome Back!</h1>
               <p>Enter your personal details to use all of site features</p>
-              <button class="btnn" id="login" onClick={handleLoginClick}>
+              <button className="btnn" id="login" onClick={handleLoginClick}>
                 Sign In
               </button>
             </div>
             <div className="toggle-panelLogin Logintoggle-right">
               <h1>Hello, Friend!</h1>
-              <p>
-                Register with your personal details to use all of site features
-              </p>
-              <button class="btnn" id="register" onClick={handleRegisterClick}>
+              <p>Register with your personal details to use all of site features</p>
+              <button className="btnn" id="register" onClick={handleRegisterClick}>
                 Sign Up
               </button>
             </div>
@@ -257,4 +249,5 @@ const Login = () => {
     </body>
   );
 };
+
 export default Login;

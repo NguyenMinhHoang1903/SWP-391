@@ -13,6 +13,7 @@ import { MdHistory } from "react-icons/md";
 import React, { useEffect, useState } from "react";
 import useSignOut from "react-auth-kit/hooks/useSignOut";
 import { Collapse } from "react-bootstrap";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 const Header = () => {
   const user = useSelector((state) => state?.user?.user);
@@ -104,14 +105,14 @@ const Header = () => {
               <img src="userIcon.png" alt="userIcon" />
               <div />
               <div class="dropdown">
-                {user?._id ? (
+                {user ? (
                   <div>
                     <div
                       class="btn username btn-7sm "
                       type="button"
                       data-bs-toggle="dropdown"
                     >
-                      {user?.name}
+                      {user.name}
                     </div>
                     <ul
                       class="dropdown-menu container-fluid p-0"
@@ -157,7 +158,7 @@ const Header = () => {
 
             <div>
               <div>
-                {user?._id ? (
+                {user ? (
                   <button onClick={handleLogout} className="login-button">
                     Logout
                   </button>
@@ -201,7 +202,7 @@ const Header = () => {
               <img src="userIcon.png" alt="userIcon" />
               <div />
               <div class="dropdown">
-                {user?._id ? (
+                {user ? (
                   <div>
                     <div
                       class="btn username btn-7sm "
@@ -258,7 +259,7 @@ const Header = () => {
 
             <div>
               <div>
-                {user?._id ? (
+                {user ? (
                   <div
                     onClick={handleLogout}
                     className="login-button"

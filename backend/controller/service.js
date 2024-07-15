@@ -73,7 +73,7 @@ const updateOneService = async (req, res) => {
   
   const existingService = await Service.findOne(query);
 
-  if (existingService && existingService._id !== oldId) res.json({ message: 0 });
+  if (existingService && existingService._id.toString() !== oldId) res.json({ message: 0 });
   else {
     await Service.deleteOne({ _id: oldId })
       .then(result => console.log("Deleted Service"))

@@ -8,6 +8,7 @@ import { setUserDetails } from "../../store/userSlice";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import axios from "axios";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -23,7 +24,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-auth.languageCode = 'en';
+auth.languageCode = "en";
 const provider = new GoogleAuthProvider();
 
 const Login = () => {
@@ -32,7 +33,6 @@ const Login = () => {
   const navigate = useNavigate();
   const { fetchUserDetails } = useContext(Context);
   const [showPassword, setShowPassword] = useState(false);
-
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -67,6 +67,32 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const API_KEY = "7598c3f2cfcd4424b0f1abc75c534578";
+    const BASE_URL = "https://api.zerobounce.net/v2/validate";
+    const email = data.email;
+
+    const validateEmail = async (email) => {
+      try {
+        const response = await axios.get(BASE_URL, {
+          params: {
+            api_key: API_KEY,
+            email: email,
+          },
+        });
+        console.log(response.data);
+        if (response.data.status === "invalid") {
+          toast.error("Invalid email address or domain");
+          return;
+        }
+      } catch (error) {
+        console.error("Error validating email:", error);
+        throw error;
+      }
+    };
+
+    validateEmail(email);
+
     if (data.password.length < 6) {
       toast.error("Password must be at least 6 characters");
       return;
@@ -129,7 +155,13 @@ const Login = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
         const user = result.user;
-        dispatch(setUserDetails({ name: user.displayName, email: user.email, role: "CUSTOMER" }));
+        dispatch(
+          setUserDetails({
+            name: user.displayName,
+            email: user.email,
+            role: "CUSTOMER",
+          })
+        );
         toast.success("Sign in with your Google account successfully");
         navigate("/");
       })
@@ -240,8 +272,14 @@ const Login = () => {
             </div>
             <div className="toggle-panelLogin Logintoggle-right">
               <h1>Hello, Friend!</h1>
-              <p>Register with your personal details to use all of site features</p>
-              <button className="btnn" id="register" onClick={handleRegisterClick}>
+              <p>
+                Register with your personal details to use all of site features
+              </p>
+              <button
+                className="btnn"
+                id="register"
+                onClick={handleRegisterClick}
+              >
                 Sign Up
               </button>
             </div>

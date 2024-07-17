@@ -9,6 +9,7 @@ import useSignIn from "react-auth-kit/hooks/useSignIn";
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import axios from "axios";
+import ReCAPTCHA from "react-google-recaptcha";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -33,6 +34,7 @@ const Login = () => {
   const navigate = useNavigate();
   const { fetchUserDetails } = useContext(Context);
   const [showPassword, setShowPassword] = useState(false);
+  const [capVal, setCapVal] = useState(null);
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -244,6 +246,7 @@ const Login = () => {
               onChange={handleOnChange}
               placeholder="Enter your password"
             />
+            <ReCAPTCHA sitekey="6LcK-BEqAAAAADJxdIF5CVMyPVVH_xumF3we_0zW" onChange={(val) => setCapVal(val)} />,
             <div className="checkbox">
               <input
                 type="checkbox"
@@ -258,7 +261,7 @@ const Login = () => {
             >
               Forgot password?
             </Link>
-            <button className="btnn">Sign In</button>
+            <button disabled={!capVal} className="btnn">Sign In</button>
           </form>
         </div>
         <div className="toggle-containerLogin">

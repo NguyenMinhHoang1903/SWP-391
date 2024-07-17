@@ -44,6 +44,11 @@ const userSchema = new mongoose.Schema({
     },
     address: {
         type: String
+    },
+    wallet: {
+        type: Number,
+        default: 0,
+        required: true,
     }
 },{
     timestamps : true

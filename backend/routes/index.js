@@ -40,10 +40,7 @@ const feedback = require("../controller/feedback");
 const bookingTracker = require("../controller/bookingTracker");
 
 // Google Login
-const userGoogleLogin = require("../controller/googleauth");
-const userGoogleLoginFaile = require("../controller/googleauth");
-const userGoogle = require("../controller/googleauth");
-const userGoogleCallBack = require("../controller/googleauth");
+const userGoogleController = require("../controller/googleauth")
 
 router.post("/signup", userSignUpController);
 router.post("/signin", userSignInController);
@@ -57,10 +54,7 @@ router.post("/update-profile", updateProfile);
 router.post("/update-password", updatePassword);
 
 // Google Router
-router.get("/login/success", userGoogleLogin);
-router.get("/login/failed", userGoogleLoginFaile);
-router.get("/google", userGoogle);
-router.get("/google/callback", userGoogleCallBack);
+router.post("/saveGoogle",userGoogleController)
 
 // ForgotPassword
 router.post("/forgotpassword", forgotPassword);

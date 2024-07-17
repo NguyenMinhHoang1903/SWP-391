@@ -923,6 +923,7 @@ transition: 0.5s;
 .checkbox{
   display: flex;
   align-items: center;
+  max-width: 100px;
 }
 .dropdown{
   display: flex;

@@ -7,9 +7,9 @@ import Context from "../../context";
 import { setUserDetails } from "../../store/userSlice";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import axios from "axios";
-import ReCAPTCHA from "react-google-recaptcha";
+// import ReCAPTCHA from "react-google-recaptcha";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -154,23 +154,48 @@ const Login = () => {
   };
 
   const handleGoogleLogin = () => {
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        const user = result.user;
-        dispatch(
-          setUserDetails({
+    signOut(auth).then(() => {
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          const user = result.user;
+          dispatch(
+            setUserDetails({
+              name: user.displayName,
+              email: user.email,
+              role: "CUSTOMER",
+            })
+          );
+          // Save Google user details to the backend
+          axios.post('http://localhost:5000/api/saveGoogle', {
             name: user.displayName,
             email: user.email,
-            role: "CUSTOMER",
-          })
-        );
-        toast.success("Sign in with your Google account successfully");
-        navigate("/");
-      })
-      .catch((error) => {
-        toast.error(error.message);
-      });
+            googleId: user.uid,
+          }).then((response) => {
+            console.log('Server response:', response);  // Debug log
+            toast.success("Sign in with your Google account successfully");
+            navigate("/");
+          }).catch((error) => {
+            if (error.response) {
+              // Server responded with a status other than 2xx
+              console.error('Axios error response:', error.response);
+              toast.error(`Failed to save user details: ${error.response.data.message}`);
+            } else if (error.request) {
+              // No response received
+              console.error('Axios error request:', error.request);
+              toast.error("Failed to save user details: No response from server");
+            } else {
+              // Other errors
+              console.error('Axios error message:', error.message);
+              toast.error(`Failed to save user details: ${error.message}`);
+            }
+          });
+        })
+        .catch((error) => {
+          toast.error(error.message);
+        });
+    });
   };
+  
 
   return (
     <body className="loginBody">
@@ -246,14 +271,14 @@ const Login = () => {
               onChange={handleOnChange}
               placeholder="Enter your password"
             />
-            <ReCAPTCHA sitekey="6LcK-BEqAAAAADJxdIF5CVMyPVVH_xumF3we_0zW" onChange={(val) => setCapVal(val)} />,
+            {/* <ReCAPTCHA style={{width : "20"}} sitekey="6LcK-BEqAAAAADJxdIF5CVMyPVVH_xumF3we_0zW" onChange={(val) => setCapVal(val)} />, */}
             <div className="checkbox">
               <input
                 type="checkbox"
                 checked={showPassword}
                 onChange={toggleShowPassword}
               />
-              Show Password
+              <div style={{fontSize : "10"}}>Show Password</div>
             </div>
             <Link
               to="/forgotpassword"

@@ -117,7 +117,7 @@ export default function BookingDetail() {
             </div>
 
             <div className="button row">
-              <div className="col-4 text-left">
+              <div className="col-3 text-left">
                 <Link to="/myBookingList">
                   <Button
                     sx={{ ":hover": { bgcolor: "rgb(0, 201, 170)" } }}
@@ -128,11 +128,17 @@ export default function BookingDetail() {
                   </Button>
                 </Link>
               </div>
-              <div className="col-4">
-                {booking.status === "PROCESS" && (
-                  <Link style={{color: "rgb(0, 201, 170)", marginLeft: '500'}} to={`/refund?${booking._id}`}>
+              <div className="col-3">
+                {booking.status === "PENDING" && (
+                  <Link
+                    style={{ color: "rgb(0, 201, 170)" }}
+                    to={`/refund?${booking._id}`}
+                  >
                     <Button
-                      sx={{ bgcolor: "rgb(0, 201, 170)" ,":hover": { bgcolor: "rgb(0, 201, 170)" } }}
+                      sx={{
+                        bgcolor: "rgb(0, 201, 170)",
+                        ":hover": { bgcolor: "rgb(0, 201, 170)" },
+                      }}
                       variant="contained"
                       type="button"
                       disabled={!canRefund}
@@ -142,7 +148,22 @@ export default function BookingDetail() {
                   </Link>
                 )}
               </div>
-              <div className="col-4 text-right">
+              <div className="col-3">
+                <Link
+                  to={`/changeBookingDetail?${booking._id}`}
+                  className="text-decoration-none text-white"
+                >
+                  <Button
+                    sx={{
+                      bgcolor: "rgb(0, 201, 170)",
+                      ":hover": { bgcolor: "rgb(0, 201, 170)" },
+                    }}
+                  >
+                    Update
+                  </Button>
+                </Link>
+              </div>
+              <div className="col-3 text-right">
                 {booking.status === "PENDING" && (
                   <Link
                     to={`http://localhost:8888/order/create_payment_url?${booking.total}`}

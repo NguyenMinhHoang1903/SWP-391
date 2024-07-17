@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { Tooltip } from "react-tooltip";
@@ -12,6 +12,12 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import {
   Badge,
   Box,
+  Button,
+  Card,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  CircularProgress,
   Divider,
   FormControl,
   IconButton,
@@ -23,7 +29,7 @@ import {
 } from "@mui/material";
 import TooltipMUI from "@mui/material/Tooltip";
 import { useSelector } from "react-redux";
-import { Collapse, Table } from "react-bootstrap";
+import { Col, Collapse, Row, Table } from "react-bootstrap";
 import Backdrop from "@mui/material/Backdrop";
 import Fade from "@mui/material/Fade";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
@@ -31,20 +37,25 @@ import UpdateIcon from "@mui/icons-material/Update";
 import setHours from "date-fns/setHours";
 import setMinutes from "date-fns/setMinutes";
 
-export default function BookingSpa() {
+export default function ChangeBookingDetail() {
   const [listService, setListService] = useState([]);
   const [listCombo, setListCombo] = useState([]);
   const [disabled, setDisabled] = useState(false);
   const [serviceOfCombo, setServiceOfCombo] = useState([]);
   const [openServiceTableOfCombo, setOpenServiceTableOfCombo] = useState(false);
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
+  const [openSuccessOptionModal, setOpenSuccessOptionModal] = useState(false);
   const [isRequired, setIsRequired] = useState(false);
   const [priceIndex, setPriceIndex] = useState(0);
+  const [openBackDrop, setOpenBackDrop] = useState(false);
+  const [openOption, setOpenOption] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const user = useSelector((state) => state?.user?.user);
 
   const formik = useFormik({
     initialValues: {
+      oldId: "",
       userName: "",
       email: "",
       petName: "",
@@ -54,27 +65,38 @@ export default function BookingSpa() {
       services: [],
       combo: "",
       total: 0,
+      oldTotal: "",
+      payingOfflineTotal: "",
+      status: "",
     },
     onSubmit: (values) => {
-      // Handle time if that time is over 5 staffs
-      fetch(`http://localhost:5000/api/bookingTracker/track`, {
-        method: "GET",
-      });
+      if (formik.values.status === "PROCESS") {
+        if (values.total > formik.values.oldTotal) {
+          formik.setFieldValue(
+            "payingOfflineTotal",
+            values.total - formik.values.oldTotal
+          );
+          setOpenOption(true);
+          return;
+        }
+      }
+
       fetch(`http://localhost:5000/api/forgotpassword`, {
         method: "POST",
       })
         .then((res) => res.json())
         .then((json) => {
-          if (json.message === 1) {
+          if (json.message === 5) {
             toast.error("No more staff for service");
           } else {
             // Add booking to database
-            fetch("http://localhost:5000/api/bookings/create", {
+            fetch("http://localhost:5000/api/bookings/changeBookingDetail", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
+                oldId: formik.values.oldId,
                 userName: values.userName,
                 email: values.email,
                 petName: values.petName,
@@ -88,26 +110,11 @@ export default function BookingSpa() {
             })
               .then((res) => res.json())
               .then((data) => {
-                if (data.message === "Create Successfully") {
-                  toast.success("Please check your gmail box or spam box!");
-                  setOpenSuccessModal(true);
-                  setTimeout(() => {
-                    navigate("/bookingDetail", {
-                      state: {
-                        userName: values.userName,
-                        email: values.email,
-                        petName: values.petName,
-                        petType: values.petType,
-                        date: values.date,
-                        weight: Number(values.weight),
-                        services: values.services,
-                        combo: values.combo,
-                        total: Number(formik.values.total),
-                      },
-                    });
-                  }, 10000);
+                if (data.message === 0) {
+                  toast.error("Updated Unsuccessfully");
                 } else {
-                  toast.error("Unsuccessfully");
+                  toast.success("Updated Successfully");
+                  navigate("/myBookingList");
                 }
               })
               .catch((err) => console.log(err));
@@ -141,6 +148,11 @@ export default function BookingSpa() {
       date: Yup.date().required("Require"),
     }),
   });
+
+  // Handle close box of option
+  const handleOption = () => {
+    setOpenOption(!openOption);
+  };
 
   // Handle service or combo
   const handleCombo = async (e) => {
@@ -346,11 +358,54 @@ export default function BookingSpa() {
     return currentDate.getTime() < selectedDate.getTime();
   };
 
+  // Read old booking
+  const readOneOldBooking = async () => {
+    let isFetched = true;
+    const oldId = location.search.substring(1);
+
+    await fetch(`http://localhost:5000/api/bookings/read/${oldId}`, {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (isFetched) {
+          formik.setFieldValue("oldId", json._id);
+          formik.setFieldValue("petName", json.petName);
+          formik.setFieldValue("petType", json.petType);
+          formik.setFieldValue("date", new Date(json.date));
+          formik.setFieldValue("weight", json.weight);
+          formik.setFieldValue("services", json.services);
+          formik.setFieldValue("combo", json.combo);
+          formik.setFieldValue("total", json.total);
+          formik.setFieldValue("oldTotal", json.total);
+          formik.setFieldValue("status", json.status);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
   useEffect(() => {
+    setOpenBackDrop(true);
+    readOneOldBooking();
     readAllService();
     readAllCombo();
     readUser();
+    setTimeout(() => {
+      setOpenBackDrop(false);
+    }, 2000);
   }, []);
+
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 4,
+  };
 
   return (
     <>
@@ -543,6 +598,11 @@ export default function BookingSpa() {
                           name="services"
                           onChange={formik.handleChange}
                           value={service.name}
+                          checked={
+                            formik.values.services
+                              ? formik.values.services.includes(service.name)
+                              : false
+                          }
                         />
                         <div className="row">
                           <div className="col">
@@ -706,7 +766,6 @@ export default function BookingSpa() {
                   </Stack>
                 </Box>
 
-                
                 {/* Submit Button */}
                 <button
                   className="submit-button"
@@ -782,6 +841,131 @@ export default function BookingSpa() {
               >
                 You will be moved to the booking detail page after 10 second
               </Typography>
+            </Box>
+          </Fade>
+        </Modal>
+
+        {/* Back Drop */}
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={openBackDrop}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+
+        {/* Using wallet or paying in offline */}
+        <Modal open={openOption} onClose={() => handleOption()}>
+          <Box sx={style}>
+            <Row style={{ width: "100%" }}>
+              <Col>
+                <Card sx={{ maxWidth: 345, width: "100%" }}>
+                  <CardActionArea>
+                    <CardMedia
+                      component="img"
+                      height="140"
+                      image="assets/imgs/wallet.jpg"
+                      alt="green iguana"
+                    />
+                    <CardContent>
+                      <Typography gutterBottom variant="h5" component="div">
+                        Wallet
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Using wallet to pay
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              </Col>
+
+              <Col>
+                <Card sx={{ maxWidth: 345, width: "100%" }}>
+                  <CardActionArea
+                    onClick={() => setOpenSuccessOptionModal(true)}
+                  >
+                    <CardMedia
+                      component="img"
+                      height="140"
+                      image="assets/imgs/paying-offline.jpg"
+                      alt=""
+                    />
+                    <CardContent>
+                      <Typography gutterBottom variant="h5" component="div">
+                        Offline
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Paying at the store
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        You need to pay:{" "}
+                        {formattedPrice(formik.values.payingOfflineTotal)} VND
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              </Col>
+            </Row>
+          </Box>
+        </Modal>
+
+        {/* After selected option to pay */}
+        <Modal
+          open={openSuccessOptionModal}
+          slots={{ backdrop: Backdrop }}
+          slotProps={{
+            backdrop: {
+              timeout: 500,
+            },
+          }}
+        >
+          <Fade in={openSuccessOptionModal}>
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 400,
+                bgcolor: "background.paper",
+                border: "2px solid #000",
+                boxShadow: 24,
+                p: 4,
+              }}
+            >
+              <CheckCircleOutlineIcon
+                sx={{ fontSize: 80, marginX: 15 }}
+                color="success"
+              />
+              <Typography
+                variant="h4"
+                component="h2"
+                sx={{ mb: 1, textAlign: "center" }}
+              >
+                Success
+              </Typography>
+              <Typography
+                variant="h6"
+                component="h2"
+                sx={{ mb: 1, textAlign: "center" }}
+              >
+                Your option has been selected
+              </Typography>
+              <Button
+                sx={{
+                  marginLeft: "20%",
+                  bgcolor: "rgb(0, 201, 170)",
+                  ":hover": { bgcolor: "rgb(0, 201, 170)" },
+                }}
+                variant="contained"
+              >
+                <Link
+                  className="text-decoration-none text-white"
+                  style={{}}
+                  to="/myBookingList"
+                >
+                  Return to My Booking List
+                </Link>
+              </Button>
             </Box>
           </Fade>
         </Modal>

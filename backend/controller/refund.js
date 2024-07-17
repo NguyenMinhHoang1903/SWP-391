@@ -39,7 +39,7 @@ const createRefund = async (req, res) => {
       bankNumber: req.body.bankNumber,
       holder: req.body.holder,
       amount: refundAmount, // Set the calculated refund amount
-      status: req.body.status || "PROCESS", // Set default status to "PROCESS"
+      status: req.body.status || "PENDING", // Set default status to "PENDING"
     };
 
     const newRefund = new Refund(newRefundData);

@@ -40,7 +40,7 @@ const createBooking = async (req, res) => {
     services: services,
     combo: combo,
     total: total,
-    status: "PROCESS",
+    status: "PENDING",
   });
 
   await newBooking
@@ -65,7 +65,49 @@ const readOneBooking = async (req, res) => {
     });
 };
 
+
+// Update Booking
+const changeBookingDetail = async (req, res) => {
+  const {
+    oldId,
+    userName,
+    email,
+    petName,
+    petType,
+    date,
+    weight,
+    services,
+    combo,
+    total,
+  } = req.body;
+
+  const existingBooking = await Booking.findById(oldId);
+
+  if (existingBooking) {
+    await Booking.findByIdAndUpdate(oldId, {
+      $set: {
+        userName: userName,
+        email: email,
+        petName: petName,
+        petType: petType,
+        date: date,
+        weight: weight,
+        services: services,
+        combo: combo,
+        total: total,
+      },
+    })
+      .then((result) => {
+        res.json({ message: 1 });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  } else res.json({ message: 0 });
+};
+
 module.exports = {
   createBooking,
-  readOneBooking
+  readOneBooking,
+  changeBookingDetail
 };

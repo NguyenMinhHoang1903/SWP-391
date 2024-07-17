@@ -73,6 +73,9 @@ const ManageRefund = lazy(() =>
 
 const Home = lazy(() => import("./components/template/Home"));
 const Footer = lazy(() => import("./components/layouts/Footer"));
+const ChangeBookingDetail = lazy(() =>
+  import("./components/template/ChangeBookingDetail")
+);
 
 function App() {
   // Get user from store
@@ -210,6 +213,18 @@ function App() {
                         <CustomerRoute>
                           <Suspense fallback={<Loader />}>
                             <Booking />
+                          </Suspense>
+                        </CustomerRoute>
+                      </Suspense>
+                    }
+                  />
+                   <Route
+                    path="/changeBookingDetail"
+                    element={
+                      <Suspense fallback={<Loader />}>
+                        <CustomerRoute>
+                          <Suspense fallback={<Loader />}>
+                            <ChangeBookingDetail />
                           </Suspense>
                         </CustomerRoute>
                       </Suspense>

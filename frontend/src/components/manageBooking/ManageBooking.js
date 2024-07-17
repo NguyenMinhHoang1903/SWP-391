@@ -230,6 +230,7 @@ export default function ManageBooking() {
                   onChange={handleFilterChange}
                 >
                   <option value="All">All</option>
+                  <option value="PENDING">Pending</option>
                   <option value="PROCESS">Process</option>
                   <option value="FINISHED">Finished</option>
                   <option value="CANCELLED">Cancelled</option>

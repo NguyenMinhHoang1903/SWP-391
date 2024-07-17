@@ -67,7 +67,7 @@ export default function BookingSpa() {
       })
         .then((res) => res.json())
         .then((json) => {
-          if (json.message === 5) {
+          if (json.message === 1) {
             toast.error("No more staff for service");
           } else {
             // Add booking to database

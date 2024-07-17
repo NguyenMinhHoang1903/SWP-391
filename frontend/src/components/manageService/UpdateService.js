@@ -150,7 +150,6 @@ export default function UpdateService() {
           flag = 1;
         }
       });
-
       // Call API
       setTimeout(() => {
         if (flag === 0) {
@@ -252,6 +251,10 @@ export default function UpdateService() {
       formik.setFieldValue("priceByWeight", formik.values.priceByWeight);
       toast.success("Added to the list");
     } else toast.error("You need to enter price and weight");
+  };
+
+  const formattedPrice = (price) => {
+    return new Intl.NumberFormat("vi-VN").format(price);
   };
 
   // Remove price and weight in priceByWeight
@@ -392,7 +395,7 @@ export default function UpdateService() {
                             onChange={(e) => handlePrice(e.target.value, index)}
                             onKeyDown={handleKeyDown}
                             value={value.price}
-                            label="Price (VND)"
+                            label= {formattedPrice(formik.values.total)}
                             variant="outlined"
                           />
                         </div>

@@ -70,9 +70,9 @@ export default function ShowListCombo() {
                     />
 
                     <Card.Body>
-                      <Card.Title style={{ width: "10rem", height: "1rem" }}>{data.name}</Card.Title>
+                      <Card.Title style={{ width: "10rem", height: "3rem" }}>{data.name}</Card.Title>
                       <Card.Text style={{ width: "10rem", height: "4rem" }}>{formattedPrice(data.price)} VND</Card.Text>
-                      <Card.Text style={{ width: "16rem", height: "9rem" }}>
+                      <Card.Text style={{ width: "16rem", height: "7rem" }}>
                         {data.desc}
                       </Card.Text>
                       <a href="/booking" className="loginContainer btnBooking">

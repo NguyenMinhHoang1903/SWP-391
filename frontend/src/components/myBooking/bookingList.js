@@ -95,10 +95,11 @@ export default function MyBooking() {
               </div>
             </div>
             {/* Filter bar */}
-            <div className="row justify-content-end mb-3">
+            <div className="row justify-content-end mb-4" >
               <div className="col-auto">
                 <select
                   className="form-select"
+                  
                   value={filteredStatus}
                   onChange={handleFilterChange}
                 >

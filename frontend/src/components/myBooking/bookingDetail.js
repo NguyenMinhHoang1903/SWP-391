@@ -130,7 +130,7 @@ export default function BookingDetail() {
               </div>
               <div className="col-4">
                 {booking.status === "PROCESS" && (
-                  <Link style={{color: "rgb(0, 201, 170)"}} to={`/refund?${booking._id}`}>
+                  <Link style={{color: "rgb(0, 201, 170)", marginLeft: '500'}} to={`/refund?${booking._id}`}>
                     <Button
                       sx={{ bgcolor: "rgb(0, 201, 170)" ,":hover": { bgcolor: "rgb(0, 201, 170)" } }}
                       variant="contained"
@@ -143,7 +143,7 @@ export default function BookingDetail() {
                 )}
               </div>
               <div className="col-4 text-right">
-                {booking.status === "PROCESS" && (
+                {booking.status === "PENDING" && (
                   <Link
                     to={`http://localhost:8888/order/create_payment_url?${booking.total}`}
                   >

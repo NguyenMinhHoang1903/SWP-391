@@ -31,6 +31,10 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
+const formatCurrency = (amount) => {
+  return new Intl.NumberFormat('vi-VN').format(amount);
+};
+
 // Utility function to get next day's date
 const getNextDayDate = () => {
   const today = new Date();
@@ -198,6 +202,7 @@ export default function UpdateCombo() {
     }
   };
 
+
   // Read all services
   const readAllService = async () => {
     let isFetched = true;
@@ -342,6 +347,12 @@ export default function UpdateCombo() {
                         label="Price"
                         variant="outlined"
                         onChange={formik.handleChange}
+                        onBlur={() => {
+                          formik.setFieldValue(
+                            "price",
+                            formatCurrency(formik.values.price)
+                          );
+                        }}
                         onKeyDown={handleKeyDown}
                         type="text"
                         name="price"

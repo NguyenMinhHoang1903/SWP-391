@@ -219,8 +219,7 @@ export default function ManageBooking() {
             >
               <TextField
                 sx={{ bgcolor: "white" }}
-                variant="outlined"
-                label="Search by Customer's or Pet's Name"
+                placeholder = "Search by Customer's or Pet's Name"
                 onChange={(e) => setQuery(e.target.value)}
               />
             </Box>

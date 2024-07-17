@@ -22,8 +22,8 @@ const forgotPassword = async (req, res) => {
 
     const newPassword = generateRandomPassword();
     user.password = bcrypt.hashSync(newPassword, 10);
-    user.tempPassword = newPassword;
-    user.tempPasswordExpires = Date.now() + 10 * 60 * 1000;
+     user.tempPassword = newPassword;
+     user.tempPasswordExpires = Date.now() + 10 * 60 * 1000;
 
     await user.save();
 

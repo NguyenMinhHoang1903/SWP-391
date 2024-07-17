@@ -48,7 +48,7 @@ const createBooking = async (req, res) => {
     .then((result) => {
       console.log(result);
       sendMail(mailOptions);
-      res.json({ message: 1 });
+      res.json({ message: "Create Successfully" });
     })
     .catch((err) => console.log(err));
 };

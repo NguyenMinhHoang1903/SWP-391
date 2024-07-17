@@ -45,7 +45,7 @@ const createRefund = async (req, res) => {
     const newRefund = new Refund(newRefundData);
     const result = await newRefund.save();
 
-    await Booking.updateOne({ _id: id }, { status: "Cancelled" });
+    await Booking.updateOne({ _id: id }, { status: "CANCELLED" });
 
     res.status(201).json({ success: true, message: "Refund created successfully", data: result });
   } catch (err) {

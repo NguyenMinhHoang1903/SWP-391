@@ -21,11 +21,10 @@ const userSchema = new mongoose.Schema({
     },
     tempPassword: {
         type: String,
-        required: true
+        
     },
     tempPasswordExpires: {
         type: Date,
-        required: true
     },
     role: {
         type: String

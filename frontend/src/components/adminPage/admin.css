@@ -1,0 +1,118 @@
+/* HOME */
+.adminHome-component{
+    display: flex;
+
+    .adminHome-container{
+        flex: 6;
+
+        .show-widget{
+            margin-right: 20px;
+            display: flex;
+            padding: 20px;
+            gap: 40px;
+            flex: 12;
+        }
+    }
+}
+
+/* WIDGET */
+
+.widget-part{
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+    padding: 10px;
+    -webkit-box-shadow: 3px -5px 18px -7px grey; 
+    box-shadow: 3px -5px 18px -7px grey;
+    border-radius: 10px;
+    height: 200px;
+
+    .left, .right{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        .title{
+            font-weight: bold;
+            font-size: 24px;
+            color: darkgray;
+        }
+        .counter{
+            font-size: 34px;
+            font-weight: 400;
+        }
+        .linkWidget{
+            width: max-content;
+            font-size: 20px;
+            border-bottom: 1px solid darkgrey;
+            cursor: pointer;
+        }
+        .iconWidget{
+            font-size: 40px;
+            padding: 5px;
+            /* background-color: rgb(185, 114, 74); */
+            border-radius: 5px;
+            align-self: flex-end;
+        }
+    }
+
+}
+
+
+
+
+/* SIDE BAR */
+.sidebar{
+    flex: 1;
+    height: calc(100vh - 50px);
+    background-color: saddlebrown;
+    position: sticky;
+    top: 50px;
+    display: flex;
+}
+
+.sidebarWrapper{
+    padding: 20px;
+    color: white;
+    flex: 2;
+}
+
+.sidebarMenu{
+    margin-bottom: 10px;   
+}
+
+.sidebarTitle{
+    font-size: 25px;
+    color: white;
+}
+
+.sidebarList{
+    list-style: none;
+    padding: 5px;
+    font-size: 20px;
+}
+
+.sidebarListItem{
+    padding: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+}
+
+.sidebarListItem.active, .sidebarListItem:hover{
+    background-color: sienna;
+    flex: 2;
+}
+
+.sidebarIcon{
+    margin-right: 5px;
+    font-size: 20px !important;   
+}
+
+.linkToSlidebar{
+    text-decoration: none;
+    background-color: none;
+    color: white;
+}
+
+

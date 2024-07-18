@@ -52,7 +52,7 @@ const Header = () => {
       if (user === null) return;
       else if (user.role === "ADMIN") {
         setOpenManageLink(true);
-        setNameLink("/manageStaff");
+        setNameLink("/adminHome");
       } else if (user.role === "MANAGER") {
         setOpenManageLink(true);
         setNameLink("/manageService");

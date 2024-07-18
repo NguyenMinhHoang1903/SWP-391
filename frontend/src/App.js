@@ -26,6 +26,11 @@ const ManageStaff = lazy(() => import("./components/manageAccount/manage"));
 const UpdateStaff = lazy(() =>
   import("./components/manageAccount/updateStaff")
 );
+
+const AdminHome = lazy(() =>
+  import("./components/adminPage/AdminHome")
+);
+
 const HairDye = lazy(() => import("./components/details/HairDye"));
 const TrimFur = lazy(() => import("./components/details/TrimFur"));
 const CutNails = lazy(() => import("./components/details/CutNails"));
@@ -218,7 +223,7 @@ function App() {
                       </Suspense>
                     }
                   />
-                   <Route
+                  <Route
                     path="/changeBookingDetail"
                     element={
                       <Suspense fallback={<Loader />}>
@@ -515,6 +520,19 @@ function App() {
                             <UpdateCombo />
                           </Suspense>
                         </ManagerRoute>
+                      </Suspense>
+                    }
+                  />
+
+                  <Route
+                    path="/adminHome"
+                    element={
+                      <Suspense fallback={<Loader />}>
+                        <AdminRoute>
+                          <Suspense fallback={<Loader />}>
+                            <AdminHome />
+                          </Suspense>
+                        </AdminRoute>
                       </Suspense>
                     }
                   />

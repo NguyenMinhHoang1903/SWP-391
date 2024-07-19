@@ -133,7 +133,7 @@ export default function BookingDetail() {
                   </Button>
               </div>
               <div className="col-3">
-                {booking.status === "PENDING" && (
+                {booking.status === "PROCESS" && (
                   <Link
                     style={{ color: "rgb(0, 201, 170)" }}
                     to={`/refund?${booking._id}`}

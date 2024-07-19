@@ -49,9 +49,20 @@ export default function ChangeBookingDetail() {
   const [priceIndex, setPriceIndex] = useState(0);
   const [openBackDrop, setOpenBackDrop] = useState(false);
   const [openOption, setOpenOption] = useState(false);
+  const [petNameList, setPetNameList] = useState([]);
+  const [petTypeList, setPetTypeList] = useState([]);
+  const [weightList, setWeightList] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
   const user = useSelector((state) => state?.user?.user);
+
+  const [myPetList, setAllPet] = useState([]);
+
+  useEffect(() => {
+    if (user?.name) {
+      fetchAllPets(user.name); // Fetch pets based on the current user's name
+    }
+  }, [user]);
 
   const formik = useFormik({
     initialValues: {
@@ -194,6 +205,47 @@ export default function ChangeBookingDetail() {
       e.preventDefault();
     }
   };
+
+// Read all pet of users
+const fetchAllPets = async (userName) => {
+  try {
+    const response = await fetch(`http://localhost:5000/api/pet/user/${userName}`, {
+      method: "GET",
+    });
+
+    const dataResponse = await response.json();
+    if (dataResponse.success) {
+      const pets = dataResponse.data;
+      setAllPet(pets); // Set the list of pets from the response
+
+      const petNames = pets.map(pet => pet.petName);
+      const petTypes = pets.map(pet => pet.petType);
+      const weights = pets.map(pet => pet.weight);
+
+      setPetNameList(petNames);
+      setPetTypeList(petTypes);
+      setWeightList(weights);
+    } else {
+      toast.error(dataResponse.message);
+    }
+  } catch (error) {
+    toast.error("Failed to fetch pets");
+  }
+};
+
+const handlePetNameChange = (event) => {
+  const selectedPetName = event.target.value;
+  formik.setFieldValue("petName", selectedPetName);
+
+  const selectedPet = myPetList.find(pet => pet.petName === selectedPetName);
+  if (selectedPet) {
+    formik.setFieldValue("petType", selectedPet.petType);
+    formik.setFieldValue("weight", selectedPet.weight);
+  } else {
+    formik.setFieldValue("petType", "");
+    formik.setFieldValue("weight", "");
+  }
+};
 
   // Calculate total of one booking
   const handleTotal = () => {
@@ -426,7 +478,7 @@ export default function ChangeBookingDetail() {
                   </Link>
                 </div>
                 <div className="col-9">
-                  <div className="heading">BOOKING</div>
+                  <div className="heading">CHANGE BOOKING</div>
                 </div>
               </div>
 
@@ -478,29 +530,34 @@ export default function ChangeBookingDetail() {
                 </div>
                 <Tooltip id="email-tooltip" isOpen={true} imperativeModeOnly />
 
-                {/* Enter Pet Name */}
+                {/* Choose Pet Name */}
                 <div className="row mb-3">
-                  <label>Pet Name</label>
-                  <a
-                    data-tooltip-id="petName-tooltip"
-                    data-tooltip-content={formik.errors.petName}
-                    data-tooltip-variant="warning"
-                    data-tooltip-place="right"
+                <label>Pet Name</label>
+                <a
+                  data-tooltip-id="petName-tooltip"
+                  data-tooltip-content={formik.errors.petName}
+                  data-tooltip-variant="warning"
+                  data-tooltip-place="right"
+                >
+                  <select
+                    className="form-select"
+                    name="petName"
+                    value={formik.values.petName}
+                    onChange={(event) => {
+                      formik.handleChange(event);
+                      handlePetNameChange(event);
+                    }}
                   >
-                    <input
-                      onChange={formik.handleChange}
-                      type="text"
-                      name="petName"
-                      value={formik.values.petName}
-                      placeholder="..."
-                    />
-                  </a>
-                </div>
-                <Tooltip
-                  id="petName-tooltip"
-                  isOpen={true}
-                  imperativeModeOnly
-                />
+                    {/*<option value="">Please choose a pet name</option>*/}
+                    {petNameList.map((petName) => (
+                      <option key={petName} value={petName}>
+                        {petName}
+                      </option>
+                    ))}
+                  </select>
+                </a>
+              </div>
+              <Tooltip id="petName-tooltip" isOpen={!!formik.errors.petName} />
 
                 {/* Choose Pet Type */}
                 <div className="row mb-3">
@@ -516,6 +573,7 @@ export default function ChangeBookingDetail() {
                       name="petType"
                       value={formik.values.petType}
                       onChange={formik.handleChange}
+                      disabled={disabled}
                     >
                       <option selected value={1}>
                         Please choose a pet type
@@ -576,6 +634,7 @@ export default function ChangeBookingDetail() {
                       name="weight"
                       value={formik.values.weight}
                       placeholder="..."
+                      disabled={disabled}
                     />
                   </a>
                 </div>

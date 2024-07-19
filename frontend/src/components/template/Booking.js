@@ -48,6 +48,14 @@ export default function BookingSpa() {
   const navigate = useNavigate();
   const user = useSelector((state) => state?.user?.user);
 
+  const [myPetList, setAllPet] = useState([]);
+
+  useEffect(() => {
+    if (user?.name) {
+      fetchAllPets(user.name); // Fetch pets based on the current user's name
+    }
+  }, [user]);
+
   const formik = useFormik({
     initialValues: {
       userName: "",
@@ -127,10 +135,6 @@ export default function BookingSpa() {
         .min(3, "Must be at least 3 characters long")
         .required("Require"),
       petName: Yup.string().required("Require."),
-      petType: Yup.string()
-        .matches(/^[a-zA-Z\s]*$/, "Require.")
-        .required("Require."),
-      weight: Yup.number().min(1, "Require.").required("Require."),
       services: isRequired
         ? Yup.array().notRequired()
         : Yup.array().min(
@@ -304,36 +308,44 @@ export default function BookingSpa() {
   };
 
   // Read all pet of users
-  const readAllPet = async () => {
-    let isFetched = true;
+  const fetchAllPets = async (userName) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/pet/user/${userName}`, {
+        method: "GET",
+      });
 
-    await fetch(`http://localhost:5000/api/pet/readAll/${user.name}`, {
-      method: "GET",
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        if (isFetched) {
-          if (json.success) {
-            json.data.pets.map((pet) => {
-              petNameList.push(pet.petName);
-              petTypeList.push(pet.petType);
-              weightList.push(pet.weight);
-              // Remove duplicates
-              let uniqueArr = [...new Set(petNameList)];
-              setPetNameList(uniqueArr);
-              uniqueArr = [...new Set(petTypeList)];
-              setPetTypeList(uniqueArr);
-              uniqueArr = [...new Set(weightList)];
-              setWeightList(uniqueArr);
-            });
-          }
-        }
-      })
-      .catch((err) => console.log(err));
+      const dataResponse = await response.json();
+      if (dataResponse.success) {
+        const pets = dataResponse.data;
+        setAllPet(pets); // Set the list of pets from the response
 
-    return () => {
-      isFetched = false;
-    };
+        const petNames = pets.map(pet => pet.petName);
+        const petTypes = pets.map(pet => pet.petType);
+        const weights = pets.map(pet => pet.weight);
+
+        setPetNameList(petNames);
+        setPetTypeList(petTypes);
+        setWeightList(weights);
+      } else {
+        toast.error(dataResponse.message);
+      }
+    } catch (error) {
+      toast.error("Failed to fetch pets");
+    }
+  };
+
+  const handlePetNameChange = (event) => {
+    const selectedPetName = event.target.value;
+    formik.setFieldValue("petName", selectedPetName);
+
+    const selectedPet = myPetList.find(pet => pet.petName === selectedPetName);
+    if (selectedPet) {
+      formik.setFieldValue("petType", selectedPet.petType);
+      formik.setFieldValue("weight", selectedPet.weight);
+    } else {
+      formik.setFieldValue("petType", "");
+      formik.setFieldValue("weight", "");
+    }
   };
 
   // Handle service of combo
@@ -387,7 +399,6 @@ export default function BookingSpa() {
   useEffect(() => {
     readAllService();
     readAllCombo();
-    readAllPet();
     readUser();
   }, []);
 
@@ -462,35 +473,35 @@ export default function BookingSpa() {
                 </div>
                 <Tooltip id="email-tooltip" isOpen={true} imperativeModeOnly />
 
-                {/* Enter Pet Name */}
+                {/* Choose Pet Name */}
                 <div className="row mb-3">
-                  <label>Pet Name</label>
-                  <a
-                    data-tooltip-id="petName-tooltip"
-                    data-tooltip-content={formik.errors.petName}
-                    data-tooltip-variant="warning"
-                    data-tooltip-place="right"
+                <label>Pet Name</label>
+                <a
+                  data-tooltip-id="petName-tooltip"
+                  data-tooltip-content={formik.errors.petName}
+                  data-tooltip-variant="warning"
+                  data-tooltip-place="right"
+                >
+                  <select
+                    className="form-select"
+                    name="petName"
+                    value={formik.values.petName}
+                    onChange={(event) => {
+                      formik.handleChange(event);
+                      handlePetNameChange(event);
+                    }}
                   >
-                    <select
-                      class="form-select"
-                      name="petName"
-                      value={formik.values.petName}
-                      onChange={formik.handleChange}
-                    >
-                      <option selected value={1}>
-                        Please choose a pet name
+                    <option value="">Please choose a pet name</option>
+                    {petNameList.map((petName) => (
+                      <option key={petName} value={petName}>
+                        {petName}
                       </option>
-                      {petNameList.map((petName) => (
-                        <option value={petName}>{petName}</option>
-                      ))}
-                    </select>
-                  </a>
-                </div>
-                <Tooltip
-                  id="petName-tooltip"
-                  isOpen={true}
-                  imperativeModeOnly
-                />
+                    ))}
+                  </select>
+                </a>
+              </div>
+              <Tooltip id="petName-tooltip" isOpen={!!formik.errors.petName} />
+
 
                 {/* Choose Pet Type */}
                 <div className="row mb-3">
@@ -506,6 +517,7 @@ export default function BookingSpa() {
                       name="petType"
                       value={formik.values.petType}
                       onChange={formik.handleChange}
+                      disabled={disabled}
                     >
                       <option selected value={1}>
                         Please choose a pet type
@@ -531,19 +543,15 @@ export default function BookingSpa() {
                     data-tooltip-variant="warning"
                     data-tooltip-place="right"
                   >
-                    <select
-                      class="form-select"
+                    <input
+                      onKeyDown={handleKeyDownNumber}
+                      onChange={(e) => handleWeight(e.target.value)}
+                      type="text"
                       name="weight"
                       value={formik.values.weight}
-                      onChange={(e) => handleWeight(e.target.value)}
-                    >
-                      <option selected value={1}>
-                        Please choose a weight
-                      </option>
-                      {weightList.map((weight) => (
-                        <option value={weight}>{weight}</option>
-                      ))}
-                    </select>
+                      placeholder="..."
+                      disabled={disabled}
+                    />
                   </a>
                 </div>
                 <Tooltip id="weight-tooltip" isOpen={true} imperativeModeOnly />

@@ -9,7 +9,7 @@ import useSignIn from "react-auth-kit/hooks/useSignIn";
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import axios from "axios";
-// import ReCAPTCHA from "react-google-recaptcha";
+import ReCAPTCHA from "react-google-recaptcha";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -82,8 +82,7 @@ const Login = () => {
             email: email,
           },
         });
-        console.log(response.data);
-        if (response.data.status === "invalid") {
+        if (response.data.status === "invalid email!") {
           toast.error("Invalid email address or domain");
           return;
         }
@@ -271,7 +270,7 @@ const Login = () => {
               onChange={handleOnChange}
               placeholder="Enter your password"
             />
-            {/* <ReCAPTCHA style={{width : "20"}} sitekey="6LcK-BEqAAAAADJxdIF5CVMyPVVH_xumF3we_0zW" onChange={(val) => setCapVal(val)} />, */}
+            <ReCAPTCHA sitekey="6LcK-BEqAAAAADJxdIF5CVMyPVVH_xumF3we_0zW" onChange={(val) => setCapVal(val)} />, 
             <div className="checkbox">
               <input
                 type="checkbox"

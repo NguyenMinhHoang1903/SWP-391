@@ -26,6 +26,7 @@ const Header = () => {
   const [nameLink, setNameLink] = useState("");
   const [openMyBooking, setOpenMyBooking] = useState(false);
   const [showWallet, setShowWallet] = useState(true); // State to show/hide wallet
+  const [myWallet, setMyWallet] = useState([]);
 
   const handleLogout = async () => {
     const fetchData = await fetch(SummaryApi.logout_user.url, {
@@ -77,6 +78,32 @@ const Header = () => {
     setShowWallet(!showWallet);
   };
 
+  const fetchAllUsers = async () => {
+    const fetchData = await fetch(SummaryApi.allUser.url, {
+      method: SummaryApi.allUser.method,
+      credentials: "include",
+    });
+
+    const dataResponse = await fetchData.json();
+    if (dataResponse.success) {
+      // Filter bookings by logged-in user
+      const userWallet = dataResponse.data.filter(wallet => wallet.name === user.name);
+      setMyWallet(userWallet);
+    }
+
+    if (dataResponse.error) {
+      toast.error(dataResponse.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllUsers();
+  }, []);
+
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('vi-VN').format(amount);
+  };
+
   return (
     <div className="navbar-container">
       <div className="container">
@@ -93,7 +120,7 @@ const Header = () => {
                     Home
                   </Link>
                 </label>
-                
+
                 <input type="radio" name="tabs" checked id="tab2" />
                 <label for="tab2">
                   <Link className="link" to="/booking">
@@ -197,8 +224,12 @@ const Header = () => {
                 <FaWallet />
               </div>
               <div className="numberWallet">
-                {showWallet ? "********" : "10.000.000" + " VND"}
-                {/* {showWallet ? "********" : {} +" VND"} */}
+                {myWallet.map((data, index) => {
+                  const showUserWallet = formatCurrency(data?.wallet);
+                  return (
+                    <div>{showWallet ? "********" : showUserWallet + " VND"}</div>
+                  );
+                })}
               </div>
               <div className="iconEye" onClick={toggleWallet}>
                 {showWallet ? <FaEye /> : <FaEyeSlash />}
@@ -237,8 +268,12 @@ const Header = () => {
                 <FaWallet />
               </div>
               <div className="numberWallet">
-                {showWallet ? "********" : "10.000.000" + " VND"}
-                {/* {showWallet ? "********" : {} +" VND"} */}
+                {myWallet.map((data) => {
+                  const showUserWallet = formatCurrency(data?.wallet);
+                  return (
+                    <div>{showWallet ? "********" : showUserWallet + " VND"}</div>
+                  );
+                })}
               </div>
               <div className="iconEye" onClick={toggleWallet}>
                 {showWallet ? <FaEye /> : <FaEyeSlash />}

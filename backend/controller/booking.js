@@ -22,7 +22,7 @@ const createBooking = async (req, res) => {
           <p>Your Service: ${services}</p>
           <p>Your Combo: ${combo}</p>
           <p>Date: ${moment(date).format('MMMM Do YYYY, h:mm:ss a')}</p>
-          <p>Total: $ ${total}</p>
+          <p>Total: ${total} VND</p>
           <p>Thank you for booking</p>
           <p>Your regards,</p>
           <p>Pet Spa</p>

@@ -56,7 +56,11 @@ const ChangePassword = lazy(() =>
 );
 const SpeedDialBox = lazy(() => import("./components/layouts/SpeedDialBox"));
 const Transaction = lazy(() => import("./components/template/TransactionHistory"));
-const Pet = lazy(() => import("./components/template/MyPets"));
+
+const Pet = lazy(() => import("./components/MyPet/MyPets"));
+const PetList = lazy(() => import("./components/MyPet/MyPetList"));
+const UpdatePet = lazy(() => import("./components/MyPet/UpdateMyPet"));
+
 const BookingDetail = lazy(() => import("./components/template/BookingDetail"));
 const ManageBooking = lazy(() =>
   import("./components/manageBooking/ManageBooking")
@@ -342,6 +346,32 @@ function App() {
                         <PrivateRoute>
                           <Suspense fallback={<Loader />}>
                             <Pet />
+                          </Suspense>
+                        </PrivateRoute>
+                      </Suspense>
+                    }
+                  />
+
+                  <Route
+                    path="/myPetList"
+                    element={
+                      <Suspense fallback={<Loader />}>
+                        <PrivateRoute>
+                          <Suspense fallback={<Loader />}>
+                            <PetList />
+                          </Suspense>
+                        </PrivateRoute>
+                      </Suspense>
+                    }
+                  />
+
+                  <Route
+                    path="/updateMyPet/:petName"
+                    element={
+                      <Suspense fallback={<Loader />}>
+                        <PrivateRoute>
+                          <Suspense fallback={<Loader />}>
+                            <UpdatePet />
                           </Suspense>
                         </PrivateRoute>
                       </Suspense>

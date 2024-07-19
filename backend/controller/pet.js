@@ -1,13 +1,11 @@
-const Pet = require("../models/petModel");
+const Pet = require("../models/PetModel");
 
 // CREATE or UPDATE
 const createNewPet = async (req, res) => {
   try {
-    // Find the user by their userName
     let user = await Pet.findOne({ userName: req.body.userName });
 
     if (!user) {
-      // User doesn't exist, create new user with the pet
       const newUser = new Pet({
         userName: req.body.userName,
         pets: [{
@@ -25,7 +23,6 @@ const createNewPet = async (req, res) => {
         data: result,
       });
     } else {
-      // User exists, check if the pet with the same name already exists
       const existingPet = user.pets.find(pet => pet.petName === req.body.petName);
 
       if (existingPet) {
@@ -35,7 +32,6 @@ const createNewPet = async (req, res) => {
         });
       }
 
-      // Add the new pet to the user's pets array
       user.pets.push({
         petName: req.body.petName,
         petType: req.body.petType,
@@ -59,19 +55,77 @@ const createNewPet = async (req, res) => {
   }
 };
 
-// Get
-const readAllPet = async (req, res) => {
+// Function to show all pets
+const getAllPets = async (req, res) => {
+  try {
     const user = await Pet.findOne({ userName: req.params.userName });
-    console.log(user);
-    if(user) {
-      res.json({
-        success: true,
-        data: user,
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
       });
     }
-}
+
+    return res.status(200).json({
+      success: true,
+      data: user.pets,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch pets",
+    });
+  }
+};
+
+// Function to update a pet
+const updatePet = async (req, res) => {
+  try {
+    const { userName, petName, petType, weight } = req.body;
+
+    const user = await Pet.findOne({ userName });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    const pet = user.pets.find(pet => pet.petName === petName);
+
+    if (!pet) {
+      return res.status(404).json({
+        success: false,
+        message: "Pet not found",
+      });
+    }
+
+    // Cập nhật thông tin pet
+    pet.petName = petName || pet.petName;
+    pet.petType = petType || pet.petType;
+    pet.weight = weight || pet.weight;
+
+    const result = await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Pet updated successfully",
+      data: result,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      success: false,
+      message: "Failed to update pet",
+    });
+  }
+};
 
 module.exports = {
   createNewPet,
-  readAllPet,
+  getAllPets,
+  updatePet,
 };

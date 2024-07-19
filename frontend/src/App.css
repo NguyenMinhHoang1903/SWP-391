@@ -2287,3 +2287,66 @@ form .input-field {
 .showServiceCombo-component {
   padding: 30px;
 }
+
+/* Pet */
+.contentAddPetPage {
+  display: flex;
+  align-items: center;
+  margin: 0 auto;
+  max-width: 800px;
+  padding: 0 20px;
+  box-sizing: border-box;
+  justify-content: space-between;
+}
+
+.contentAddPetPage .container {
+  background-color: rgb(182, 120, 83);
+  margin-top: 30px;
+  margin-bottom: 30px;
+  padding-bottom: 25px;
+  max-width: 500px;
+  border-radius: 15px; /* Added for rounded corners */
+}
+
+.contentAddPetPage .container-heading {
+  color: white;
+  text-align: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-radius: 15px 15px 0 0; /* Added for rounded corners at the top */
+}
+
+.contentAddPetPage .input-group, .content .row {
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-bottom: 10px;
+  justify-content: space-between;
+  font-size: 18px;
+}
+
+.contentAddPetPage .row label {
+  color: white;
+}
+
+.contentAddPetPage .input-group-addon {
+  width: 150px; /* Set a fixed width for the label */
+}
+
+.contentAddPetPage .button .row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px; /* Adjust as needed */
+}
+
+.contentAddPetPage .button.row .col-6 {
+  flex: 1; /* Make each column take half the width */
+}
+
+
+.container .text-right {
+  text-align: right;
+}
+
+.container .text-left {
+  text-align: left;
+}

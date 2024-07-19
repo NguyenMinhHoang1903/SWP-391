@@ -103,6 +103,7 @@ router.get("/bookingTracker/track", bookingTracker.trackNumberStaffs);
 
 // Pet Router
 router.post("/pet/create", petController.createNewPet);
-router.get("/pet/readAll/:userName", petController.readAllPet);
+router.get("/pet/user/:userName", petController.getAllPets);
+router.put("/pet/update", petController.updatePet);
 
 module.exports = router;

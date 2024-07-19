@@ -26,6 +26,4 @@ const userSchema = new Schema({
 }, { timestamps: true });
 
 const OwnPet = mongoose.model('Pet', userSchema);
-
-
 module.exports = OwnPet;

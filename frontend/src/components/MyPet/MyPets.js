@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import InputAdornment from "@mui/material/InputAdornment";
+import { GiCat } from "react-icons/gi";
+import { LuDog } from "react-icons/lu";
+import { MdPets } from "react-icons/md";
+import { GiWeightScale } from "react-icons/gi";
 import TextField from "@mui/material/TextField";
 import { Button, MenuItem, Select, FormControl, InputLabel } from "@mui/material";
 
@@ -43,7 +45,7 @@ const AddPetPage = () => {
     e.preventDefault();
 
     // Regular expressions for validation
-    const numberRegex = /^\d+$/;
+    const numberRegex = /^\d+(\.\d+)?$/;
 
     // Perform form validation
     if (!data.petName || !data.petType || !data.weight) {
@@ -59,7 +61,7 @@ const AddPetPage = () => {
 
     try {
       const createPet = await fetch("http://localhost:5000/api/pet/create", {
-        method: "POST", // Added missing HTTP method
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -72,7 +74,7 @@ const AddPetPage = () => {
         toast.success("Pet added successfully");
         handleBack();
       } else {
-        toast.error(responseData.message);
+        toast.error(responseData.message || "Failed to add pet");
       }
     } catch (error) {
       toast.error("An error occurred while submitting the form");
@@ -91,7 +93,7 @@ const AddPetPage = () => {
             <div className="addPet-details">
               <div className="input-group mb-3">
                 <div className="input-group-addon" style={{ textAlign: "left" }}>
-                  Pet Name
+                  <MdPets /> Pet Name
                 </div>
                 <TextField
                   id="petName"
@@ -101,21 +103,13 @@ const AddPetPage = () => {
                   value={data.petName}
                   name="petName"
                   onChange={handleOnChange}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <AccountCircleIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                  sx={{ width: "55%" }}
                   required
                 />
               </div>
 
               <div className="input-group mb-3">
                 <div className="input-group-addon" style={{ textAlign: "left" }}>
-                  Pet Type
+                  <MdPets /> Pet Type
                 </div>
                 <FormControl variant="standard" sx={{ width: "55%" }}>
                   <InputLabel id="petType-label">Select Pet Type</InputLabel>
@@ -128,15 +122,15 @@ const AddPetPage = () => {
                     label="Pet Type"
                     required
                   >
-                    <MenuItem value="Dog">Dog</MenuItem>
-                    <MenuItem value="Cat">Cat</MenuItem>
+                    <MenuItem value="Dog"><LuDog /> Dog</MenuItem>
+                    <MenuItem value="Cat"><GiCat /> Cat</MenuItem>
                   </Select>
                 </FormControl>
               </div>
 
               <div className="input-group mb-3">
                 <div className="input-group-addon" style={{ textAlign: "left" }}>
-                  Weight
+                  <GiWeightScale /> Weight
                 </div>
                 <TextField
                   id="weight"
@@ -148,7 +142,6 @@ const AddPetPage = () => {
                   value={data.weight}
                   name="weight"
                   onChange={handleOnChange}
-                  sx={{ width: "55%" }}
                   required
                 />
               </div>

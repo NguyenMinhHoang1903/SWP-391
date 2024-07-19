@@ -93,16 +93,25 @@ const Header = () => {
                     Home
                   </Link>
                 </label>
+                
                 <input type="radio" name="tabs" checked id="tab2" />
                 <label for="tab2">
                   <Link className="link" to="/booking">
                     Booking
                   </Link>
                 </label>
+
                 <input type="radio" name="tabs" checked id="tab3" />
                 <label for="tab3">
                   <Link className="link" to="/serviceslist">
                     Service
+                  </Link>
+                </label>
+
+                <input type="radio" name="tabs" checked id="tab4" />
+                <label for="tab1">
+                  <Link className="link" to="/myPetList">
+                    My Pets
                   </Link>
                 </label>
                 <div class="glider"></div>

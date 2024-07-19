@@ -1,40 +1,55 @@
 const Pet = require("../models/petModel");
 
-// CREATE
+// CREATE or UPDATE
 const createNewPet = async (req, res) => {
-  const id = req.params.id;
-
   try {
-    // Check if the pet with the same name already exists for the same user
-    const existingPet = await Pet.findOne({
-      userName: req.body.userName,
-      petName: req.body.petName,
-    });
+    // Find the user by their userName
+    let user = await Pet.findOne({ userName: req.body.userName });
 
-    if (existingPet) {
-      return res.status(400).json({
-        success: false,
-        message: "Pet with the same name already exists for this user",
+    if (!user) {
+      // User doesn't exist, create new user with the pet
+      const newUser = new Pet({
+        userName: req.body.userName,
+        pets: [{
+          petName: req.body.petName,
+          petType: req.body.petType,
+          weight: req.body.weight,
+        }],
+      });
+
+      const result = await newUser.save();
+
+      return res.status(201).json({
+        success: true,
+        message: "User and pet created successfully",
+        data: result,
+      });
+    } else {
+      // User exists, check if the pet with the same name already exists
+      const existingPet = user.pets.find(pet => pet.petName === req.body.petName);
+
+      if (existingPet) {
+        return res.status(400).json({
+          success: false,
+          message: "Pet with the same name already exists for this user",
+        });
+      }
+
+      // Add the new pet to the user's pets array
+      user.pets.push({
+        petName: req.body.petName,
+        petType: req.body.petType,
+        weight: req.body.weight,
+      });
+
+      const result = await user.save();
+
+      return res.status(201).json({
+        success: true,
+        message: "Pet added successfully",
+        data: result,
       });
     }
-
-    // Create new pet data
-    const newPetData = {
-      userName: req.body.userName,
-      petName: req.body.petName,
-      petType: req.body.petType,
-      weight: req.body.weight,
-    };
-
-    // Create and save new pet
-    const newPet = new Pet(newPetData);
-    const result = await newPet.save();
-
-    res.status(201).json({
-      success: true,
-      message: "Add pet successfully",
-      data: result,
-    });
   } catch (err) {
     console.error(err);
     res.status(500).json({
@@ -44,6 +59,19 @@ const createNewPet = async (req, res) => {
   }
 };
 
+// Get
+const readAllPet = async (req, res) => {
+    const user = await Pet.findOne({ userName: req.params.userName });
+    console.log(user);
+    if(user) {
+      res.json({
+        success: true,
+        data: user,
+      });
+    }
+}
+
 module.exports = {
   createNewPet,
+  readAllPet,
 };

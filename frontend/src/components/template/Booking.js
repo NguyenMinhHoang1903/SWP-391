@@ -12,6 +12,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import {
   Badge,
   Box,
+  Button,
   Divider,
   FormControl,
   IconButton,
@@ -30,6 +31,7 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import UpdateIcon from "@mui/icons-material/Update";
 import setHours from "date-fns/setHours";
 import setMinutes from "date-fns/setMinutes";
+import AddIcon from "@mui/icons-material/Add";
 
 export default function BookingSpa() {
   const [listService, setListService] = useState([]);
@@ -40,6 +42,9 @@ export default function BookingSpa() {
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
   const [isRequired, setIsRequired] = useState(false);
   const [priceIndex, setPriceIndex] = useState(0);
+  const [petNameList, setPetNameList] = useState([]);
+  const [petTypeList, setPetTypeList] = useState([]);
+  const [weightList, setWeightList] = useState([]);
   const navigate = useNavigate();
   const user = useSelector((state) => state?.user?.user);
 
@@ -298,6 +303,39 @@ export default function BookingSpa() {
     };
   };
 
+  // Read all pet of users
+  const readAllPet = async () => {
+    let isFetched = true;
+
+    await fetch(`http://localhost:5000/api/pet/readAll/${user.name}`, {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (isFetched) {
+          if (json.success) {
+            json.data.pets.map((pet) => {
+              petNameList.push(pet.petName);
+              petTypeList.push(pet.petType);
+              weightList.push(pet.weight);
+              // Remove duplicates
+              let uniqueArr = [...new Set(petNameList)];
+              setPetNameList(uniqueArr);
+              uniqueArr = [...new Set(petTypeList)];
+              setPetTypeList(uniqueArr);
+              uniqueArr = [...new Set(weightList)];
+              setWeightList(uniqueArr);
+            });
+          }
+        }
+      })
+      .catch((err) => console.log(err));
+
+    return () => {
+      isFetched = false;
+    };
+  };
+
   // Handle service of combo
   const handleOpenServiceOfCombo = async (passedComboId) => {
     if (passedComboId) {
@@ -349,6 +387,7 @@ export default function BookingSpa() {
   useEffect(() => {
     readAllService();
     readAllCombo();
+    readAllPet();
     readUser();
   }, []);
 
@@ -432,13 +471,19 @@ export default function BookingSpa() {
                     data-tooltip-variant="warning"
                     data-tooltip-place="right"
                   >
-                    <input
-                      onChange={formik.handleChange}
-                      type="text"
+                    <select
+                      class="form-select"
                       name="petName"
                       value={formik.values.petName}
-                      placeholder="..."
-                    />
+                      onChange={formik.handleChange}
+                    >
+                      <option selected value={1}>
+                        Please choose a pet name
+                      </option>
+                      {petNameList.map((petName) => (
+                        <option value={petName}>{petName}</option>
+                      ))}
+                    </select>
                   </a>
                 </div>
                 <Tooltip
@@ -465,8 +510,9 @@ export default function BookingSpa() {
                       <option selected value={1}>
                         Please choose a pet type
                       </option>
-                      <option value="Cat">Cat</option>
-                      <option value="Dog">Dog</option>
+                      {petTypeList.map((petType) => (
+                        <option value={petType}>{petType}</option>
+                      ))}
                     </select>
                   </a>
                 </div>
@@ -475,6 +521,52 @@ export default function BookingSpa() {
                   isOpen={true}
                   imperativeModeOnly
                 />
+
+                {/* Enter Weight */}
+                <div className="row mb-3">
+                  <label>Weight (kg)</label>
+                  <a
+                    data-tooltip-id="weight-tooltip"
+                    data-tooltip-content={formik.errors.weight}
+                    data-tooltip-variant="warning"
+                    data-tooltip-place="right"
+                  >
+                    <select
+                      class="form-select"
+                      name="weight"
+                      value={formik.values.weight}
+                      onChange={(e) => handleWeight(e.target.value)}
+                    >
+                      <option selected value={1}>
+                        Please choose a weight
+                      </option>
+                      {weightList.map((weight) => (
+                        <option value={weight}>{weight}</option>
+                      ))}
+                    </select>
+                  </a>
+                </div>
+                <Tooltip id="weight-tooltip" isOpen={true} imperativeModeOnly />
+
+                {/* Add new pet button */}
+                <div className="mb-3">
+                  <TooltipMUI title="Add new pet">
+                    <Link
+                      className="text-decoration-none text-white"
+                      to="/addMyPet"
+                    >
+                      <Button
+                        sx={{
+                          bgcolor: "rgb(0, 201, 170)",
+                          ":hover": { bgcolor: "rgb(0, 201, 170)" },
+                        }}
+                        variant="contained"
+                      >
+                        <AddIcon />
+                      </Button>
+                    </Link>
+                  </TooltipMUI>
+                </div>
 
                 {/* Enter Date */}
                 <div className="row mb-3">
@@ -504,27 +596,6 @@ export default function BookingSpa() {
                   </a>
                 </div>
                 <Tooltip id="date-tooltip" isOpen={true} imperativeModeOnly />
-
-                {/* Enter Weight */}
-                <div className="row mb-3">
-                  <label>Weight (kg)</label>
-                  <a
-                    data-tooltip-id="weight-tooltip"
-                    data-tooltip-content={formik.errors.weight}
-                    data-tooltip-variant="warning"
-                    data-tooltip-place="right"
-                  >
-                    <input
-                      onKeyDown={handleKeyDownNumber}
-                      onChange={(e) => handleWeight(e.target.value)}
-                      type="text"
-                      name="weight"
-                      value={formik.values.weight}
-                      placeholder="..."
-                    />
-                  </a>
-                </div>
-                <Tooltip id="weight-tooltip" isOpen={true} imperativeModeOnly />
 
                 {/* Select Service */}
                 <div className="row mb-3">
@@ -706,7 +777,6 @@ export default function BookingSpa() {
                   </Stack>
                 </Box>
 
-                
                 {/* Submit Button */}
                 <button
                   className="submit-button"

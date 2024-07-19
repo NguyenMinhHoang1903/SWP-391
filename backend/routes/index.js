@@ -40,7 +40,10 @@ const feedback = require("../controller/feedback");
 const bookingTracker = require("../controller/bookingTracker");
 
 // Google Login
-const userGoogleController = require("../controller/googleauth")
+const userGoogleController = require("../controller/googleauth");
+
+// Add New Pet
+const petController = require("../controller/pet");
 
 router.post("/signup", userSignUpController);
 router.post("/signin", userSignInController);
@@ -97,5 +100,8 @@ router.post("/feedbacks/create", feedback.createFeedback);
 
 // Booking Tracker Router
 router.get("/bookingTracker/track", bookingTracker.trackNumberStaffs);
+
+// Pet Router
+router.post("/pet/create", petController.createNewPet);
 
 module.exports = router;

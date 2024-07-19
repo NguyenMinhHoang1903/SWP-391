@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "react-tooltip/dist/react-tooltip.css";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import PetsIcon from "@mui/icons-material/Pets";
@@ -13,10 +13,15 @@ export default function BookingDetail() {
   const [booking, setBooking] = useState("");
   const location = useLocation();
   const passedid = location.search.substring(1);
+  const navigate = useNavigate();
   const formattedDate = booking.date
     ? new Date(booking.date).toLocaleString()
     : "";
   const [canRefund, setCanRefund] = useState(false); // State for enabling/disabling Refund button
+
+  const handleBack = () => {
+    navigate(-1);
+  };
 
   const readOneBooking = async () => {
     await fetch(`http://localhost:5000/api/myBooking/readOne/${passedid}`)
@@ -118,15 +123,14 @@ export default function BookingDetail() {
 
             <div className="button row">
               <div className="col-3 text-left">
-                <Link to="/myBookingList">
                   <Button
                     sx={{ ":hover": { bgcolor: "rgb(0, 201, 170)" } }}
                     variant="contained"
                     type="button"
+                    onClick={handleBack}
                   >
                     <ArrowBackIcon />
                   </Button>
-                </Link>
               </div>
               <div className="col-3">
                 {booking.status === "PENDING" && (

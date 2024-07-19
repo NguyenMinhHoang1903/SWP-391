@@ -14,6 +14,9 @@ import React, { useEffect, useState } from "react";
 import useSignOut from "react-auth-kit/hooks/useSignOut";
 import { Collapse } from "react-bootstrap";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { FaWallet } from "react-icons/fa6";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+
 
 const Header = () => {
   const user = useSelector((state) => state?.user?.user);
@@ -22,6 +25,7 @@ const Header = () => {
   const [openManageLink, setOpenManageLink] = useState(false);
   const [nameLink, setNameLink] = useState("");
   const [openMyBooking, setOpenMyBooking] = useState(false);
+  const [showWallet, setShowWallet] = useState(true); // State to show/hide wallet
 
   const handleLogout = async () => {
     const fetchData = await fetch(SummaryApi.logout_user.url, {
@@ -68,6 +72,11 @@ const Header = () => {
     handleManageLink();
   }, [user]);
 
+  //show-hide number of money
+  const toggleWallet = () => {
+    setShowWallet(!showWallet);
+  };
+
   return (
     <div className="navbar-container">
       <div className="container">
@@ -101,77 +110,93 @@ const Header = () => {
             </div>
           </div>
           <div className="navbar-right">
-            <div className="userIcon">
-              <img src="userIcon.png" alt="userIcon" />
-              <div />
-              <div class="dropdown">
-                {user ? (
-                  <div>
-                    <div
-                      class="btn username btn-7sm "
-                      type="button"
-                      data-bs-toggle="dropdown"
-                    >
-                      {user.name}
+            <div>
+              <div className="userIcon">
+                <img src="userIcon.png" alt="userIcon" />
+                <div />
+                <div class="dropdown">
+                  {user ? (
+                    <div>
+                      <div
+                        class="btn username btn-7sm "
+                        type="button"
+                        data-bs-toggle="dropdown"
+                      >
+                        {user.name}
+                      </div>
+                      <ul
+                        class="dropdown-menu container-fluid p-0"
+                        aria-labelledby="dropdownMenu2"
+                      >
+                        <Link className="profile" to="/userprofile">
+                          <div class="dropdown-item">
+                            <ImProfile /> Profile
+                          </div>
+                        </Link>
+                        <Link className="profile" to="/changepassword">
+                          <div class="dropdown-item">
+                            <MdOutlineChangeCircle /> Password
+                          </div>
+                        </Link>
+
+                        <Collapse in={openMyBooking}>
+                          <div>
+                            <Link className="profile" to={nameLink}>
+                              <div class="dropdown-item">
+                                <BookTwoToneIcon /> My Booking{" "}
+                              </div>
+                            </Link>
+                          </div>
+                        </Collapse>
+
+                        <Collapse in={openManageLink}>
+                          <div>
+                            <Link className="profile" to={nameLink}>
+                              <div class="dropdown-item">
+                                <MdManageAccounts /> Manage{" "}
+                              </div>
+                            </Link>
+                          </div>
+                        </Collapse>
+                      </ul>
                     </div>
-                    <ul
-                      class="dropdown-menu container-fluid p-0"
-                      aria-labelledby="dropdownMenu2"
-                    >
-                      <Link className="profile" to="/userprofile">
-                        <div class="dropdown-item">
-                          <ImProfile /> Profile
-                        </div>
-                      </Link>
-                      <Link className="profile" to="/changepassword">
-                        <div class="dropdown-item">
-                          <MdOutlineChangeCircle /> Password
-                        </div>
-                      </Link>
+                  ) : (
+                    <div class="guest">Guest</div>
+                  )}
+                </div>
+              </div>
 
-                      <Collapse in={openMyBooking}>
-                        <div>
-                          <Link className="profile" to={nameLink}>
-                            <div class="dropdown-item">
-                              <BookTwoToneIcon /> My Booking{" "}
-                            </div>
-                          </Link>
-                        </div>
-                      </Collapse>
-
-                      <Collapse in={openManageLink}>
-                        <div>
-                          <Link className="profile" to={nameLink}>
-                            <div class="dropdown-item">
-                              <MdManageAccounts /> Manage{" "}
-                            </div>
-                          </Link>
-                        </div>
-                      </Collapse>
-                    </ul>
-                  </div>
-                ) : (
-                  <div class="guest">Guest</div>
-                )}
+              <div>
+                <div>
+                  {user ? (
+                    <button onClick={handleLogout} className="login-button">
+                      Logout
+                    </button>
+                  ) : (
+                    <div>
+                      <Link className="login-button" to="login">
+                        Login
+                      </Link>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
-            <div>
-              <div>
-                {user ? (
-                  <button onClick={handleLogout} className="login-button">
-                    Logout
-                  </button>
-                ) : (
-                  <div>
-                    <Link className="login-button" to="login">
-                      Login
-                    </Link>
-                  </div>
-                )}
+            <div className="wallet">
+              <div className="iconWallet">
+                <FaWallet />
+              </div>
+              <div className="numberWallet">
+                {showWallet ? "********" : "10.000.000" + " VND"}
+                {/* {showWallet ? "********" : {} +" VND"} */}
+              </div>
+              <div className="iconEye" onClick={toggleWallet}>
+                {showWallet ? <FaEye /> : <FaEyeSlash />}
               </div>
             </div>
           </div>
+
           <div className="bar_btn" onClick={toggleMenu}>
             <FontAwesomeIcon icon={isOpen ? faTimes : faBars} />
           </div>
@@ -195,6 +220,21 @@ const Header = () => {
             >
               Service
             </Link>
+          </li>
+
+          <li>
+            <div className="wallet2">
+              <div className="iconWallet">
+                <FaWallet />
+              </div>
+              <div className="numberWallet">
+                {showWallet ? "********" : "10.000.000" + " VND"}
+                {/* {showWallet ? "********" : {} +" VND"} */}
+              </div>
+              <div className="iconEye" onClick={toggleWallet}>
+                {showWallet ? <FaEye /> : <FaEyeSlash />}
+              </div>
+            </div>
           </li>
 
           <li>

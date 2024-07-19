@@ -1,5 +1,6 @@
 import "./admin.css"
 import Sidebar from './Sidebar'
+import WidgetAccount from "./WidgetAccount"
 import WidgetRevenueLM from "./WidgetRevenueLM"
 import WidgetRevenueTM from "./WidgetRevenueTM"
 
@@ -12,6 +13,7 @@ export default function AdminHome() {
       <div className='show-widget'>
         <WidgetRevenueTM/>
         <WidgetRevenueLM/>
+        <WidgetAccount/>
       </div>
       </div>
     </div>

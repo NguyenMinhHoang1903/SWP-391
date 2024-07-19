@@ -1,79 +1,46 @@
 const BookingTracker = require("../models/bookingTrackerModel");
+const User = require("../models/userModel");
 
 // Check number of staffs in the same time
 const trackNumberStaffs = async (req, res) => {
-  const newTracker = [
-    {
-      time: 8,
-      staffs: 5,
-    },
-    {
-      time: 9,
-      staffs: 5,
-    },
-    {
-      time: 10,
-      staffs: 5,
-    },
-    {
-      time: 11,
-      staffs: 5,
-    },
-    {
-      time: 12,
-      staffs: 5,
-    },
-    {
-      time: 13,
-      staffs: 5,
-    },
-    {
-      time: 14,
-      staffs: 5,
-    },
-    {
-      time: 15,
-      staffs: 5,
-    },
-    {
-      time: 16,
-      staffs: 5,
-    },
-    {
-      time: 17,
-      staffs: 5,
-    },
-    {
-      time: 18,
-      staffs: 5,
-    },
-    {
-      time: 19,
-      staffs: 5,
-    },
-    {
-      time: 20,
-      staffs: 5,
-    },
-  ];
+  const user = await User.find().catch((err) => console.log(err));
+  const newTracker = [];
 
-  // Check if created date is less than current date, then create new tracker
+  for (let i = 8; i <= 20; i++) {
+    newTracker.push({
+      time: i,
+      staffs: user.length,
+    });
+  }
+
   const currentDate = new Date();
   let bookingTracker = [];
   bookingTracker = await BookingTracker.findOne();
 
-  if (bookingTracker.createdAt.getDay < currentDate.getDay) {
+  // if there are not booking tracker, create a new one
+  if (!bookingTracker) {
+    const newBookingTracker = new BookingTracker({
+      tracker: newTracker,
+    });
+    bookingTracker = await newBookingTracker
+      .save()
+      .catch((err) => console.log(err));
+  }
+
+  // Check if created date is less than current date, then create new tracker
+  if (bookingTracker.createdAt.getDate() < currentDate.getDate()) {
+    BookingTracker.deleteOne({ _id: bookingTracker._id }).catch((err) => console.log(err));
+
     const newBookingTracker = new BookingTracker({
       tracker: newTracker,
     });
 
-    await newBookingTracker
+    bookingTracker = await newBookingTracker
       .save()
-      .then(() => console.log("Created new booking tracker"))
       .catch((err) => console.log(err));
   }
 
-  // Check if there are staff is less than 5
+  // Check if there are staff is less than number of staffs
   const hourBooking = new Date().getHours(); // Get hour from frontend
 
   bookingTracker.tracker.map((item, index) => {

@@ -45,6 +45,7 @@ export default function BookingSpa() {
   const [petNameList, setPetNameList] = useState([]);
   const [petTypeList, setPetTypeList] = useState([]);
   const [weightList, setWeightList] = useState([]);
+  const [messages, setMessages] = useState();
   const navigate = useNavigate();
   const user = useSelector((state) => state?.user?.user);
 
@@ -67,18 +68,28 @@ export default function BookingSpa() {
       services: [],
       combo: "",
       total: 0,
+      messages: "",
     },
     onSubmit: (values) => {
+      let messages = 0;
       // Handle time if that time is over 5 staffs
       fetch(`http://localhost:5000/api/bookingTracker/track`, {
         method: "GET",
-      });
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          if (json.messages === 1) {
+            messages = json.messages;
+          }
+        })
+        .catch((err) => console.log(err));
       fetch(`http://localhost:5000/api/forgotpassword`, {
         method: "POST",
       })
         .then((res) => res.json())
         .then((json) => {
-          if (json.message === 1) {
+          console.log("test: "+messages)
+          if (messages === 1) {
             toast.error("No more staff for service");
           } else {
             // Add booking to database
@@ -310,18 +321,21 @@ export default function BookingSpa() {
   // Read all pet of users
   const fetchAllPets = async (userName) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/pet/user/${userName}`, {
-        method: "GET",
-      });
+      const response = await fetch(
+        `http://localhost:5000/api/pet/user/${userName}`,
+        {
+          method: "GET",
+        }
+      );
 
       const dataResponse = await response.json();
       if (dataResponse.success) {
         const pets = dataResponse.data;
         setAllPet(pets); // Set the list of pets from the response
 
-        const petNames = pets.map(pet => pet.petName);
-        const petTypes = pets.map(pet => pet.petType);
-        const weights = pets.map(pet => pet.weight);
+        const petNames = pets.map((pet) => pet.petName);
+        const petTypes = pets.map((pet) => pet.petType);
+        const weights = pets.map((pet) => pet.weight);
 
         setPetNameList(petNames);
         setPetTypeList(petTypes);
@@ -338,7 +352,9 @@ export default function BookingSpa() {
     const selectedPetName = event.target.value;
     formik.setFieldValue("petName", selectedPetName);
 
-    const selectedPet = myPetList.find(pet => pet.petName === selectedPetName);
+    const selectedPet = myPetList.find(
+      (pet) => pet.petName === selectedPetName
+    );
     if (selectedPet) {
       formik.setFieldValue("petType", selectedPet.petType);
       formik.setFieldValue("weight", selectedPet.weight);
@@ -475,33 +491,35 @@ export default function BookingSpa() {
 
                 {/* Choose Pet Name */}
                 <div className="row mb-3">
-                <label>Pet Name</label>
-                <a
-                  data-tooltip-id="petName-tooltip"
-                  data-tooltip-content={formik.errors.petName}
-                  data-tooltip-variant="warning"
-                  data-tooltip-place="right"
-                >
-                  <select
-                    className="form-select"
-                    name="petName"
-                    value={formik.values.petName}
-                    onChange={(event) => {
-                      formik.handleChange(event);
-                      handlePetNameChange(event);
-                    }}
+                  <label>Pet Name</label>
+                  <a
+                    data-tooltip-id="petName-tooltip"
+                    data-tooltip-content={formik.errors.petName}
+                    data-tooltip-variant="warning"
+                    data-tooltip-place="right"
                   >
-                    <option value="">Please choose a pet name</option>
-                    {petNameList.map((petName) => (
-                      <option key={petName} value={petName}>
-                        {petName}
-                      </option>
-                    ))}
-                  </select>
-                </a>
-              </div>
-              <Tooltip id="petName-tooltip" isOpen={!!formik.errors.petName} />
-
+                    <select
+                      className="form-select"
+                      name="petName"
+                      value={formik.values.petName}
+                      onChange={(event) => {
+                        formik.handleChange(event);
+                        handlePetNameChange(event);
+                      }}
+                    >
+                      <option value="">Please choose a pet name</option>
+                      {petNameList.map((petName) => (
+                        <option key={petName} value={petName}>
+                          {petName}
+                        </option>
+                      ))}
+                    </select>
+                  </a>
+                </div>
+                <Tooltip
+                  id="petName-tooltip"
+                  isOpen={!!formik.errors.petName}
+                />
 
                 {/* Choose Pet Type */}
                 <div className="row mb-3">

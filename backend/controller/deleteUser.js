@@ -7,7 +7,7 @@ async function deleteUser(req, res) {
     await userModel.findById(query).then((user) => {
       if (user.role === "ADMIN") {
         res.json({
-          message: "How dare you delete your boss?",
+          message: "Can not delete ADMIN",
           success: false,
           error: true,
         });

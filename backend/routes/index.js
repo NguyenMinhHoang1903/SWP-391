@@ -99,7 +99,7 @@ router.post("/combos/update", combo.updateOneCombo);
 router.post("/feedbacks/create", feedback.createFeedback);
 
 // Booking Tracker Router
-router.get("/bookingTracker/track", bookingTracker.trackNumberStaffs);
+router.post("/bookingTracker/track", bookingTracker.trackNumberStaffs);
 
 // Pet Router
 router.post("/pet/create", petController.createNewPet);

@@ -66,6 +66,7 @@ router.post("/resetPassword/${token}", resetPassword);
 // Booking Router
 router.post("/bookings/create", booking.createBooking);
 router.get("/bookings/read/:id", booking.readOneBooking);
+router.post("/bookings/checkPet", booking.checkPet);
 router.post("/bookings/changeBookingDetail", booking.changeBookingDetail);
 router.get("/myBooking/read", myBooking.allMyBooking);
 router.get("/myBooking/readOne/:id", myBooking.readOneBooking);

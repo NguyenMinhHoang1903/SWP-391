@@ -70,7 +70,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const API_KEY = "7598c3f2cfcd4424b0f1abc75c534578";
+    const API_KEY = "24330debe6c0409bbcee434ab9d1b556";
     const BASE_URL = "https://api.zerobounce.net/v2/validate";
     const email = data.email;
 
@@ -82,7 +82,7 @@ const Login = () => {
             email: email,
           },
         });
-        if (response.data.status === "invalid email!") {
+        if (response.data.status === "invalid email") {
           toast.error("Invalid email address or domain");
           return;
         }

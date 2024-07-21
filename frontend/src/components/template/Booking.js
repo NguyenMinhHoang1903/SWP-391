@@ -32,6 +32,7 @@ import UpdateIcon from "@mui/icons-material/Update";
 import setHours from "date-fns/setHours";
 import setMinutes from "date-fns/setMinutes";
 import AddIcon from "@mui/icons-material/Add";
+import axios from "axios";
 
 export default function BookingSpa() {
   const [listService, setListService] = useState([]);
@@ -45,7 +46,7 @@ export default function BookingSpa() {
   const [petNameList, setPetNameList] = useState([]);
   const [petTypeList, setPetTypeList] = useState([]);
   const [weightList, setWeightList] = useState([]);
-  const [noStaff, setNoStaff] = useState(false);
+  const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
   const user = useSelector((state) => state?.user?.user);
 
@@ -70,74 +71,103 @@ export default function BookingSpa() {
       total: 0,
     },
     onSubmit: (values) => {
-      // Handle time if that time is over staffs
-      fetch(`http://localhost:5000/api/bookingTracker/track`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          date: values.date,
-        }),
-      })
-        .then((res) => res.json())
-        .then((json) => {
-          if (json.noStaff) {
-            toast.error("No more staff for service");
-          } else {
-            fetch(`http://localhost:5000/api/forgotpassword`, {
-              method: "POST",
-            })
-              .then((res) => res.json())
-              .then((json) => {
-                // Add booking to database
-                fetch("http://localhost:5000/api/bookings/create", {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({
-                    userName: values.userName,
-                    email: values.email,
-                    petName: values.petName,
-                    petType: values.petType,
-                    date: values.date,
-                    weight: Number(values.weight),
-                    services: values.services,
-                    combo: values.combo,
-                    total: Number(formik.values.total),
-                  }),
-                })
-                  .then((res) => res.json())
-                  .then((data) => {
-                    if (data.message === "Create Successfully") {
-                      toast.success("Please check your gmail box or spam box!");
-                      setOpenSuccessModal(true);
-                      setTimeout(() => {
-                        navigate("/bookingDetail", {
-                          state: {
-                            userName: values.userName,
-                            email: values.email,
-                            petName: values.petName,
-                            petType: values.petType,
-                            date: values.date,
-                            weight: Number(values.weight),
-                            services: values.services,
-                            combo: values.combo,
-                            total: Number(formik.values.total),
-                          },
-                        });
-                      }, 10000);
-                    } else {
-                      toast.error("Unsuccessfully");
-                    }
-                  })
-                  .catch((err) => console.log(err));
-              })
-              .catch((err) => console.log(err));
+      // Check pet
+      // fetch("http://localhost:5000/api/bookings/checkPet", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({
+      //     email: values.email,
+      //     petName: values.petName,
+      //     date: values.date,
+      //   }),
+      // })
+      //   .then((res) => res.json())
+      //   .then((json) => {
+      //     if (!json.success) {
+      //       toast.error(json.message);
+      //     } else {
+      //     }
+      //   })
+      //   .catch((err) => console.log(err));
+
+      const handleSubmit = async () => {
+        try {
+          // Check pet already on the same date or not
+          const resCheckPet = await axios.post(
+            "http://localhost:5000/api/bookings/checkPet",
+            {
+              email: values.email,
+              petName: values.petName,
+              date: values.date,
+            }
+          );
+          if (!resCheckPet.data.success) {
+            toast.error(resCheckPet.data.message);
+            return;
           }
-        })
-        .catch((err) => console.log(err));
+
+          // Check the staffs is enough or not
+          const resCheckStaff = await axios.post(
+            "http://localhost:5000/api/bookingTracker/track",
+            {
+              date: values.date,
+            }
+          );
+          if (!resCheckStaff.data.success) {
+            toast.error(resCheckStaff.data.message);
+            return;
+          }
+
+          // Add booking to database
+          fetch("http://localhost:5000/api/bookings/create", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userName: values.userName,
+              email: values.email,
+              petName: values.petName,
+              petType: values.petType,
+              date: values.date,
+              weight: Number(values.weight),
+              services: values.services,
+              combo: values.combo,
+              total: Number(formik.values.total),
+            }),
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.success) {
+                toast.success(data.message);
+                setOpenSuccessModal(true);
+                setTimeout(() => {
+                  navigate("/bookingDetail", {
+                    state: {
+                      userName: values.userName,
+                      email: values.email,
+                      petName: values.petName,
+                      petType: values.petType,
+                      date: values.date,
+                      weight: Number(values.weight),
+                      services: values.services,
+                      combo: values.combo,
+                      total: Number(formik.values.total),
+                    },
+                  });
+                }, 10000);
+              } else {
+                toast.error(data.message);
+              }
+            });
+        } catch (err) {
+          console.log(err.message);
+        }
+      };
+
+      handleSubmit();
     },
     validationSchema: Yup.object({
       userName: Yup.string().required("Require."),
@@ -368,9 +398,9 @@ export default function BookingSpa() {
   const handleOpenServiceOfCombo = async (passedComboId) => {
     if (passedComboId) {
       readAllServiceOfCombo(passedComboId);
-      setOpenServiceTableOfCombo((prev) => (prev = true));
+      setOpenServiceTableOfCombo((prev) => true);
     } else {
-      setOpenServiceTableOfCombo((prev) => (prev = false));
+      setOpenServiceTableOfCombo((prev) => false);
     }
   };
 
@@ -411,6 +441,67 @@ export default function BookingSpa() {
 
     return currentDate.getTime() < selectedDate.getTime();
   };
+
+  // // Check pet with passed email, pet name and date
+  // const checkPet = async (email, petName, date) => {
+  //   let isFetched = true;
+
+  //   await fetch("http://localhost:5000/api/bookings/checkPet", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       email: email,
+  //       petName: petName,
+  //       date: date,
+  //     }),
+  //   })
+  //     .then((res) => res.json())
+  //     .then((json) => {
+  //       if (isFetched) {
+  //         if (!json.success) {
+  //           setSuccess(json.success);
+  //           console.log(success);
+  //           toast.error(json.message);
+  //         }
+  //       }
+  //     })
+  //     .catch((err) => console.log(err));
+
+  //   return () => {
+  //     isFetched = false;
+  //   };
+  // };
+
+  // // Handle time if that time is over staffs
+  // const handleTimeStaff = async (date) => {
+  //   let isFetched = true;
+
+  //   await fetch(`http://localhost:5000/api/bookingTracker/track`, {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       date: date,
+  //     }),
+  //   })
+  //     .then((res) => res.json())
+  //     .then((json) => {
+  //       if (isFetched) {
+  //         if (!json.success) {
+  //           setSuccess((prev) => !prev);
+  //           toast.error(json.message);
+  //         }
+  //       }
+  //     })
+  //     .catch((err) => console.log(err));
+
+  //   return () => {
+  //     isFetched = false;
+  //   };
+  // };
 
   useEffect(() => {
     readAllService();
@@ -830,7 +921,6 @@ export default function BookingSpa() {
           aria-labelledby="transition-modal-title"
           aria-describedby="transition-modal-description"
           open={openSuccessModal}
-          onClose={() => setOpenSuccessModal(false)}
           closeAfterTransition
           slots={{ backdrop: Backdrop }}
           slotProps={{

@@ -60,6 +60,7 @@ const Transaction = lazy(() => import("./components/template/TransactionHistory"
 const Pet = lazy(() => import("./components/MyPet/MyPets"));
 const PetList = lazy(() => import("./components/MyPet/MyPetList"));
 const UpdatePet = lazy(() => import("./components/MyPet/UpdateMyPet"));
+const ManagePet = lazy(() => import("./components/managePet/ManagePet"));
 
 const BookingDetail = lazy(() => import("./components/template/BookingDetail"));
 const ManageBooking = lazy(() =>
@@ -339,6 +340,19 @@ function App() {
                     }
                   />
 
+                  <Route
+                    path="/managePet"
+                    element={
+                      <Suspense fallback={<Loader />}>
+                        <ManagerRoute>
+                          <Suspense fallback={<Loader />}>
+                            <ManagePet />
+                          </Suspense>
+                        </ManagerRoute>
+                      </Suspense>
+                    }
+                  />
+                  
                   <Route
                     path="/addMyPet"
                     element={

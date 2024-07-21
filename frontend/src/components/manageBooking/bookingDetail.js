@@ -63,7 +63,7 @@ export default function BookingDetail() {
       <div className="contentBookDetail">
         <div className="containerBookDetail">
           <div className="container-heading">
-            <h1>Booking Detail1</h1>
+            <h1>Booking Detail</h1>
           </div>
           <form>
             <div className="infor">

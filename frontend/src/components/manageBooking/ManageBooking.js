@@ -93,7 +93,10 @@ export default function ManageBooking() {
   const filteredAndSearchedBookings = search(bookingList.filter(filterBookings));
 
 
-  const todayBookings = bookingList.filter(booking => isToday(new Date(booking.date)));
+  // const todayBookings = bookingList.filter(booking => isToday(new Date(booking.date)));
+  const todayBookings = bookingList.filter(booking => 
+    isToday(new Date(booking.date)) && booking.status === 'PROCESS'
+  );
   const todayBookingsCount = todayBookings.length;
 
 

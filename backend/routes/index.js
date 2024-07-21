@@ -106,5 +106,6 @@ router.post("/bookingTracker/track", bookingTracker.trackNumberStaffs);
 router.post("/pet/create", petController.createNewPet);
 router.get("/pet/user/:userName", petController.getAllPets);
 router.put("/pet/update", petController.updatePet);
+router.get("/listPet/read", petController.readAllPet);
 
 module.exports = router;

@@ -146,6 +146,29 @@ const Header = () => {
             </div>
           </div>
           <div className="navbar-right">
+          <div className="wallet">
+              {user ? (
+                <div className="wallet-part">
+                  <div className="iconWallet">
+                    <FaWallet />
+                  </div>
+                  <div className="numberWallet">
+                    {myWallet.map((data, index) => {
+                      const showUserWallet = formatCurrency(data?.wallet);
+                      return (
+                        <div>{showWallet ? "********" : showUserWallet + " VND"}</div>
+                      );
+                    })}
+                  </div>
+                  <div className="iconEye" onClick={toggleWallet}>
+                    {showWallet ? <FaEye /> : <FaEyeSlash />}
+                  </div>
+                </div>
+              ) : (
+                <div class="guest"></div>
+              )}
+            </div>
+
             <div>
               <div className="userIcon">
                 <img src="userIcon.png" alt="userIcon" />
@@ -216,23 +239,6 @@ const Header = () => {
                     </div>
                   )}
                 </div>
-              </div>
-            </div>
-
-            <div className="wallet">
-              <div className="iconWallet">
-                <FaWallet />
-              </div>
-              <div className="numberWallet">
-                {myWallet.map((data, index) => {
-                  const showUserWallet = formatCurrency(data?.wallet);
-                  return (
-                    <div>{showWallet ? "********" : showUserWallet + " VND"}</div>
-                  );
-                })}
-              </div>
-              <div className="iconEye" onClick={toggleWallet}>
-                {showWallet ? <FaEye /> : <FaEyeSlash />}
               </div>
             </div>
           </div>

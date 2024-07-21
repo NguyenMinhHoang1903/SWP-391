@@ -84,6 +84,10 @@ const SummaryApi =  {
     allListRefund : {
         url : `${backendDomin}/api/listRefund/read`,
         method : 'get'
+    },
+    allListPet : {
+        url : `${backendDomin}/api/listPet/read`,
+        method : 'get'
     }
 }
 export default SummaryApi

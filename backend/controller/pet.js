@@ -80,6 +80,26 @@ const getAllPets = async (req, res) => {
   }
 };
 
+// Function to read all pets in database
+const readAllPet = async (req, res) => {
+  try {
+    const allPet = await Pet.find();
+
+    res.json({
+      message: "All Pet ",
+      data: allPet,
+      success: true,
+      error: false
+    })
+  } catch (err) {
+    res.status(400).json({
+      message: err.message || err,
+      error: true,
+      success: false
+    })
+  }
+};
+
 // Function to update a pet
 const updatePet = async (req, res) => {
   try {
@@ -128,4 +148,5 @@ module.exports = {
   createNewPet,
   getAllPets,
   updatePet,
+  readAllPet,
 };

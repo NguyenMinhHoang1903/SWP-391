@@ -36,6 +36,8 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import UpdateIcon from "@mui/icons-material/Update";
 import setHours from "date-fns/setHours";
 import setMinutes from "date-fns/setMinutes";
+import axios from "axios";
+import moment from "moment";
 
 export default function ChangeBookingDetail() {
   const [listService, setListService] = useState([]);
@@ -52,6 +54,9 @@ export default function ChangeBookingDetail() {
   const [petNameList, setPetNameList] = useState([]);
   const [petTypeList, setPetTypeList] = useState([]);
   const [weightList, setWeightList] = useState([]);
+  const [excludedTimes, setExcludedTimes] = useState([]);
+  const [oldBooking, setOldBooking] = useState();
+  const [isClicked, setIsClicked] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const user = useSelector((state) => state?.user?.user);
@@ -77,61 +82,124 @@ export default function ChangeBookingDetail() {
       combo: "",
       total: 0,
       oldTotal: "",
-      payingOfflineTotal: "",
+      additionalAmount: "",
       status: "",
+      newWallet: "",
     },
     onSubmit: (values) => {
-      if (formik.values.status === "PROCESS") {
-        if (values.total > formik.values.oldTotal) {
-          formik.setFieldValue(
-            "payingOfflineTotal",
-            values.total - formik.values.oldTotal
-          );
-          setOpenOption(true);
-          return;
-        }
-      }
+      setIsClicked(true);
+      const handleSubmit = async () => {
+        try {
+          if (formik.values.status === "PROCESS") {
+            if (values.total > formik.values.oldTotal) {
+              formik.setFieldValue(
+                "additionalAmount",
+                values.total - formik.values.oldTotal
+              );
+              setOpenOption(true);
+              setIsClicked(true);
+              return;
+            }
+          }
 
-      fetch(`http://localhost:5000/api/forgotpassword`, {
-        method: "POST",
-      })
-        .then((res) => res.json())
-        .then((json) => {
-          if (json.message === 5) {
-            toast.error("No more staff for service");
-          } else {
-            // Add booking to database
-            fetch("http://localhost:5000/api/bookings/changeBookingDetail", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                oldId: formik.values.oldId,
-                userName: values.userName,
+          // if date or pet is changed then check
+
+          const date = values.date;
+          const oldDate = new Date(oldBooking.date);
+
+          if (values.petName !== oldBooking.petName) {
+            // Check pet already on the same date or not
+            const resCheckPet = await axios.post(
+              "http://localhost:5000/api/bookings/checkPet",
+              {
                 email: values.email,
                 petName: values.petName,
-                petType: values.petType,
                 date: values.date,
-                weight: Number(values.weight),
-                services: values.services,
-                combo: values.combo,
-                total: Number(formik.values.total),
-              }),
-            })
-              .then((res) => res.json())
-              .then((data) => {
-                if (data.message === 0) {
-                  toast.error("Updated Unsuccessfully");
-                } else {
-                  toast.success("Updated Successfully");
-                  navigate("/myBookingList");
-                }
-              })
-              .catch((err) => console.log(err));
+              }
+            );
+            if (!resCheckPet.data.success) {
+              setIsClicked(false);
+              toast.error(resCheckPet.data.message);
+              return;
+            }
           }
-        })
-        .catch((err) => console.log(err));
+
+          let flag = false;
+          if (date.getFullYear() === oldDate.getFullYear()) {
+            if (date.getMonth() === oldDate.getMonth()) {
+              if (date.getDate() === oldDate.getDate()) {
+                flag = true;
+              }
+            }
+
+            if (!flag) {
+              // Check pet already on the same date or not
+              const resCheckPet = await axios.post(
+                "http://localhost:5000/api/bookings/checkPet",
+                {
+                  email: values.email,
+                  petName: values.petName,
+                  date: values.date,
+                }
+              );
+              if (!resCheckPet.data.success) {
+                setIsClicked(false);
+                toast.error(resCheckPet.data.message);
+                return;
+              }
+            }
+
+            if (date !== oldDate) {
+              // Check the staffs is enough or not
+              const resCheckStaff = await axios.post(
+                "http://localhost:5000/api/bookingTracker/track",
+                {
+                  date: values.date,
+                }
+              );
+              if (!resCheckStaff.data.success) {
+                setIsClicked(false);
+                toast.error(resCheckStaff.data.message);
+                return;
+              }
+            }
+          }
+
+          // Update booking in database
+          fetch("http://localhost:5000/api/bookings/changeBookingDetail", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              oldId: formik.values.oldId,
+              userName: values.userName,
+              email: values.email,
+              petName: values.petName,
+              petType: values.petType,
+              date: values.date,
+              weight: Number(values.weight),
+              services: values.services,
+              combo: values.combo,
+              total: Number(formik.values.total),
+            }),
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.success) {
+                toast.success(data.message);
+                navigate("/myBookingList");
+              } else {
+                setIsClicked(false);
+                toast.error(data.message);
+              }
+            });
+        } catch (err) {
+          setIsClicked(false);
+          console.log(err.message);
+        }
+      };
+      handleSubmit();
     },
     validationSchema: Yup.object({
       userName: Yup.string().required("Require."),
@@ -206,46 +274,51 @@ export default function ChangeBookingDetail() {
     }
   };
 
-// Read all pet of users
-const fetchAllPets = async (userName) => {
-  try {
-    const response = await fetch(`http://localhost:5000/api/pet/user/${userName}`, {
-      method: "GET",
-    });
+  // Read all pet of users
+  const fetchAllPets = async (userName) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/pet/user/${userName}`,
+        {
+          method: "GET",
+        }
+      );
 
-    const dataResponse = await response.json();
-    if (dataResponse.success) {
-      const pets = dataResponse.data;
-      setAllPet(pets); // Set the list of pets from the response
+      const dataResponse = await response.json();
+      if (dataResponse.success) {
+        const pets = dataResponse.data;
+        setAllPet(pets); // Set the list of pets from the response
 
-      const petNames = pets.map(pet => pet.petName);
-      const petTypes = pets.map(pet => pet.petType);
-      const weights = pets.map(pet => pet.weight);
+        const petNames = pets.map((pet) => pet.petName);
+        const petTypes = pets.map((pet) => pet.petType);
+        const weights = pets.map((pet) => pet.weight);
 
-      setPetNameList(petNames);
-      setPetTypeList(petTypes);
-      setWeightList(weights);
-    } else {
-      toast.error(dataResponse.message);
+        setPetNameList(petNames);
+        setPetTypeList(petTypes);
+        setWeightList(weights);
+      } else {
+        toast.error(dataResponse.message);
+      }
+    } catch (error) {
+      toast.error("Failed to fetch pets");
     }
-  } catch (error) {
-    toast.error("Failed to fetch pets");
-  }
-};
+  };
 
-const handlePetNameChange = (event) => {
-  const selectedPetName = event.target.value;
-  formik.setFieldValue("petName", selectedPetName);
+  const handlePetNameChange = (event) => {
+    const selectedPetName = event.target.value;
+    formik.setFieldValue("petName", selectedPetName);
 
-  const selectedPet = myPetList.find(pet => pet.petName === selectedPetName);
-  if (selectedPet) {
-    formik.setFieldValue("petType", selectedPet.petType);
-    formik.setFieldValue("weight", selectedPet.weight);
-  } else {
-    formik.setFieldValue("petType", "");
-    formik.setFieldValue("weight", "");
-  }
-};
+    const selectedPet = myPetList.find(
+      (pet) => pet.petName === selectedPetName
+    );
+    if (selectedPet) {
+      formik.setFieldValue("petType", selectedPet.petType);
+      formik.setFieldValue("weight", selectedPet.weight);
+    } else {
+      formik.setFieldValue("petType", "");
+      formik.setFieldValue("weight", "");
+    }
+  };
 
   // Calculate total of one booking
   const handleTotal = () => {
@@ -421,6 +494,7 @@ const handlePetNameChange = (event) => {
       .then((res) => res.json())
       .then((json) => {
         if (isFetched) {
+          setOldBooking(json);
           formik.setFieldValue("oldId", json._id);
           formik.setFieldValue("petName", json.petName);
           formik.setFieldValue("petType", json.petType);
@@ -436,8 +510,88 @@ const handlePetNameChange = (event) => {
       .catch((err) => console.log(err));
   };
 
+  // if customers have enough money in wallet then use them, or not
+  const handlePayingByWallet = async () => {
+    try {
+      if (formik.values.additionalAmount === 0) {
+        setOpenSuccessOptionModal(true);
+        return;
+      }
+
+      if (user.wallet < formik.values.additionalAmount) {
+        toast.error("Not enough money in your wallet!");
+        return;
+      } else {
+        let newWallet = user.wallet - formik.values.additionalAmount;
+        formik.setFieldValue("newWallet", newWallet);
+        const res = await axios.post("http://localhost:5000/api/updateWallet", {
+          userId: user._id,
+          wallet: newWallet,
+        });
+
+        if (res.data.success) {
+          setOpenSuccessOptionModal(true);
+        } else {
+          toast.error(res.data.message);
+        }
+        // formik.setFieldValue("additionalAmount", 0);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Handle time of booking
+  const handleFullDate = async (result) => {
+    let selectedDate = "";
+    let flag = false;
+    const list = [];
+
+    if (result) {
+      selectedDate = new Date(result);
+      formik.setFieldValue("date", selectedDate);
+    } else {
+      selectedDate = new Date();
+    }
+
+    try {
+      const dateList = await axios.get(
+        "http://localhost:5000/api/bookingTracker/readAll"
+      );
+      const availableTimes = dateList.data.list;
+      if (availableTimes) {
+        availableTimes.map((value) => {
+          if (value.year === selectedDate.getFullYear()) {
+            if (value.month === selectedDate.getMonth() + 1) {
+              if (value.date === selectedDate.getDate()) {
+                value.tracker.map((value) => {
+                  if (value.staffs === 0) {
+                    list.push(value.time);
+                  }
+                });
+                flag = true;
+              }
+            }
+          }
+        });
+
+        if (flag) {
+          const filterSelectedTime = list
+            .flatMap((hour) => [new Date().setHours(hour, 0, 0, 0)])
+            .map((time) => new Date(time));
+          setExcludedTimes(filterSelectedTime);
+        } else {
+          setExcludedTimes([]);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     setOpenBackDrop(true);
+    handleFullDate();
     readOneOldBooking();
     readAllService();
     readAllCombo();
@@ -469,7 +623,7 @@ const handlePetNameChange = (event) => {
               <div className="row">
                 {/* Back Button */}
                 <div className="col-3">
-                  <Link to="/">
+                  <Link to={-1}>
                     <TooltipMUI title="Back">
                       <IconButton>
                         <ArrowBackIcon className="back-button" />
@@ -532,32 +686,35 @@ const handlePetNameChange = (event) => {
 
                 {/* Choose Pet Name */}
                 <div className="row mb-3">
-                <label>Pet Name</label>
-                <a
-                  data-tooltip-id="petName-tooltip"
-                  data-tooltip-content={formik.errors.petName}
-                  data-tooltip-variant="warning"
-                  data-tooltip-place="right"
-                >
-                  <select
-                    className="form-select"
-                    name="petName"
-                    value={formik.values.petName}
-                    onChange={(event) => {
-                      formik.handleChange(event);
-                      handlePetNameChange(event);
-                    }}
+                  <label>Pet Name</label>
+                  <a
+                    data-tooltip-id="petName-tooltip"
+                    data-tooltip-content={formik.errors.petName}
+                    data-tooltip-variant="warning"
+                    data-tooltip-place="right"
                   >
-                    {/*<option value="">Please choose a pet name</option>*/}
-                    {petNameList.map((petName) => (
-                      <option key={petName} value={petName}>
-                        {petName}
-                      </option>
-                    ))}
-                  </select>
-                </a>
-              </div>
-              <Tooltip id="petName-tooltip" isOpen={!!formik.errors.petName} />
+                    <select
+                      className="form-select"
+                      name="petName"
+                      value={formik.values.petName}
+                      onChange={(event) => {
+                        formik.handleChange(event);
+                        handlePetNameChange(event);
+                      }}
+                    >
+                      {/*<option value="">Please choose a pet name</option>*/}
+                      {petNameList.map((petName) => (
+                        <option key={petName} value={petName}>
+                          {petName}
+                        </option>
+                      ))}
+                    </select>
+                  </a>
+                </div>
+                <Tooltip
+                  id="petName-tooltip"
+                  isOpen={!!formik.errors.petName}
+                />
 
                 {/* Choose Pet Type */}
                 <div className="row mb-3">
@@ -603,16 +760,16 @@ const handlePetNameChange = (event) => {
                       selected={formik.values.date}
                       minDate={new Date()}
                       onChange={(result) => {
-                        formik.setFieldValue("date", result);
+                        handleFullDate(result);
                       }}
                       name="date"
                       showTimeSelect
-                      timeIntervals={15}
+                      timeIntervals={60}
                       dateFormat="yyyy/MM/dd h:mm aa"
-                      filterTime={filterPassedTime}
                       minTime={setHours(setMinutes(new Date(), 45), 7)}
                       maxTime={setHours(setMinutes(new Date(), 0), 20)}
-                      isClearable
+                      filterTime={filterPassedTime}
+                      excludeTimes={excludedTimes}
                     />
                   </a>
                 </div>
@@ -829,9 +986,9 @@ const handlePetNameChange = (event) => {
                 <button
                   className="submit-button"
                   type="submit"
-                  disabled={!(formik.dirty && formik.isValid)}
+                  disabled={!(formik.dirty && formik.isValid) || isClicked}
                 >
-                  BOOK
+                  CHANGE
                 </button>
               </form>
             </div>
@@ -918,12 +1075,12 @@ const handlePetNameChange = (event) => {
             <Row style={{ width: "100%" }}>
               <Col>
                 <Card sx={{ maxWidth: 345, width: "100%" }}>
-                  <CardActionArea>
+                  <CardActionArea onClick={() => handlePayingByWallet()}>
                     <CardMedia
                       component="img"
                       height="140"
                       image="assets/imgs/wallet.jpg"
-                      alt="green iguana"
+                      alt=""
                     />
                     <CardContent>
                       <Typography gutterBottom variant="h5" component="div">
@@ -957,7 +1114,7 @@ const handlePetNameChange = (event) => {
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
                         You need to pay:{" "}
-                        {formattedPrice(formik.values.payingOfflineTotal)} VND
+                        {formattedPrice(formik.values.additionalAmount)} VND
                       </Typography>
                     </CardContent>
                   </CardActionArea>
@@ -1009,6 +1166,19 @@ const handlePetNameChange = (event) => {
               >
                 Your option has been selected
               </Typography>
+              {formik.values.newWallet ? (
+                <Typography
+                  variant="h6"
+                  component="h2"
+                  sx={{ mb: 1, textAlign: "center" }}
+                >
+                  Your new wallet: {formattedPrice(formik.values.newWallet)} VND
+                  <br />
+                  You paid: {formattedPrice(formik.values.additionalAmount)} VND
+                </Typography>
+              ) : (
+                ""
+              )}
               <Button
                 sx={{
                   marginLeft: "20%",

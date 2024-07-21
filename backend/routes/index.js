@@ -12,6 +12,7 @@ const localVariables = require("../middleware/localVariables");
 const allUsers = require("../controller/allUser");
 const deleteUser = require("../controller/deleteUser");
 const updateUser = require("../controller/updateUser");
+const updateWallet = require("../controller/updateWallet");
 const updateProfile = require("../controller/updateProfile");
 const updatePassword = require("../controller/changePassword");
 const updateBooking = require("../controller/updateBooking");
@@ -53,6 +54,7 @@ router.get("/generateOTP", verifyUser, localVariables, generateOTP);
 router.get("/all-user", authToken, allUsers);
 router.delete("/delete-user", deleteUser);
 router.post("/update-user", updateUser);
+router.post("/updateWallet", updateWallet);
 router.post("/update-profile", updateProfile);
 router.post("/update-password", updatePassword);
 

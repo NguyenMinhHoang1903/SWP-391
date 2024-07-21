@@ -47,6 +47,7 @@ export default function BookingSpa() {
   const [petTypeList, setPetTypeList] = useState([]);
   const [weightList, setWeightList] = useState([]);
   const [excludedTimes, setExcludedTimes] = useState([]);
+  const [isClicked, setIsClicked] = useState(false);
   const navigate = useNavigate();
   const user = useSelector((state) => state?.user?.user);
 
@@ -71,6 +72,7 @@ export default function BookingSpa() {
       total: 0,
     },
     onSubmit: (values) => {
+      setIsClicked(true);
       const handleSubmit = async () => {
         try {
           // Check pet already on the same date or not
@@ -83,6 +85,8 @@ export default function BookingSpa() {
             }
           );
           if (!resCheckPet.data.success) {
+            setIsClicked(false);
+
             toast.error(resCheckPet.data.message);
             return;
           }
@@ -95,6 +99,8 @@ export default function BookingSpa() {
             }
           );
           if (!resCheckStaff.data.success) {
+            setIsClicked(false);
+
             toast.error(resCheckStaff.data.message);
             return;
           }
@@ -138,6 +144,8 @@ export default function BookingSpa() {
                   });
                 }, 10000);
               } else {
+                setIsClicked(false);
+
                 toast.error(data.message);
               }
             });
@@ -468,7 +476,6 @@ export default function BookingSpa() {
       console.log(error);
     }
   };
-
 
   useEffect(() => {
     handleFullDate();
@@ -866,7 +873,7 @@ export default function BookingSpa() {
                 <button
                   className="submit-button"
                   type="submit"
-                  disabled={!(formik.dirty && formik.isValid)}
+                  disabled={!(formik.dirty && formik.isValid) || isClicked}
                 >
                   BOOK
                 </button>

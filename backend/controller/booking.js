@@ -19,107 +19,6 @@ const createBooking = async (req, res) => {
     total,
   } = req.body;
 
-  // // Check pet
-  // const bookingDate = new Date(date);
-  // await Booking.find({ email: email, petName: petName })
-  //   .then((existingPet) => {
-  //     existingPet.map((value) => {
-  //       if (value.date.getFullYear() === bookingDate.getFullYear()) {
-  //         if (value.date.getMonth() === bookingDate.getMonth()) {
-  //           if (value.date.getDate() === bookingDate.getDate()) {
-  //             return res.json({
-  //               success: false,
-  //               message: "Pet already booked on this day",
-  //             });
-  //           }
-  //         }
-  //       }
-  //     });
-  //   })
-  //   .catch((err) => {
-  //     console.log(err);
-  //   });
-
-  // const newTracker = [];
-  // //Check staffs in the same time
-  // await User.find({ role: "STAFF" })
-  //   .then((staffs) => {
-  //     if (staffs.length === 0) {
-  //       res.json({
-  //         success: false,
-  //         message: "No staff on this day",
-  //       });
-  //     } else {
-  //       // Create new tracker
-  //       for (let i = 8; i <= 20; i++) {
-  //         newTracker.push({
-  //           time: i,
-  //           staffs: staffs.length,
-  //         });
-  //       }
-  //     }
-  //   })
-  //   .catch((err) => console.log(err));
-
-  // const currentDate = new Date();
-  // let bookingTracker = [];
-
-  // await BookingTracker.findOne()
-  //   .then((result) => {
-  //     // if there are not booking tracker, create a new one
-  //     if (!result) {
-  //       const newBookingTracker = new BookingTracker({
-  //         tracker: newTracker,
-  //       });
-  //       bookingTracker = newBookingTracker
-  //         .save()
-  //         .catch((err) => console.log(err));
-  //     } else {
-  //       // Check if created date is less than current date, then create new tracker
-  //       if (result.createdAt.getDate() < currentDate.getDate()) {
-  //         BookingTracker.deleteOne({ _id: bookingTracker._id }).catch((err) =>
-  //           console.log(err)
-  //         );
-
-  //         const newBookingTracker = new BookingTracker({
-  //           tracker: newTracker,
-  //         });
-
-  //         bookingTracker = newBookingTracker
-  //           .save()
-  //           .catch((err) => console.log(err));
-  //       }
-  //     }
-  //   })
-  //   .catch((err) => console.log(err));
-
-  // // Check if there are staff is less than number of staffs
-  // const dateToCheck = new Date(date);
-  // const hourBooking = dateToCheck.getHours(); // Get hour from frontend
-
-  // await BookingTracker.findOne()
-  //   .then((result) => {
-  //     result.tracker.map((item, index) => {
-  //       if (hourBooking === item.time) {
-  //         if (item.staffs === 0) {
-  //           return res.json({
-  //             success: false,
-  //             message: "No staffs for services",
-  //           });
-  //         } else {
-  //           let newStaffs = item.staffs - 1;
-  //           // Update staffs in the tracker
-  //           bookingTracker.tracker[index].staffs = newStaffs;
-  //           const newTracker = bookingTracker.tracker;
-  //           BookingTracker.findByIdAndUpdate(bookingTracker._id.toString(), {
-  //             tracker: newTracker,
-  //           }).catch((err) => console.log(err));
-  //         }
-  //       }
-  //     });
-  //   })
-  //   .catch((err) => console.log(err));
-
   const mailOptions = {
     from: {
       name: "Pet Spa",
@@ -157,9 +56,10 @@ const createBooking = async (req, res) => {
 
   await newBooking
     .save()
-    .then(() => {
+    .then((result) => {
       sendMail(mailOptions);
       return res.json({
+        data: result,
         success: true,
         message: "Please check your gmail or spam box",
       });
@@ -196,6 +96,26 @@ const changeBookingDetail = async (req, res) => {
   const existingBooking = await Booking.findById(oldId);
 
   if (existingBooking) {
+    // Return staff to the booking tracker
+    const bookingTracker = await BookingTracker.findOne({
+      year: existingBooking.date.getFullYear(),
+      month: existingBooking.date.getMonth() + 1,
+      date: existingBooking.date.getDate(),
+    });
+    console.log("Before: "+bookingTracker);
+    bookingTracker.tracker.map((value, index) => {
+      if (value.time === existingBooking.date.getHours()) {
+        const newStaff = value.staffs + 1;
+        console.log(value.time);
+        bookingTracker.tracker[index].staffs = newStaff;
+        const newTracker = bookingTracker.tracker;
+        BookingTracker.findByIdAndUpdate(bookingTracker._id.toString(), {
+          tracker: newTracker,
+        }).then(result => console.log("after: "+result)).catch(err => console.log(err));
+      }
+    })
+
+    // Update booking
     await Booking.findByIdAndUpdate(oldId, {
       $set: {
         userName: userName,
@@ -210,12 +130,12 @@ const changeBookingDetail = async (req, res) => {
       },
     })
       .then(() => {
-        res.json({ message: 1 });
+        res.json({ success: true, message: "Updated Booking" });
       })
       .catch((err) => {
         console.log(err);
       });
-  } else res.json({ message: 0 });
+  } else res.json({ success: false, message: "Can not update booking" });
 };
 
 // Check pet

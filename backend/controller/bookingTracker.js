@@ -23,11 +23,17 @@ const trackNumberStaffs = async (req, res) => {
 
     const currentDate = new Date();
     let bookingTracker = [];
-    bookingTracker = await BookingTracker.findOne();
+    const date = new Date(req.body.date);
+    const hourBooking = date.getHours(); // Get hour from frontend
+    bookingTracker = await BookingTracker.findOne({ year: date.getFullYear(), month: date.getMonth(), date: date.getDate()});
+console.log("TEST: "+bookingTracker)
 
     // if there are not booking tracker, create a new one
     if (!bookingTracker) {
       const newBookingTracker = new BookingTracker({
+        year: date.getFullYear(),
+        month: date.getMonth(),
+        date: date.getDate(),
         tracker: newTracker,
       });
       bookingTracker = await newBookingTracker.save();
@@ -40,6 +46,9 @@ const trackNumberStaffs = async (req, res) => {
       });
 
       const newBookingTracker = new BookingTracker({
+        year: date.getFullYear(),
+        month: date.getMonth(),
+        date: date.getDate(),
         tracker: newTracker,
       });
 
@@ -47,13 +56,10 @@ const trackNumberStaffs = async (req, res) => {
     }
 
     // Check if there are staff is less than number of staffs
-    const date = new Date(req.body.date);
-    const hourBooking = date.getHours(); // Get hour from frontend
-
     bookingTracker.tracker.map((item, index) => {
       if (hourBooking === item.time) {
         if (item.staffs === 0) {
-          return res.status(200).json({ success: false, message: "No staffs" });
+          return res.status(200).json({ success: false, message: "No staffs for services" });
         } else {
           let newStaffs = item.staffs - 1;
           // Update staffs in the tracker

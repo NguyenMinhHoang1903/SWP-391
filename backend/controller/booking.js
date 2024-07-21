@@ -222,35 +222,35 @@ const changeBookingDetail = async (req, res) => {
 const checkPet = async (req, res) => {
   const { email, petName, date } = req.body;
   const bookingDate = new Date(date);
-  let flag = 0;
+  let flag = false;
 
   try {
     const existingPet = await Booking.find({ email: email, petName: petName });
 
-    if (!existingPet)
+    if (!existingPet) {
       return res
         .status(200)
         .json({ success: false, message: "Can not find pet" });
-    else {
-      existingPet.map((value) => {
-        if (value.date.getFullYear() !== bookingDate.getFullYear()) {
-          return res.status(200).json({ success: true });
-        }
-
-        if (value.date.getMonth() !== bookingDate.getMonth()) {
-          return res.status(200).json({ success: true });
-        }
-
-        if (value.date.getDate() !== bookingDate.getDate()) {
-          return res.status(200).json({ success: true });
-        } else {
-          return res.status(200).json({
-            success: false,
-            message: "Pet already booked on this day",
-          });
-        }
-      });
     }
+    existingPet.map((value) => {
+      if (value.date.getFullYear() === bookingDate.getFullYear()) {
+        if (value.date.getMonth() === bookingDate.getMonth()) {
+          if (value.date.getDate() === bookingDate.getDate()) {
+            flag = true;
+            return;
+          }
+        }
+      }
+    });
+    if (flag) {
+      return res.status(200).json({
+        success: false,
+        message: "Pet already booked on this day",
+      });
+    } else
+      return res.status(200).json({
+        success: true,
+      });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }

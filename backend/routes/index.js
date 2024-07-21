@@ -101,6 +101,7 @@ router.post("/feedbacks/create", feedback.createFeedback);
 
 // Booking Tracker Router
 router.post("/bookingTracker/track", bookingTracker.trackNumberStaffs);
+router.get("/bookingTracker/readAll", bookingTracker.readAll);
 
 // Pet Router
 router.post("/pet/create", petController.createNewPet);

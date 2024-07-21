@@ -87,6 +87,21 @@ const trackNumberStaffs = async (req, res) => {
   }
 };
 
+// Get all list
+const readAll = async (req, res) => {
+  const list = await BookingTracker.find({});
+
+  try {
+    if (list.length > 0) {
+      return res.status(200).json({ success: true, list: list });
+    } else return res.status(200).json({ success: false });
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+};
+
+
 module.exports = {
   trackNumberStaffs,
+  readAll,
 };

@@ -46,7 +46,6 @@ export default function BookingSpa() {
   const [petNameList, setPetNameList] = useState([]);
   const [petTypeList, setPetTypeList] = useState([]);
   const [weightList, setWeightList] = useState([]);
-  const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
   const user = useSelector((state) => state?.user?.user);
 
@@ -71,27 +70,6 @@ export default function BookingSpa() {
       total: 0,
     },
     onSubmit: (values) => {
-      // Check pet
-      // fetch("http://localhost:5000/api/bookings/checkPet", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({
-      //     email: values.email,
-      //     petName: values.petName,
-      //     date: values.date,
-      //   }),
-      // })
-      //   .then((res) => res.json())
-      //   .then((json) => {
-      //     if (!json.success) {
-      //       toast.error(json.message);
-      //     } else {
-      //     }
-      //   })
-      //   .catch((err) => console.log(err));
-
       const handleSubmit = async () => {
         try {
           // Check pet already on the same date or not

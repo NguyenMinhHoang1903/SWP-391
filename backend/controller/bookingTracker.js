@@ -21,45 +21,54 @@ const trackNumberStaffs = async (req, res) => {
       }
     }
 
-    const currentDate = new Date();
+    const currentFullDate = new Date();
+    const currentYear = currentFullDate.getFullYear();
+    const currentMonth = currentFullDate.getMonth() + 1;
+    const currentDate = currentFullDate.getDate();
+    
     let bookingTracker = [];
-    const date = new Date(req.body.date);
-    const hourBooking = date.getHours(); // Get hour from frontend
-    bookingTracker = await BookingTracker.findOne({ year: date.getFullYear(), month: date.getMonth(), date: date.getDate()});
-console.log("TEST: "+bookingTracker)
+    const fullDate = new Date(req.body.date);
+
+    const year = fullDate.getFullYear();
+    const month = fullDate.getMonth() + 1;
+    const date = fullDate.getDate();
+    const hour = fullDate.getHours();
+
+    // Check if year month date is less than current time, then delete
+    await BookingTracker.deleteMany({
+      $or: [
+        { "year" : { $lt: currentYear } },
+        { "year" : currentYear, "month": { $lt: currentMonth } },
+        { "year" : currentYear, "month": currentMonth, "date": { $lt: currentDate } },
+        
+      ],
+    });
+
+    // Find booking tracker by year , month, date
+    bookingTracker = await BookingTracker.findOne({
+      year: year,
+      month: month,
+      date: date,
+    });
 
     // if there are not booking tracker, create a new one
     if (!bookingTracker) {
       const newBookingTracker = new BookingTracker({
-        year: date.getFullYear(),
-        month: date.getMonth(),
-        date: date.getDate(),
+        year: year,
+        month: month,
+        date: date,
         tracker: newTracker,
       });
-      bookingTracker = await newBookingTracker.save();
-    }
-
-    // Check if created date is less than current date, then create new tracker
-    if (bookingTracker.createdAt.getDate() < currentDate.getDate()) {
-      await BookingTracker.deleteOne({
-        _id: bookingTracker._id,
-      });
-
-      const newBookingTracker = new BookingTracker({
-        year: date.getFullYear(),
-        month: date.getMonth(),
-        date: date.getDate(),
-        tracker: newTracker,
-      });
-
       bookingTracker = await newBookingTracker.save();
     }
 
     // Check if there are staff is less than number of staffs
     bookingTracker.tracker.map((item, index) => {
-      if (hourBooking === item.time) {
+      if (hour === item.time) {
         if (item.staffs === 0) {
-          return res.status(200).json({ success: false, message: "No staffs for services" });
+          return res
+            .status(200)
+            .json({ success: false, message: "No staffs for services" });
         } else {
           let newStaffs = item.staffs - 1;
           // Update staffs in the tracker
@@ -67,8 +76,9 @@ console.log("TEST: "+bookingTracker)
           const newTracker = bookingTracker.tracker;
           BookingTracker.findByIdAndUpdate(bookingTracker._id.toString(), {
             tracker: newTracker,
-          }).then(() => {return res.status(200).json({ success: true })});
-           
+          }).then(() => {
+            return res.status(200).json({ success: true });
+          });
         }
       }
     });

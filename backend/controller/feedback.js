@@ -25,12 +25,14 @@ const createFeedback = async (req, res) => {
     }
 
     // Add rating to combo and increase rating number
-    if(comboRating) {
+    if (comboRating) {
       const result = await Combo.findOne({ name: comboRating.name });
+
       result.rating = (result.rating + comboRating.rating) / 2;
       result.ratingNumber = result.ratingNumber + 1;
       await result.save();
     }
+
     // Add feedback to database
     const newFeedback = new Feedback({
       userName: userName,
@@ -39,17 +41,13 @@ const createFeedback = async (req, res) => {
       comboRating: comboRating,
       comment: comment,
     });
-  
-    newFeedback
-      .save()
-      .then(() => {
-        res.json({ success: true });
-      })
+
+    newFeedback.save().then(() => {
+      res.json({ success: true });
+    });
   } catch (err) {
     return res.status(500).json({ success: false, message: err.message });
   }
-
-  
 };
 
 module.exports = {

@@ -98,11 +98,8 @@ export default function BookingDetail() {
 
               {/* Total Amount */}
               <div className="total row">
-                <div className="col-md-2 text-left">
-                  <h3>Total Amount:</h3>
-                </div>
-                <div className="col-md-2 text-right">
-                  <h3>{formattedPrice(total)} VND</h3>
+                <div className="col text-left">
+                  <h3>Total Amount: {formattedPrice(total)} VND</h3>
                 </div>
               </div>
 

@@ -20,14 +20,6 @@ export default function ShowListService() {
     return new Intl.NumberFormat("vi-VN").format(price);
   };
 
-  const handleNameLink = (name) => {
-    if(name === "Cut nails") return '/cutnailservice';
-    if(name === "Hair dye") return '/hairdyeservice';
-    if(name === "Trim fur") return '/trimfurservice';
-    if(name === "Washing body") return '/washingservice';
-    return '/booking';
-  }
-
   // Start fetching all service
   useEffect(() => {
     let isFetched = true;
@@ -56,22 +48,26 @@ export default function ShowListService() {
                   >
                     <Card.Img
                       variant="top"
-                      style={{ width: "19rem", height: "12rem" }}
+                      style={{ width: "100%" }}
                       src={data.imageUrl}
                       className="card-img"
                     />
                     <Card.Body>
-                      <Card.Title style={{ width: "10rem", height: "1rem" }}>{data.name}</Card.Title>
-                      <Card.Text style={{ width: "10rem", height: "4rem" }}>{data.priceByWeight.map((value) => (
+                      <Card.Title style={{ width: "100%", height: "1.5rem" }}>{data.name}</Card.Title>
+                      <h5>Price:</h5>
+                      <Card.Text style={{ width: "100%", height: "1.5rem" }}>{data.priceByWeight.map((value) => (
                         <div key={value} className="row">
-                          <div className="col-7">{formattedPrice(value.price)} VND</div>
+                          <div className="col-7"> {formattedPrice(value.price)} VND</div>
                           <div className="col-5">{formattedPrice(value.weight)} KG</div>
                         </div>
                       ))}</Card.Text>
-                      <Card.Text style={{ width: "16rem", height: "9rem" }}>
+                      <Card.Text style={{ width: "100%" }}>
+                        Rating: {Math.round(data.rating * 100) / 100}/5 - {data.ratingNumber} Votes
+                      </Card.Text>
+                      <Card.Text style={{ width: "100" }}>
                         {data.desc}
                       </Card.Text>
-                      <a href={handleNameLink(data.name)} className="loginContainer btnBooking">
+                      <a href={data.path} className="loginContainer btnBooking">
                         Booking
                       </a>
                     </Card.Body>

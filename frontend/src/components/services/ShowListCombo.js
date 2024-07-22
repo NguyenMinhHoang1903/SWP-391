@@ -64,15 +64,23 @@ export default function ShowListCombo() {
                   <Card style={{ width: "19.2rem", height: "35rem" }}>
                     <Card.Img
                       variant="top"
-                      style={{ width: "19rem", height: "12rem" }}
+                      style={{ width: "100%" }}
                       src={data.imageUrl}
                       className="card-img"
                     />
 
                     <Card.Body>
-                      <Card.Title style={{ width: "10rem", height: "3rem" }}>{data.name}</Card.Title>
-                      <Card.Text style={{ width: "10rem", height: "4rem" }}>{formattedPrice(data.price)} VND</Card.Text>
-                      <Card.Text style={{ width: "16rem", height: "7rem" }}>
+                      <Card.Title style={{ width: "100%", height: "1.5rem" }}>
+                        {data.name}
+                      </Card.Title>
+                      <Card.Text style={{ width: "100%", height: "1rem" }}>
+                        Price: {formattedPrice(data.price)} VND
+                      </Card.Text>
+                      <Card.Text style={{ width: "100%", height: "1rem" }}>
+                        Rating: {Math.round(data.rating * 100) / 100}/5 - {data.ratingNumber} Votes
+                      </Card.Text>
+                      <Card.Text style={{ width: "100%", height: "8rem" }}>
+                        Description: <br/>
                         {data.desc}
                       </Card.Text>
                       <a href="/booking" className="loginContainer btnBooking">

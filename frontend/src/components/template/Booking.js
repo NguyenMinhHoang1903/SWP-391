@@ -142,7 +142,7 @@ export default function BookingSpa() {
                       total: Number(formik.values.total),
                     },
                   });
-                }, 10000);
+                }, 5000);
               } else {
                 setIsClicked(false);
 
@@ -941,7 +941,7 @@ export default function BookingSpa() {
                 id="transition-modal-description"
                 sx={{ textAlign: "center", mb: 1 }}
               >
-                You will be moved to the booking detail page after 10 second
+                You will be moved to the booking detail page after 5 second
               </Typography>
             </Box>
           </Fade>

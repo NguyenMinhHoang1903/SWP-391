@@ -357,11 +357,11 @@ function App() {
                     path="/addMyPet"
                     element={
                       <Suspense fallback={<Loader />}>
-                        <PrivateRoute>
+                        <CustomerRoute>
                           <Suspense fallback={<Loader />}>
                             <Pet />
                           </Suspense>
-                        </PrivateRoute>
+                        </CustomerRoute>
                       </Suspense>
                     }
                   />
@@ -370,11 +370,11 @@ function App() {
                     path="/myPetList"
                     element={
                       <Suspense fallback={<Loader />}>
-                        <PrivateRoute>
+                        <CustomerRoute>
                           <Suspense fallback={<Loader />}>
                             <PetList />
                           </Suspense>
-                        </PrivateRoute>
+                        </CustomerRoute>
                       </Suspense>
                     }
                   />

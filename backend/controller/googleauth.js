@@ -6,9 +6,10 @@ async function userGoogleController (req, res) {
 
   try {
     let user = await UserGoogle.findOne({ email });
-
-    if (user) {
-      user = new User({ name, email, googleId });
+    console.log(user)
+    if (!user) {
+      user = new UserGoogle({ name, email, googleId });
+      console.log(user)
       await user.save();
     }
 

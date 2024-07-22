@@ -17,7 +17,7 @@ router.get('/', function(req, res, next){
 
 router.get('/create_payment_url', function (req, res, next) {
     const url = req.originalUrl;
-    const total = parseInt(url.substring(26));
+    const total = req.query.total;
     res.render('order', {title: 'Create new order', amount: total})
 });
 

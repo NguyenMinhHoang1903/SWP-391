@@ -165,7 +165,7 @@ const checkPet = async (req, res) => {
     if (flag) {
       return res.status(200).json({
         success: false,
-        message: "Pet already booked on this day",
+        message: "Pets were booked today. Please make changes in \"My booking\"",
       });
     } else
       return res.status(200).json({

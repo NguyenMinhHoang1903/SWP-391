@@ -1,7 +1,5 @@
 const STATUSBOOKING = {
-  PENDING: "PENDING",
-  PROCESS: "PROCESS",
+  All: "Update Status",
   FINISHED: "FINISHED",
-  CANCELLED: "CANCELLED",
 };
 export default STATUSBOOKING;

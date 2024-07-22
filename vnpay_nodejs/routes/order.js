@@ -9,6 +9,7 @@ let router = express.Router();
 let $ = require('jquery');
 const request = require('request');
 const moment = require('moment');
+const Booking = require("../models/bookingModel")
 
 
 router.get('/', function(req, res, next){
@@ -16,9 +17,9 @@ router.get('/', function(req, res, next){
 });
 
 router.get('/create_payment_url', function (req, res, next) {
-    const url = req.originalUrl;
+    const id = req.query.id;
     const total = req.query.total;
-    res.render('order', {title: 'Create new order', amount: total})
+    res.render('order', {title: 'Create new order', amount: total, id: id})
 });
 
 router.get('/querydr', function (req, res, next) {
@@ -52,7 +53,7 @@ router.post('/create_payment_url', function (req, res, next) {
     let secretKey = config.get('vnp_HashSecret');
     let vnpUrl = config.get('vnp_Url');
     let returnUrl = config.get('vnp_ReturnUrl');
-    let orderId = moment(date).format('DDHHmmss');
+    let orderId = req.body.id;
     let amount = req.body.amount;
     let bankCode = req.body.bankCode;
     
@@ -91,7 +92,8 @@ router.post('/create_payment_url', function (req, res, next) {
     res.redirect(vnpUrl)
 });
 
-router.get('/vnpay_return', function (req, res, next) {
+
+router.get('/vnpay_return', async function (req, res, next) {
     let vnp_Params = req.query;
 
     let secureHash = vnp_Params['vnp_SecureHash'];
@@ -109,18 +111,30 @@ router.get('/vnpay_return', function (req, res, next) {
     let signData = querystring.stringify(vnp_Params, { encode: false });
     let crypto = require("crypto");     
     let hmac = crypto.createHmac("sha512", secretKey);
-    let signed = hmac.update(new Buffer(signData, 'utf-8')).digest("hex");     
+    let signed = hmac.update(new Buffer(signData, 'utf-8')).digest("hex");  
 
-    if(secureHash === signed){
-        //Kiem tra xem du lieu trong db co hop le hay khong va thong bao ket qua
-
-        res.render('success', {code: vnp_Params['vnp_ResponseCode']})
-    } else{
-        res.render('success', {code: '97'})
+    if (secureHash === signed) {
+        try {
+            const booking = await Booking.findOneAndUpdate(
+                { _id: vnp_Params['vnp_TxnRef'] },
+                { status: 'PROCESS', paymentDate: new Date() }
+            );
+            if (booking) {
+                res.render('success', { code: vnp_Params['vnp_ResponseCode'] });
+            } else {
+                res.render('success', { code: '01', message: 'Booking not found' });
+            }
+        } catch (error) {
+            res.render('success', { code: '99', message: 'An error occurred' });
+        }
+    } else {
+        res.render('success', { code: '97' });
     }
 });
 
-router.get('/vnpay_ipn', function (req, res, next) {
+
+
+router.get('/vnpay_ipn', async function (req, res, next) {
     let vnp_Params = req.query;
     let secureHash = vnp_Params['vnp_SecureHash'];
     
@@ -144,7 +158,8 @@ router.get('/vnpay_ipn', function (req, res, next) {
     //let paymentStatus = '2'; // Giả sử '2' là trạng thái thất bại bạn cập nhật sau IPN được gọi và trả kết quả về nó
     
     let checkOrderId = true; // Mã đơn hàng "giá trị của vnp_TxnRef" VNPAY phản hồi tồn tại trong CSDL của bạn
-    let checkAmount = true; // Kiểm tra số tiền "giá trị của vnp_Amout/100" trùng khớp với số tiền của đơn hàng trong CSDL của bạn
+    let checkAmount = true; // Kiểm tra số tiền "giá trị của vnp_Amout/100" trùng khớp với số tiền của đơn hàng trong CSDL của bạn 
+    
     if(secureHash === signed){ //kiểm tra checksum
         if(checkOrderId){
             if(checkAmount){
@@ -178,6 +193,7 @@ router.get('/vnpay_ipn', function (req, res, next) {
         res.status(200).json({RspCode: '97', Message: 'Checksum failed'})
     }
 });
+
 
 router.post('/querydr', function (req, res, next) {
     

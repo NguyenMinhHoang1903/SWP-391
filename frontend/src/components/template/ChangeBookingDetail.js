@@ -149,7 +149,19 @@ export default function ChangeBookingDetail() {
               }
             }
 
-            if (date !== oldDate) {
+            flag = false;
+            if (date.getFullYear() === oldDate.getFullYear()) {
+              if (date.getMonth() === oldDate.getMonth()) {
+                if (date.getDate() === oldDate.getDate()) {
+                  if (date.getHours() === oldDate.getHours()) {
+                    flag = true;
+                  }
+                }
+              }
+            }
+
+            if (!flag) {
+              console.log("first")
               // Check the staffs is enough or not
               const resCheckStaff = await axios.post(
                 "http://localhost:5000/api/bookingTracker/track",
@@ -187,8 +199,7 @@ export default function ChangeBookingDetail() {
             .then((res) => res.json())
             .then((data) => {
               if (data.success) {
-                toast.success(data.message);
-                navigate("/myBookingList");
+                setOpenSuccessModal(true);
               } else {
                 setIsClicked(false);
                 toast.error(data.message);
@@ -1006,10 +1017,7 @@ export default function ChangeBookingDetail() {
         </div>
 
         <Modal
-          aria-labelledby="transition-modal-title"
-          aria-describedby="transition-modal-description"
           open={openSuccessModal}
-          onClose={() => setOpenSuccessModal(false)}
           closeAfterTransition
           slots={{ backdrop: Backdrop }}
           slotProps={{
@@ -1038,7 +1046,7 @@ export default function ChangeBookingDetail() {
               />
               <Typography
                 id="transition-modal-title"
-                variant="h6"
+                variant="h4"
                 component="h2"
                 sx={{ mb: 1, textAlign: "center" }}
               >
@@ -1048,15 +1056,25 @@ export default function ChangeBookingDetail() {
                 id="transition-modal-description"
                 sx={{ textAlign: "center", mb: 1 }}
               >
-                Your booking has been successfully
+                Your booking has been changed successfully
               </Typography>
 
-              <Typography
-                id="transition-modal-description"
-                sx={{ textAlign: "center", mb: 1 }}
+              <Button
+                sx={{
+                  marginLeft: "20%",
+                  bgcolor: "rgb(0, 201, 170)",
+                  ":hover": { bgcolor: "rgb(0, 201, 170)" },
+                }}
+                variant="contained"
               >
-                You will be moved to the booking detail page after 10 second
-              </Typography>
+                <Link
+                  className="text-decoration-none text-white"
+                  style={{}}
+                  to="/myBookingList"
+                >
+                  Return to My Booking List
+                </Link>
+              </Button>
             </Box>
           </Fade>
         </Modal>

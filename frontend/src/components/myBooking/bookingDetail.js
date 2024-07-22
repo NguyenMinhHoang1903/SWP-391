@@ -8,6 +8,7 @@ import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import TodayIcon from "@mui/icons-material/Today";
 import { FaCircleCheck } from "react-icons/fa6";
 import { Button } from "@mui/material";
+import { Collapse } from "react-bootstrap";
 
 export default function BookingDetail() {
   const [booking, setBooking] = useState("");
@@ -23,10 +24,17 @@ export default function BookingDetail() {
     navigate(-1);
   };
 
+  const [openUpdateButton, setOpenUpdateButton] = useState(false);
+
   const readOneBooking = async () => {
     await fetch(`http://localhost:5000/api/myBooking/readOne/${passedid}`)
       .then((res) => res.json())
-      .then((json) => setBooking(json.data))
+      .then((json) => {
+        setBooking(json.data);
+        if (json.data.status === "PENDING" || json.data.status === "PROCESS") {
+          setOpenUpdateButton(true);
+        }
+      })
       .catch((err) => console.log(err));
   };
 
@@ -113,26 +121,23 @@ export default function BookingDetail() {
             </div>
 
             <div className="total row mb-3">
-              <div className="col-md-2 text-left">
-                <h3>Total Amount:</h3>
-              </div>
-              <div className="col-md-2 text-right">
-                <h3>{formattedPrice(booking.total)} VND</h3>
+              <div className="col text-left">
+                <h3>Total Amount: {formattedPrice(booking.total)} VND</h3>
               </div>
             </div>
 
             <div className="button row">
-              <div className="col-3 text-left">
-                  <Button
-                    sx={{ ":hover": { bgcolor: "rgb(0, 201, 170)" } }}
-                    variant="contained"
-                    type="button"
-                    onClick={handleBack}
-                  >
-                    <ArrowBackIcon />
-                  </Button>
+              <div className="col text-left">
+                <Button
+                  sx={{ ":hover": { bgcolor: "rgb(0, 201, 170)" } }}
+                  variant="contained"
+                  type="button"
+                  onClick={handleBack}
+                >
+                  <ArrowBackIcon />
+                </Button>
               </div>
-              <div className="col-3">
+              <div className="col">
                 {booking.status === "PROCESS" && (
                   <Link
                     style={{ color: "rgb(0, 201, 170)" }}
@@ -152,24 +157,27 @@ export default function BookingDetail() {
                   </Link>
                 )}
               </div>
-              <div className="col-3">
-              {booking.status === "PROCESS" || booking.status === "PENDING" && (
-                <Link
-                  to={`/changeBookingDetail?${booking._id}`}
-                  className="text-decoration-none text-white"
-                >
-                  <Button
-                    sx={{
-                      bgcolor: "rgb(0, 201, 170)",
-                      ":hover": { bgcolor: "rgb(0, 201, 170)" },
-                    }}
+
+              {/* Update Button */}
+              <Collapse in={openUpdateButton}>
+                <div className="col">
+                  <Link
+                    to={`/changeBookingDetail?${booking._id}`}
+                    className="text-decoration-none text-white"
                   >
-                    Update
-                  </Button>
-                </Link>
-                )}
-              </div>
-              <div className="col-3 text-right">
+                    <Button
+                      sx={{
+                        bgcolor: "rgb(0, 201, 170)",
+                        ":hover": { bgcolor: "rgb(0, 201, 170)" },
+                      }}
+                    >
+                      Update
+                    </Button>
+                  </Link>
+                </div>
+              </Collapse>
+
+              <div className="col text-right">
                 {booking.status === "PENDING" && (
                   <Link
                     to={`http://localhost:8888/order/create_payment_url?id=${booking._id}&total=${booking.total}`}

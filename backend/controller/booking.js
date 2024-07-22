@@ -92,17 +92,50 @@ const changeBookingDetail = async (req, res) => {
     combo,
     total,
   } = req.body;
+  const newDate = new Date(date);
+  let flag = false;
 
   const existingBooking = await Booking.findById(oldId);
 
   if (existingBooking) {
+    // Check if old booking date is quel new booking date
+    if (newDate.getFullYear() === existingBooking.date.getFullYear()) {
+      if (newDate.getMonth() === existingBooking.date.getMonth()) {
+        if (newDate.getDate() === existingBooking.date.getDate()) {
+          if (newDate.getHours() === existingBooking.date.getHours()) {
+            flag = true;
+          }
+        }
+      }
+    }
+
+    if (!flag) {
+      // Return staff to the booking tracker
+      const bookingTracker = await BookingTracker.findOne({
+        year: existingBooking.date.getFullYear(),
+        month: existingBooking.date.getMonth() + 1,
+        date: existingBooking.date.getDate(),
+      });
+      bookingTracker.tracker.map((value, index) => {
+        if (value.time === existingBooking.date.getHours()) {
+          const newStaff = value.staffs + 1;
+          bookingTracker.tracker[index].staffs = newStaff;
+          const newTracker = bookingTracker.tracker;
+          BookingTracker.findByIdAndUpdate(bookingTracker._id.toString(), {
+            tracker: newTracker,
+          }).catch((err) => console.log(err));
+        }
+      });
+    }
+
+    // Update booking
     await Booking.findByIdAndUpdate(oldId, {
       $set: {
         userName: userName,
         email: email,
         petName: petName,
         petType: petType,
-        date: date,
+        date: newDate,
         weight: weight,
         services: services,
         combo: combo,
@@ -110,12 +143,12 @@ const changeBookingDetail = async (req, res) => {
       },
     })
       .then(() => {
-        res.json({ message: 1 });
+        res.json({ success: true });
       })
       .catch((err) => {
         console.log(err);
       });
-  } else res.json({ message: 0 });
+  } else res.json({ success: false, message: "Can not change!" });
 };
 
 // Check pet
@@ -145,7 +178,7 @@ const checkPet = async (req, res) => {
     if (flag) {
       return res.status(200).json({
         success: false,
-        message: "Pets were placed today. Please make changes in \"My booking\"",
+        message: 'Pets were placed today. Please make changes in "My booking"',
       });
     } else
       return res.status(200).json({

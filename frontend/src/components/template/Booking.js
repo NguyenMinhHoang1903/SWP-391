@@ -50,6 +50,7 @@ export default function BookingSpa() {
   const user = useSelector((state) => state?.user?.user);
   const [excludedTimes, setExcludedTimes] = useState([]);
   const [myPetList, setAllPet] = useState([]);
+  const [isClicked, setIsClicked] = useState(false);
 
   useEffect(() => {
     if (user?.name) {
@@ -70,6 +71,7 @@ export default function BookingSpa() {
       total: 0,
     },
     onSubmit: (values) => {
+      setIsClicked(true);
       const handleSubmit = async () => {
         try {
           // Check pet already on the same date or not
@@ -138,6 +140,7 @@ export default function BookingSpa() {
                   });
                 }, 5000);
               } else {
+                setIsClicked(false);
                 toast.error(data.message);
               }
             });
@@ -861,11 +864,11 @@ export default function BookingSpa() {
                   </Stack>
                 </Box>
 
-                {/* Submit Button */}
+                {/* Book Button */}
                 <button
                   className="submit-button"
                   type="submit"
-                  disabled={!(formik.dirty && formik.isValid)}
+                  disabled={!(formik.dirty && formik.isValid) || isClicked}
                 >
                   BOOK
                 </button>

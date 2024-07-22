@@ -48,7 +48,7 @@ export default function BookingSpa() {
   const [weightList, setWeightList] = useState([]);
   const navigate = useNavigate();
   const user = useSelector((state) => state?.user?.user);
-
+  const [excludedTimes, setExcludedTimes] = useState([]);
   const [myPetList, setAllPet] = useState([]);
 
   useEffect(() => {
@@ -421,68 +421,56 @@ export default function BookingSpa() {
     return currentDate.getTime() < selectedDate.getTime();
   };
 
-  // // Check pet with passed email, pet name and date
-  // const checkPet = async (email, petName, date) => {
-  //   let isFetched = true;
+  // Handle time of booking
+  const handleFullDate = async (result) => {
+    let selectedDate = "";
+    let flag = false;
+    const list = [];
 
-  //   await fetch("http://localhost:5000/api/bookings/checkPet", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       email: email,
-  //       petName: petName,
-  //       date: date,
-  //     }),
-  //   })
-  //     .then((res) => res.json())
-  //     .then((json) => {
-  //       if (isFetched) {
-  //         if (!json.success) {
-  //           setSuccess(json.success);
-  //           console.log(success);
-  //           toast.error(json.message);
-  //         }
-  //       }
-  //     })
-  //     .catch((err) => console.log(err));
+    if (result) {
+      selectedDate = new Date(result);
+      formik.setFieldValue("date", selectedDate);
+    } else {
+      selectedDate = new Date();
+    }
 
-  //   return () => {
-  //     isFetched = false;
-  //   };
-  // };
+    try {
+      const dateList = await axios.get(
+        "http://localhost:5000/api/bookingTracker/readAll"
+      );
+      const availableTimes = dateList.data.list;
+      if (availableTimes) {
+        availableTimes.map((value) => {
+          if (value.year === selectedDate.getFullYear()) {
+            if (value.month === selectedDate.getMonth() + 1) {
+              if (value.date === selectedDate.getDate()) {
+                value.tracker.map((value) => {
+                  if (value.staffs === 0) {
+                    list.push(value.time);
+                  }
+                });
+                flag = true;
+              }
+            }
+          }
+        });
 
-  // // Handle time if that time is over staffs
-  // const handleTimeStaff = async (date) => {
-  //   let isFetched = true;
-
-  //   await fetch(`http://localhost:5000/api/bookingTracker/track`, {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       date: date,
-  //     }),
-  //   })
-  //     .then((res) => res.json())
-  //     .then((json) => {
-  //       if (isFetched) {
-  //         if (!json.success) {
-  //           setSuccess((prev) => !prev);
-  //           toast.error(json.message);
-  //         }
-  //       }
-  //     })
-  //     .catch((err) => console.log(err));
-
-  //   return () => {
-  //     isFetched = false;
-  //   };
-  // };
+        if (flag) {
+          const filterSelectedTime = list
+            .flatMap((hour) => [new Date().setHours(hour, 0, 0, 0)])
+            .map((time) => new Date(time));
+          setExcludedTimes(filterSelectedTime);
+        } else {
+          setExcludedTimes([]);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
+    handleFullDate();
     readAllService();
     readAllCombo();
     readUser();
@@ -678,16 +666,16 @@ export default function BookingSpa() {
                       selected={formik.values.date}
                       minDate={new Date()}
                       onChange={(result) => {
-                        formik.setFieldValue("date", result);
+                        handleFullDate(result);
                       }}
                       name="date"
                       showTimeSelect
-                      timeIntervals={15}
+                      timeIntervals={60}
                       dateFormat="yyyy/MM/dd h:mm aa"
                       filterTime={filterPassedTime}
                       minTime={setHours(setMinutes(new Date(), 45), 7)}
                       maxTime={setHours(setMinutes(new Date(), 0), 20)}
-                      isClearable
+                      excludeTimes={excludedTimes}
                     />
                   </a>
                 </div>

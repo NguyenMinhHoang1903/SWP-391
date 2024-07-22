@@ -153,6 +153,7 @@ export default function BookingDetail() {
                 )}
               </div>
               <div className="col-3">
+              {booking.status === "PROCESS" || booking.status === "PENDING" && (
                 <Link
                   to={`/changeBookingDetail?${booking._id}`}
                   className="text-decoration-none text-white"
@@ -166,6 +167,7 @@ export default function BookingDetail() {
                     Update
                   </Button>
                 </Link>
+                )}
               </div>
               <div className="col-3 text-right">
                 {booking.status === "PENDING" && (

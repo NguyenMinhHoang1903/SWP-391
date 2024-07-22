@@ -33,10 +33,16 @@ export default function AddService() {
       desc: "",
       image: "",
       imageUrl: "",
+      path: "",
       agree: false,
     },
     onSubmit: (values) => {
       let flag = 0;
+
+      if (!values.image) {
+        toast.error("Image is required");
+        return;
+      }
       setOpenBackDrop(true);
 
       // Store image in firebase storage
@@ -75,16 +81,17 @@ export default function AddService() {
                         desc: values.desc,
                         imageName: values.image.name,
                         imageUrl: url,
+                        path: values.path,
                       }),
                     })
                       .then((res) => res.json())
                       .then((data) => {
                         setOpenBackDrop(false);
-                        if (data.message === 0) {
-                          toast.error("The name is already exists.");
-                        } else {
-                          toast.success("Successful Added");
+                        if (data.success) {
+                          toast.success(data.message);
                           navigate("/manageService");
+                        } else {
+                          toast.error(data.message);
                         }
                       })
                       .catch((err) => console.log(err));
@@ -345,6 +352,27 @@ export default function AddService() {
                 </div>
                 <Tooltip id="desc-tooltip" isOpen={true} imperativeModeOnly />
 
+                {/* Input Path */}
+                <div className="row mb-3">
+                  <a
+                    data-tooltip-id="path-tooltip"
+                    data-tooltip-content=""
+                    data-tooltip-variant="warning"
+                    data-tooltip-place="right"
+                  >
+                    <TextField
+                      onChange={formik.handleChange}
+                      type="text"
+                      name="path"
+                      value={formik.values.path}
+                      fullWidth
+                      label="Path"
+                      variant="outlined"
+                    />
+                  </a>
+                </div>
+                <Tooltip id="path-tooltip" isOpen={true} imperativeModeOnly />
+
                 {/* Input Image */}
                 <div className="row align-items-center mb-3">
                   <div className="col">
@@ -364,13 +392,13 @@ export default function AddService() {
                       <VisuallyHiddenInput
                         type="file"
                         name="image"
-                        accept="*"
                         onChange={(e) =>
                           formik.setFieldValue(
                             "image",
                             e.currentTarget.files[0]
                           )
                         }
+                        accept="image/*"
                       />
                     </Button>
                   </div>

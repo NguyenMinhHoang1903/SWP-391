@@ -45,10 +45,17 @@ export default function UpdateService() {
       image: "",
       imageName: "",
       imageUrl: "",
+      path: "",
       agree: false,
     },
     onSubmit: (values) => {
       let flag = 0;
+
+      if(!values.image) {
+        toast.error("Image is required");
+        return;
+      }
+
       //   let imageName = "";
       //   let imagePathName = "";
 
@@ -160,7 +167,6 @@ export default function UpdateService() {
                 images.items.forEach((imageRef) => {
                   getDownloadURL(imageRef).then((url) => {
                     // Create service in API
-                    console.log(url);
                     fetch("http://localhost:5000/api/services/update", {
                       method: "POST",
                       headers: {
@@ -173,16 +179,17 @@ export default function UpdateService() {
                         desc: values.desc,
                         imageName: values.image.name,
                         imageUrl: url,
+                        path: values.path,
                       }),
                     })
                       .then((res) => res.json())
                       .then((data) => {
                         setOpenBackDrop(false);
-                        if (data.message === 0) {
-                          toast.error("The name is already exists.");
-                        } else {
-                          toast.success("Successful Updated");
+                        if (data.success) {
+                          toast.success(data.message);
                           navigate("/manageService");
+                        } else {
+                          toast.error(data.message);
                         }
                       })
                       .catch((err) => console.log(err));
@@ -285,6 +292,7 @@ export default function UpdateService() {
           formik.setFieldValue("desc", json.desc);
           formik.setFieldValue("imageUrl", json.imageUrl);
           formik.setFieldValue("imageName", json.imageName);
+          formik.setFieldValue("path", json.path);
           formik.setFieldValue("agree", false);
         })
         .catch((err) => console.log(err));
@@ -395,7 +403,7 @@ export default function UpdateService() {
                             onChange={(e) => handlePrice(e.target.value, index)}
                             onKeyDown={handleKeyDown}
                             value={value.price}
-                            label= {formattedPrice(formik.values.total)}
+                            label={formattedPrice(formik.values.total)}
                             variant="outlined"
                           />
                         </div>
@@ -471,6 +479,27 @@ export default function UpdateService() {
                   </a>
                 </div>
                 <Tooltip id="desc-tooltip" isOpen={true} imperativeModeOnly />
+
+                {/* Input Path */}
+                <div className="row mb-3">
+                  <a
+                    data-tooltip-id="path-tooltip"
+                    data-tooltip-content=""
+                    data-tooltip-variant="warning"
+                    data-tooltip-place="right"
+                  >
+                    <TextField
+                      onChange={formik.handleChange}
+                      type="text"
+                      name="path"
+                      value={formik.values.path}
+                      fullWidth
+                      label="Path"
+                      variant="outlined"
+                    />
+                  </a>
+                </div>
+                <Tooltip id="path-tooltip" isOpen={true} imperativeModeOnly />
 
                 {/* Input Image */}
                 <div className="row align-items-center mb-3">

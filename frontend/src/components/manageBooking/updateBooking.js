@@ -24,8 +24,6 @@ const ChangeBookingRole = ({ userName, statusBooking, bookingId, onClose, callFu
 
   const handleOnChangeSelect2 = (e) => {
     setBookingStatus(e.target.value);
-
-    console.log(e.target.value);
   };
 
 

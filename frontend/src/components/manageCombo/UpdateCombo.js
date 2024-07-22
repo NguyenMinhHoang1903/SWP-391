@@ -32,7 +32,7 @@ import dayjs from "dayjs";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const formatCurrency = (amount) => {
-  return new Intl.NumberFormat('vi-VN').format(amount);
+  return new Intl.NumberFormat("vi-VN").format(amount);
 };
 
 // Utility function to get next day's date
@@ -119,11 +119,11 @@ export default function UpdateCombo() {
                     .then((res) => res.json())
                     .then((data) => {
                       setOpenBackDrop(false);
-                      if (data.message === 0) {
-                        toast.error("Updated Unsuccessfully");
-                      } else {
-                        toast.success("Updated Successfully");
+                      if (data.success) {
+                        toast.success(data.message);
                         navigate("/manageCombo");
+                      } else {
+                        toast.error(data.message);
                       }
                     })
                     .catch((err) => console.log(err));
@@ -201,7 +201,6 @@ export default function UpdateCombo() {
       e.preventDefault();
     }
   };
-
 
   // Read all services
   const readAllService = async () => {

@@ -55,6 +55,12 @@ export default function AddCombo() {
       const { startDate, endDate } = values;
       const validStartDate = startDate;
       const validEndDate = endDate;
+
+      if (!values.image) {
+        toast.error("Please select an image");
+        return;
+      }
+
       setOpenBackDrop(true);
 
       // Store image in firebase storage
@@ -93,11 +99,11 @@ export default function AddCombo() {
                     .then((res) => res.json())
                     .then((data) => {
                       setOpenBackDrop(false);
-                      if (data.message === 0) {
-                        toast.error("The name is already exists.");
-                      } else {
-                        toast.success("Add Successfully");
+                      if (data.success) {
+                        toast.success(data.message);
                         navigate("/manageCombo");
+                      } else {
+                        toast.error(data.message);
                       }
                     })
                     .catch((err) => console.log(err));

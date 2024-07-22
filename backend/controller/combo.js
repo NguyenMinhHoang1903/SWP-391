@@ -4,7 +4,6 @@ const Service = require("../models/serviceModel");
 const indexCombo = (req, res) => {
   res.send("<h1>This is combo page</h1>");
 };
-
 // CREATE
 const createCombo = async (req, res) => {
   let query = { name: req.body.name };
@@ -20,6 +19,8 @@ const createCombo = async (req, res) => {
       serviceId: req.body.serviceId,
       imageName: req.body.imageName,
       imageUrl: req.body.imageUrl,
+      rating: 0,
+      ratingNumber: 0,
     };
 
     if (req.body.startDate) {
@@ -33,10 +34,10 @@ const createCombo = async (req, res) => {
     const newCombo = new Combo(newComboData);
     await newCombo
       .save()
-      .then((result) => {
-        res.send(result);
+      .then(() => {
+        res.send({ success: true, message: "Added combo successfully" });
       })
-      .catch((err) => console.log(err));
+      .catch((err) => res.json({ success: true, message: err }));
   }
 };
 
@@ -102,30 +103,25 @@ const updateOneCombo = async (req, res) => {
 
   const existingCombo = await Combo.findOne(query);
 
-
-  if (existingCombo && existingCombo._id !== oldId) res.json({ message: 0 });
+  if (existingCombo && existingCombo._id.toString() !== oldId)
+    res.json({ success: false, message: "Combo already exist!" });
   else {
-    await Combo.deleteOne({ _id: oldId })
-      .then(() => console.log("Deleted Combo"))
-      .catch((err) => console.log(err));
-
-    const newCombo = await new Combo({
-      name: name,
-      price: req.body.price,
-      startDate: req.body.startDate,
-      endDate: req.body.endDate,
-      desc: req.body.desc,
-      serviceId: req.body.serviceId,
-      imageName: req.body.imageName,
-      imageUrl: req.body.imageUrl,
-    });
-
-    await newCombo
-      .save()
-      .then((result) => {
-        res.send(result);
-      })
-      .catch((err) => console.log(err));
+    const result = await Combo.findByIdAndUpdate(oldId, {
+      $set: {
+        name: name,
+        price: req.body.price,
+        startDate: req.body.startDate,
+        endDate: req.body.endDate,
+        desc: req.body.desc,
+        serviceId: req.body.serviceId,
+        imageName: req.body.imageName,
+        imageUrl: req.body.imageUrl,
+      },
+    })
+      .then(() =>
+        res.json({ success: true, message: "Combo updated successfully" })
+      )
+      .catch((err) => res.json({ success: false, message: err }));
   }
 };
 

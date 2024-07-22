@@ -134,6 +134,7 @@ body {
   margin-bottom: 10px;
   display: flex;
   color: #fff;
+  justify-content: right;
 }
 
 .userIcon img {
@@ -145,7 +146,8 @@ body {
 
 .username {
   color: white;
-  padding-right: 60px;
+  padding-right: 10px;
+  width: auto;
 }
 
 .guest {
@@ -159,8 +161,9 @@ body {
 }
 
 .wallet-part {
-  padding: 30px 30px 30px 0px;
+  padding: 0px 30px 0px 0px;
   display: flex;
+  justify-content: right;
 }
 
 .wallet2 {
@@ -181,6 +184,10 @@ body {
   padding-left: 0px;
   padding-top: 9px;
   cursor: pointer;
+}
+
+.btnLogout{
+  padding-top: 50px;
 }
 
 .navbar-left {
@@ -1281,6 +1288,7 @@ form .input-field {
   text-align: center;
   transition: all 0.3s;
   text-decoration: none;
+  background-color: rgb(185, 114, 74);background-color: rgb(185, 114, 74);
 }
 
 .manageStaff-component .heading-button:hover {

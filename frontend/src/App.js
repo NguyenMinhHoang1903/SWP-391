@@ -344,11 +344,11 @@ function App() {
                     path="/managePet"
                     element={
                       <Suspense fallback={<Loader />}>
-                        <ManagerRoute>
+                        <AdminRoute>
                           <Suspense fallback={<Loader />}>
                             <ManagePet />
                           </Suspense>
-                        </ManagerRoute>
+                        </AdminRoute>
                       </Suspense>
                     }
                   />

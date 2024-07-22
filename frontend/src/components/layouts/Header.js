@@ -146,28 +146,6 @@ const Header = () => {
             </div>
           </div>
           <div className="navbar-right">
-          <div className="wallet">
-              {user ? (
-                <div className="wallet-part">
-                  <div className="iconWallet">
-                    <FaWallet />
-                  </div>
-                  <div className="numberWallet">
-                    {myWallet.map((data, index) => {
-                      const showUserWallet = formatCurrency(data?.wallet);
-                      return (
-                        <div>{showWallet ? "********" : showUserWallet + " VND"}</div>
-                      );
-                    })}
-                  </div>
-                  <div className="iconEye" onClick={toggleWallet}>
-                    {showWallet ? <FaEye /> : <FaEyeSlash />}
-                  </div>
-                </div>
-              ) : (
-                <div class="guest"></div>
-              )}
-            </div>
 
             <div>
               <div className="userIcon">
@@ -225,21 +203,42 @@ const Header = () => {
                 </div>
               </div>
 
-              <div>
-                <div>
-                  {user ? (
-                    <button onClick={handleLogout} className="login-button">
-                      Logout
-                    </button>
-                  ) : (
-                    <div>
-                      <Link className="login-button" to="login">
-                        Login
-                      </Link>
+              <div className="wallet">
+                {user ? (
+                  <div className="wallet-part">
+                    <div className="iconWallet">
+                      <FaWallet />
                     </div>
-                  )}
-                </div>
+                    <div className="numberWallet">
+                      {myWallet.map((data, index) => {
+                        const showUserWallet = formatCurrency(data?.wallet);
+                        return (
+                          <div>{showWallet ? "********" : showUserWallet + " VND"}</div>
+                        );
+                      })}
+                    </div>
+                    <div className="iconEye" onClick={toggleWallet}>
+                      {showWallet ? <FaEye /> : <FaEyeSlash />}
+                    </div>
+                  </div>
+                ) : (
+                  <div class="guest"></div>
+                )}
               </div>
+            </div>
+
+            <div className="btnLogout">
+              {user ? (
+                <button onClick={handleLogout} className="login-button">
+                  Logout
+                </button>
+              ) : (
+                <div>
+                  <Link className="login-button" to="login">
+                    Login
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
 

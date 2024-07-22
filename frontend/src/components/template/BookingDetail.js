@@ -9,7 +9,7 @@ import { FaCircleCheck } from "react-icons/fa6";
 
 export default function BookingDetail() {
   const location = useLocation();
-  const { userName, email, petName, petType, date, services, combo, total } = location.state || {};
+  const { id, userName, email, petName, petType, date, services, combo, total } = location.state || {};
 
   // Convert date to a readable string
   const formattedDate = new Date(date).toLocaleString();

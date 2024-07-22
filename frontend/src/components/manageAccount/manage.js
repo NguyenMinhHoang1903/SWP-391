@@ -4,10 +4,14 @@ import SummaryApi from "../../common";
 import moment from "moment";
 import { TiEdit } from "react-icons/ti";
 import ChangeUserRole from "./updateStaff";
+import { Button } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useNavigate } from "react-router-dom";
 
 export default function ManageStaff() {
   const [allUser, setAllUsers] = useState([]);
   const [openUpdateRole, setOpenUpdateRole] = useState(false);
+  const navigate = useNavigate();
   const [updateUserDetails, setUpdateUserDetails] = useState({
     email: "",
     name: "",
@@ -43,6 +47,10 @@ export default function ManageStaff() {
     setIsOpen(!isOpen);
   };
 
+  const handleBack = () => {
+    navigate(-1);
+  };
+
   return (
     <>
       <div className="manageStaff-component">
@@ -51,6 +59,16 @@ export default function ManageStaff() {
             <div className="table">
               <div className="row">
                 <div className="col-2">
+                  <div className="heading-button-Link">
+                    <Button
+                      sx={{ bgcolor: "rgb(0, 201, 170)" }}
+                      variant="contained"
+                      type="button"
+                      onClick={handleBack}
+                    >
+                      <ArrowBackIcon />
+                    </Button>
+                  </div>
                 </div>
                 <div className="col-8">
                   <div className="heading">

@@ -8,13 +8,11 @@ import { Button } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SummaryApi from '../../common';
 import { FaUser } from "react-icons/fa";
-import { BsFillBookmarkCheckFill } from "react-icons/bs";
 
 
 export default function ManagePet() {
     const [listPet, setListPet] = useState([]);
     const navigate = useNavigate();
-    const [bookingList, setBookingList] = useState([]);
 
     //get pet from database
     const fetchAllPets = async () => {
@@ -41,19 +39,6 @@ export default function ManagePet() {
         navigate(-1);
     };
 
-    const countBookings = (petName) => {
-        let count = 0;
-        listPet.forEach(petData => {
-            petData.pets.forEach(pet => {
-                if (pet.petName === petName) {
-                    count++;
-                }
-            });
-        });
-        return count;
-    };
-
-
     return (
         <div>
             <div className="manageStaff-component">
@@ -61,7 +46,18 @@ export default function ManagePet() {
                     <div className="container">
                         <div className="table">
                             <div className="row">
-                                <div className="col-2"></div>
+                                <div className="col-2">
+                                    <div className="heading-button-Link">
+                                        <Button
+                                            sx={{ bgcolor: "rgb(0, 201, 170)" }}
+                                            variant="contained"
+                                            type="button"
+                                            onClick={handleBack}
+                                        >
+                                            <ArrowBackIcon />
+                                        </Button>
+                                    </div>
+                                </div>
                                 <div className="col-8">
                                     <div className="heading">Pet List</div>
                                 </div>
@@ -91,9 +87,6 @@ export default function ManagePet() {
                                         <th style={{ textAlign: "center" }}>
                                             <GiWeightScale /> Weight (kg)
                                         </th>
-                                        <th style={{ textAlign: "center" }}>
-                                            <BsFillBookmarkCheckFill /> Time Booking
-                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -116,33 +109,14 @@ export default function ManagePet() {
                                                     <div key={index}>{value.weight}</div>
                                                 ))}
                                             </td>
-                                            {/* <td style={{ textAlign: "center" }}>
-                                                {petData.pets.map((value, index) => (
-                                                    <div key={index}>{countBookings(value.petName)}</div>
-                                                ))}
-                                            </td> */}
                                         </tr>
                                     ))}
                                 </tbody>
                             </table>
                         </div>
-                        <div className="button row">
-                            <div className="col-6 text-left">
-                                <Button
-                                    sx={{ bgcolor: "rgb(0, 201, 170)" }}
-                                    variant="contained"
-                                    type="button"
-                                    onClick={handleBack}
-                                >
-                                    <ArrowBackIcon />
-                                </Button>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
-
-
         </div>
     )
 }

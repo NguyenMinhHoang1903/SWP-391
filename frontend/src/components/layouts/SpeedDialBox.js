@@ -2,23 +2,15 @@ import React from "react";
 import Box from "@mui/material/Box";
 import SpeedDial from "@mui/material/SpeedDial";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
-import FeedbackIcon from "@mui/icons-material/Feedback";
 import { SpeedDialAction } from "@mui/material";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import { useNavigate } from "react-router-dom";
 
 export default function SpeedDialBox() {
-  const navigate = useNavigate();
-  const actions = [
-    { icon: <FeedbackIcon />, name: "Feedback" },
-    { icon: <ArrowUpwardIcon />, name: "Back to top" },
-  ];
+  const actions = [{ icon: <ArrowUpwardIcon />, name: "Back to top" }];
 
   // Hand Click of Speed Dial
   const handClick = async (action) => {
-    if (action.name === "Feedback") {
-      navigate("/feedback");
-    }
     if (action.name === "Back to top") {
       window.scrollTo(0, 0);
     }

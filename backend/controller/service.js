@@ -4,12 +4,13 @@ const indexService = (req, res) => {
   res.send("<h1>This is service page</h1>");
 };
 
+
 // CREATE
 const createService = async (req, res) => {
-  let query = {name: req.body.name };
+  let query = { name: req.body.name };
 
   await Service.findOne(query).then((result) => {
-    if (result) res.json({ message: 0 });
+    if (result) res.json({ success: false, message: "Service already exists" });
     else {
       const newService = new Service({
         name: req.body.name,
@@ -17,12 +18,15 @@ const createService = async (req, res) => {
         desc: req.body.desc,
         imageName: req.body.imageName,
         imageUrl: req.body.imageUrl,
+        path: req.body.path,
+        rating: 0,
+        ratingNumber: 0,
       });
 
       newService
         .save()
         .then((result) => {
-          res.send(result);
+          res.send({ success: true, message: "Added service successfully" });
         })
         .catch((err) => console.log(err));
     }
@@ -70,29 +74,26 @@ const updateOneService = async (req, res) => {
   const oldId = req.body.oldId;
   const name = req.body.name;
   let query = { name: name };
-  
+
   const existingService = await Service.findOne(query);
 
-  if (existingService && existingService._id.toString() !== oldId) res.json({ message: 0 });
+  if (existingService && existingService._id.toString() !== oldId)
+    res.json({ success: false, message: "Service already exists" });
   else {
-    await Service.deleteOne({ _id: oldId })
-      .then(result => console.log("Deleted Service"))
-      .catch((err) => console.log(err));
-
-    const newService = await new Service({
-      name: name,
-      priceByWeight: req.body.priceByWeight,
-      desc: req.body.desc,
-      imageUrl: req.body.imageUrl,
-      imageName: req.body.imageName,
-    });
-
-    await newService
-      .save()
-      .then((result) => {
-        res.send(result);
-      })
-      .catch((err) => console.log(err));
+    const result = await Service.findByIdAndUpdate(oldId, {
+      $set: {
+        name: name,
+        priceByWeight: req.body.priceByWeight,
+        desc: req.body.desc,
+        imageUrl: req.body.imageUrl,
+        imageName: req.body.imageName,
+        path: req.body.path,
+      },
+    })
+      .then(() =>
+        res.json({ success: true, message: "Service updated successfully" })
+      )
+      .catch((err) => res.json({ success: false, message: err }));
   }
 };
 

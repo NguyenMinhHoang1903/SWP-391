@@ -10,9 +10,11 @@ const feedbackSchema = new Schema({
         type: String,
         required: true
     },
-    rating: {
-        type: Number,
-        required: true 
+    servicesRating: {
+        type: Array,
+    },
+    comboRating: {
+        type: Object,
     },
     comment: {
         type: String,

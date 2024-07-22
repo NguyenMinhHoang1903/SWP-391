@@ -22,6 +22,15 @@ const serviceSchema = new Schema({
         type: String,
         required: true
     },
+    path: {
+        type: String,
+    },
+    rating: {
+        type: Number,
+    },
+    ratingNumber: {
+        type: Number,
+    },
 }, { timestamps: true });
 
 const Service = mongoose.model('Service', serviceSchema);

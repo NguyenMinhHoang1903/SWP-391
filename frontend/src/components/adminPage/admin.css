@@ -1,11 +1,11 @@
 /* HOME */
-.adminHome-component{
+.adminHome-component {
     display: flex;
 
-    .adminHome-container{
+    .adminHome-container {
         flex: 6;
 
-        .show-widget{
+        .show-widget {
             margin-right: 20px;
             display: flex;
             padding: 20px;
@@ -16,36 +16,41 @@
 }
 
 /* WIDGET */
-
-.widget-part{
+.widget-part {
     display: flex;
     flex: 1;
     justify-content: space-between;
     padding: 20px;
-    -webkit-box-shadow: 3px -5px 18px -7px grey; 
-    box-shadow: 3px -5px 18px -7px grey;
+    -webkit-box-shadow: 3px -5px 18px -7px #8b4513;
+    box-shadow: 3px -5px 18px -7px #8b4513;
     border-radius: 10px;
     height: 200px;
 
-    .left, .right{
+    .left,
+    .right {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        .title{
+
+        .title {
             font-weight: bold;
             font-size: 24px;
-            color: darkgray;
+            color: #8b4513;
         }
-        .counter{
+
+        .counter {
             font-size: 34px;
             font-weight: 400;
         }
-        .linkWidget{
+
+        .linkWidget {
             width: max-content;
             font-size: 20px;
             cursor: pointer;
+            color: #8b4513;
         }
-        .iconWidget{
+
+        .iconWidget {
             font-size: 40px;
             padding: 5px;
             /* background-color: rgb(185, 114, 74); */
@@ -56,11 +61,8 @@
 
 }
 
-
-
-
 /* SIDE BAR */
-.sidebar{
+.sidebar {
     flex: 1;
     height: calc(100vh - 50px);
     background-color: saddlebrown;
@@ -69,28 +71,28 @@
     display: flex;
 }
 
-.sidebarWrapper{
+.sidebarWrapper {
     padding: 20px;
     color: white;
     flex: 2;
 }
 
-.sidebarMenu{
-    margin-bottom: 10px;   
+.sidebarMenu {
+    margin-bottom: 10px;
 }
 
-.sidebarTitle{
+.sidebarTitle {
     font-size: 25px;
     color: white;
 }
 
-.sidebarList{
+.sidebarList {
     list-style: none;
     padding: 5px;
     font-size: 20px;
 }
 
-.sidebarListItem{
+.sidebarListItem {
     padding: 5px;
     cursor: pointer;
     display: flex;
@@ -98,20 +100,19 @@
     border-radius: 10px;
 }
 
-.sidebarListItem.active, .sidebarListItem:hover{
+.sidebarListItem.active,
+.sidebarListItem:hover {
     background-color: sienna;
     flex: 2;
 }
 
-.sidebarIcon{
+.sidebarIcon {
     margin-right: 5px;
-    font-size: 20px !important;   
+    font-size: 20px !important;
 }
 
-.linkToSlidebar{
+.linkToSlidebar {
     text-decoration: none;
     background-color: none;
     color: white;
 }
-
-

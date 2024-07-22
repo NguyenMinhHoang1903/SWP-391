@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import NumbersTwoToneIcon from '@mui/icons-material/NumbersTwoTone';
 import PetsTwoToneIcon from '@mui/icons-material/PetsTwoTone';
 import { GiWeightScale } from "react-icons/gi";
-import { Button } from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SummaryApi from '../../common';
 import { FaUser } from "react-icons/fa";
@@ -13,6 +13,8 @@ import { FaUser } from "react-icons/fa";
 export default function ManagePet() {
     const [listPet, setListPet] = useState([]);
     const navigate = useNavigate();
+    const [query, setQuery] = useState("");
+    const keys = ["userName"];
 
     //get pet from database
     const fetchAllPets = async () => {
@@ -38,6 +40,20 @@ export default function ManagePet() {
     const handleBack = () => {
         navigate(-1);
     };
+
+    //search name owner or pet name
+    const search = (data) => {
+        if (query) {
+            return data.filter((item) =>
+                keys.some((key) =>
+                    item[key].toString().toLowerCase().includes(query.toLowerCase())
+                )
+            );
+        }
+        return data;
+    };
+    
+    const searchByName = search(listPet);
 
     return (
         <div>
@@ -69,6 +85,24 @@ export default function ManagePet() {
                                     />
                                 </div>
                             </div>
+
+                             {/* Filter search bar */}
+                             <div className="row justify-content-end mb-3">
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        marginBottom: 3,
+                                    }}
+                                >
+                                    <TextField
+                                        sx={{ bgcolor: "white" }}
+                                        placeholder="Search by Name"
+                                        onChange={(e) => setQuery(e.target.value)}
+                                    />
+                                </Box>
+                            </div>
+
                             <table>
                                 <thead>
                                     <tr>
@@ -90,7 +124,7 @@ export default function ManagePet() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {listPet.map((petData, index) => (
+                                    {searchByName.map((petData, index) => (
                                         <tr key={index}>
                                             <td style={{ textAlign: "center" }}>{index + 1}</td>
                                             <td style={{ textAlign: "center" }}>{petData?.userName}</td>

@@ -61,6 +61,7 @@ const Pet = lazy(() => import("./components/MyPet/MyPets"));
 const PetList = lazy(() => import("./components/MyPet/MyPetList"));
 const UpdatePet = lazy(() => import("./components/MyPet/UpdateMyPet"));
 const ManagePet = lazy(() => import("./components/managePet/ManagePet"));
+const TimeBookPet = lazy(() => import("./components/managePet/TimeBookPet"));
 
 const BookingDetail = lazy(() => import("./components/template/BookingDetail"));
 const ManageBooking = lazy(() =>
@@ -352,7 +353,20 @@ function App() {
                       </Suspense>
                     }
                   />
-                  
+
+                  <Route
+                    path="/timeBookPet"
+                    element={
+                      <Suspense fallback={<Loader />}>
+                        <AdminRoute>
+                          <Suspense fallback={<Loader />}>
+                            <TimeBookPet />
+                          </Suspense>
+                        </AdminRoute>
+                      </Suspense>
+                    }
+                  />
+
                   <Route
                     path="/addMyPet"
                     element={

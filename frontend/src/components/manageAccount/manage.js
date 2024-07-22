@@ -4,7 +4,7 @@ import SummaryApi from "../../common";
 import moment from "moment";
 import { TiEdit } from "react-icons/ti";
 import ChangeUserRole from "./updateStaff";
-import { Button } from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";
 
@@ -12,6 +12,8 @@ export default function ManageStaff() {
   const [allUser, setAllUsers] = useState([]);
   const [openUpdateRole, setOpenUpdateRole] = useState(false);
   const navigate = useNavigate();
+  const [query, setQuery] = useState("");
+  const keys = ["name"];
   const [updateUserDetails, setUpdateUserDetails] = useState({
     email: "",
     name: "",
@@ -51,6 +53,20 @@ export default function ManageStaff() {
     navigate(-1);
   };
 
+  //search name account
+  const search = (data) => {
+    if (query) {
+      return data.filter((item) =>
+        keys.some((key) =>
+          item[key].toString().toLowerCase().includes(query.toLowerCase())
+        )
+      );
+    }
+    return data;
+  };
+
+  const searchByName = search(allUser);
+
   return (
     <>
       <div className="manageStaff-component">
@@ -83,6 +99,24 @@ export default function ManageStaff() {
                   />
                 </div>
               </div>
+
+              {/* Filter search bar */}
+              <div className="row justify-content-end mb-3">
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginBottom: 3,
+                  }}
+                >
+                  <TextField
+                    sx={{ bgcolor: "white" }}
+                    placeholder="Search by Name"
+                    onChange={(e) => setQuery(e.target.value)}
+                  />
+                </Box>
+              </div>
+
               <table>
                 <thead>
                   <tr>
@@ -96,7 +130,7 @@ export default function ManageStaff() {
                   </tr>
                 </thead>
                 <tbody>
-                  {allUser.map((el, index) => (
+                  {searchByName.map((el, index) => (
                     <tr>
                       <td style={{ textAlign: "center" }}>{index + 1}</td>
                       <td>{el?.name}</td>

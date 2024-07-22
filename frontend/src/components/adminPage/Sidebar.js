@@ -22,11 +22,11 @@ export default function Sidebar() {
               </li>
             </Link>
 
-            {/* <Link to="/manageService" className="linkToSlidebar">
-            <li className="sidebarListItem">
-              Service
-            </li>
-            </Link> */}
+            <Link to="/timeBookPet" className="linkToSlidebar">
+              <li className="sidebarListItem">
+                Time Booking Pet
+              </li>
+            </Link>
 
             {/* <Link to="/listBooking" className="linkToSlidebar">
             <li className="sidebarListItem">

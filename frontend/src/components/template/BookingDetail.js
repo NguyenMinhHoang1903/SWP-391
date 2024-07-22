@@ -103,7 +103,7 @@ export default function BookingDetail() {
                   </button></Link>
                 </div>
                 <div className="col-6 text-right">
-                <a href = {`http://localhost:8888/order/create_payment_url?id=${id}&total=${total}`} className="btn btn-success">Confirm</a>
+                  <a href = {`http://localhost:8888/order/create_payment_url?id=${id}&total=${total}`} className="btn btn-success">Confirm</a>
                 </div>
               </div>
             </form>

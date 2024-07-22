@@ -59,7 +59,7 @@ const createBooking = async (req, res) => {
     .then((result) => {
       sendMail(mailOptions);
       return res.json({
-        data: result,
+        id: result._id,
         success: true,
         message: "Please check your gmail or spam box",
       });
@@ -96,26 +96,6 @@ const changeBookingDetail = async (req, res) => {
   const existingBooking = await Booking.findById(oldId);
 
   if (existingBooking) {
-    // Return staff to the booking tracker
-    const bookingTracker = await BookingTracker.findOne({
-      year: existingBooking.date.getFullYear(),
-      month: existingBooking.date.getMonth() + 1,
-      date: existingBooking.date.getDate(),
-    });
-    console.log("Before: "+bookingTracker);
-    bookingTracker.tracker.map((value, index) => {
-      if (value.time === existingBooking.date.getHours()) {
-        const newStaff = value.staffs + 1;
-        console.log(value.time);
-        bookingTracker.tracker[index].staffs = newStaff;
-        const newTracker = bookingTracker.tracker;
-        BookingTracker.findByIdAndUpdate(bookingTracker._id.toString(), {
-          tracker: newTracker,
-        }).then(result => console.log("after: "+result)).catch(err => console.log(err));
-      }
-    })
-
-    // Update booking
     await Booking.findByIdAndUpdate(oldId, {
       $set: {
         userName: userName,
@@ -130,12 +110,12 @@ const changeBookingDetail = async (req, res) => {
       },
     })
       .then(() => {
-        res.json({ success: true, message: "Updated Booking" });
+        res.json({ message: 1 });
       })
       .catch((err) => {
         console.log(err);
       });
-  } else res.json({ success: false, message: "Can not update booking" });
+  } else res.json({ message: 0 });
 };
 
 // Check pet
@@ -165,7 +145,7 @@ const checkPet = async (req, res) => {
     if (flag) {
       return res.status(200).json({
         success: false,
-        message: "Pets were booked today. Please make changes in \"My booking\"",
+        message: "Pets were placed today. Please make changes in \"My booking\"",
       });
     } else
       return res.status(200).json({

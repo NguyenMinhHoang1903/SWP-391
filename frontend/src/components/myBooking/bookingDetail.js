@@ -170,7 +170,7 @@ export default function BookingDetail() {
               <div className="col-3 text-right">
                 {booking.status === "PENDING" && (
                   <Link
-                  to={`http://localhost:8888/order/create_payment_url?id=${booking._id}&total=${booking.total}`}
+                    to={`http://localhost:8888/order/create_payment_url?id=${booking._id}&total=${booking.total}`}
                   >
                     <Button
                       sx={{ ":hover": { bgcolor: "rgb(0, 201, 170)" } }}

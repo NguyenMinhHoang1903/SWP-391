@@ -153,13 +153,13 @@ router.get('/vnpay_ipn', function (req, res, next) {
                         //thanh cong
                         //paymentStatus = '1'
                         // Ở đây cập nhật trạng thái giao dịch thanh toán thành công vào CSDL của bạn
-                        res.status(200).json({RspCode: '00', Message: 'Success'})
+                        res.status(200).json({id: id ,RspCode: '00', Message: 'Success'})
                     }
                     else {
                         //that bai
                         //paymentStatus = '2'
                         // Ở đây cập nhật trạng thái giao dịch thanh toán thất bại vào CSDL của bạn
-                        res.status(200).json({RspCode: '00', Message: 'Success'})
+                        res.status(200).json({RspCode: '10', Message: 'Fail'})
                     }
                 }
                 else{

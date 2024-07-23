@@ -31,12 +31,8 @@ const RefundPage = () => {
     userName: "",
     bookingID: "",
     reason: "",
-    bank: "",
-    bankNumber: "",
-    holder: "",
     amount: "",
     agree: false,
-    status: "PENDING",
   });
 
   useEffect(() => {
@@ -59,38 +55,6 @@ const RefundPage = () => {
     { title: "Transportation Problems", icon: <DirectionsBusIcon /> },
     { title: "Change of Plans", icon: <SwapHorizIcon /> },
     { title: "Personal Reasons", icon: <PersonIcon /> },
-  ];
-
-  const bankingOptions = [
-    { title: "Vietcombank" },
-    { title: "VietinBank" },
-    { title: "BIDV" },
-    { title: "Agribank" },
-    { title: "Sacombank" },
-    { title: "MB" },
-    { title: "Techcombank" },
-    { title: "ACB" },
-    { title: "VPBank" },
-    { title: "SHB" },
-    { title: "EXIMBANK" },
-    { title: "HSBC" },
-    { title: "TPBank" },
-    { title: "NCB" },
-    { title: "Ocean Bank" },
-    { title: "MSC" },
-    { title: "HD Bank" },
-    { title: "Nam A Bank" },
-    { title: "OCB" },
-    { title: "SCB" },
-    { title: "IVB" },
-    { title: "ABBANK" },
-    { title: "VIB" },
-    { title: "SeABank" },
-    { title: "VIETBANK" },
-    { title: "BVBank" },
-    { title: "VIET A BANK" },
-    { title: "BAC A BANK" },
-    { title: "SAI GON BANK" },
   ];
 
   useEffect(() => {
@@ -127,11 +91,6 @@ const RefundPage = () => {
 
     fetchBookingDetails();
   }, [passedid]);
-
-  const defaultProps = {
-    options: bankingOptions,
-    getOptionLabel: (option) => option.title,
-  };
 
   const reasonProps = {
     options: reasonOptions,
@@ -178,25 +137,10 @@ const RefundPage = () => {
 
     // Perform form validation
     if (
-      !data.bank ||
-      !data.holder ||
-      !data.bankNumber ||
       !data.reason ||
       !data.agree
     ) {
       toast.error("All fields are required");
-      return;
-    }
-
-    // Validate that bankNumber and amount are numbers
-    if (!numberRegex.test(data.bankNumber)) {
-      toast.error("Bank number  must be numbers");
-      return;
-    }
-
-    // Validate that holder contains only letters
-    if (!letterRegex.test(data.holder)) {
-      toast.error("Holder name must contain only letters");
       return;
     }
 
@@ -215,7 +159,7 @@ const RefundPage = () => {
       const responseData = await createRefund.json();
 
       if (responseData.success) {
-        toast.success("Money will be refunded within 3-5 business days");
+        toast.success("The money has been refunded to the wallet");
         handleBack();
       } else {
         toast.error(responseData.message);
@@ -273,111 +217,6 @@ const RefundPage = () => {
                       </div>
                     </li>
                   )}
-                />
-              </div>
-
-              <div className="input-group mb-3">
-                <div
-                  className="input-group-addon"
-                  style={{ textAlign: "left" }}
-                >
-                  Bank Account
-                </div>
-                <Autocomplete
-                  {...defaultProps}
-                  id="disable-close-on-select"
-                  disableCloseOnSelect
-                  value={
-                    bankingOptions.find(
-                      (option) => option.title === data.bank
-                    ) || null
-                  }
-                  onChange={(event, value) =>
-                    handleAutocompleteChange(event, value, "bank")
-                  }
-                  sx={{ width: "55%" }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      variant="standard"
-                      placeholder="Enter your bank name"
-                      InputProps={{
-                        ...params.InputProps,
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <AccountBalanceRoundedIcon />
-                          </InputAdornment>
-                        ),
-                      }}
-                      required
-                    />
-                  )}
-                  renderOption={(props, option) => (
-                    <li {...props}>
-                      <div style={{ display: "flex", alignItems: "center" }}>
-                        <AccountBalanceRoundedIcon />
-                        <span style={{ marginLeft: "10px" }}>
-                          {option.title}
-                        </span>
-                      </div>
-                    </li>
-                  )}
-                />
-              </div>
-
-              <div className="input-group mb-3">
-                <div
-                  className="input-group-addon"
-                  style={{ textAlign: "left" }}
-                >
-                  Card number
-                </div>
-                <TextField
-                  id="standard-basic"
-                  variant="standard"
-                  type="text"
-                  inputMode="numeric"
-                  pattern="[0-9]*"
-                  placeholder="Enter your card number"
-                  value={data.bankNumber}
-                  name="bankNumber"
-                  onChange={handleOnChange}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <AddCardRoundedIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                  sx={{ width: "55%" }}
-                  required
-                />
-              </div>
-
-              <div className="input-group mb-3">
-                <div
-                  className="input-group-addon"
-                  style={{ textAlign: "left" }}
-                >
-                  Card holder
-                </div>
-                <TextField
-                  id="standard-basic"
-                  variant="standard"
-                  type="text"
-                  placeholder="Enter card holder's name"
-                  value={data.holder}
-                  name="holder"
-                  onChange={handleOnChange}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <AccountCircleIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                  sx={{ width: "55%" }}
-                  required
                 />
               </div>
 
@@ -470,7 +309,12 @@ const RefundPage = () => {
               >
                 Accept
               </Button>
-            </div>
+            </div>          
+          </div>
+          <div>
+            <p style={{ color: "white", fontSize: "14px", margintop: "20px", textAlign: "center" }}>
+                Note:   Refunds are 70% if canceled less than 2 hours before the booking time
+            </p>
           </div>
         </form>
       </div>

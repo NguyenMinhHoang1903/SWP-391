@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 export default function MyBooking() {
   const user = useSelector((state) => state?.user?.user);
   const [MyBookingList, setAllBooking] = useState([]);
-  const [filteredStatus, setFilteredStatus] = useState("All"); // State to store filtered status
+  const [filteredStatus, setFilteredStatus] = useState("All");
 
   const [data, setData] = useState({
     userName: user?.name || "",
@@ -47,9 +47,7 @@ export default function MyBooking() {
   
       const dataResponse = await fetchData.json();
       if (dataResponse.success) {
-        // Filter bookings by logged-in user
         const userBookings = dataResponse.data.filter(booking => booking.userName === user.name);
-        // Sort bookings by date in ascending order (oldest to newest)
         userBookings.sort((a, b) => new Date(b.date) - new Date(a.date));
         setAllBooking(userBookings);
       } else {
@@ -66,9 +64,9 @@ export default function MyBooking() {
 
   const filterBookings = (booking) => {
     if (filteredStatus === "All") {
-      return true; // Show all bookings if "All" is selected
+      return true;
     } else {
-      return booking.status === filteredStatus; // Filter by selected status
+      return booking.status === filteredStatus;
     }
   };
 

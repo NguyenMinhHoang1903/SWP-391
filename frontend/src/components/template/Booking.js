@@ -85,6 +85,7 @@ export default function BookingSpa() {
           );
           if (!resCheckPet.data.success) {
             toast.error(resCheckPet.data.message);
+            setIsClicked(false);
             return;
           }
 
@@ -97,6 +98,7 @@ export default function BookingSpa() {
           );
           if (!resCheckStaff.data.success) {
             toast.error(resCheckStaff.data.message);
+            setIsClicked(false);
             return;
           }
 

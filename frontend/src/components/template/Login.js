@@ -7,7 +7,12 @@ import Context from "../../context";
 import { setUserDetails } from "../../store/userSlice";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
+} from "firebase/auth";
 import axios from "axios";
 import ReCAPTCHA from "react-google-recaptcha";
 
@@ -70,29 +75,26 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const API_KEY = "24330debe6c0409bbcee434ab9d1b556";
+    const API_KEY = "baad659508684e57832c13e81b63d551";
     const BASE_URL = "https://api.zerobounce.net/v2/validate";
     const email = data.email;
 
-    const validateEmail = async (email) => {
-      try {
-        const response = await axios.get(BASE_URL, {
-          params: {
-            api_key: API_KEY,
-            email: email,
-          },
-        });
-        if (response.data.status === "invalid email") {
-          toast.error("Invalid email address or domain");
-          return;
-        }
-      } catch (error) {
-        console.error("Error validating email:", error);
-        throw error;
+    try {
+      const response = await axios.get(BASE_URL, {
+        params: {
+          api_key: API_KEY,
+          email: email,
+        },
+      });
+      console.log(response);
+      if (response.data.status === "invalid") {
+        toast.error("Invalid email address or domain");
+        return;
       }
-    };
-
-    validateEmail(email);
+    } catch (error) {
+      console.error("Error validating email:", error);
+      throw error;
+    }
 
     if (data.password.length < 6) {
       toast.error("Password must be at least 6 characters");
@@ -165,36 +167,42 @@ const Login = () => {
             })
           );
           // Save Google user details to the backend
-          axios.post('http://localhost:5000/api/saveGoogle', {
-            name: user.displayName,
-            email: user.email,
-            googleId: user.uid,
-          }).then((response) => {
-            console.log('Server response:', response);  // Debug log
-            toast.success("Sign in with your Google account successfully");
-            navigate("/");
-          }).catch((error) => {
-            if (error.response) {
-              // Server responded with a status other than 2xx
-              console.error('Axios error response:', error.response);
-              toast.error(`Failed to save user details: ${error.response.data.message}`);
-            } else if (error.request) {
-              // No response received
-              console.error('Axios error request:', error.request);
-              toast.error("Failed to save user details: No response from server");
-            } else {
-              // Other errors
-              console.error('Axios error message:', error.message);
-              toast.error(`Failed to save user details: ${error.message}`);
-            }
-          });
+          axios
+            .post("http://localhost:5000/api/saveGoogle", {
+              name: user.displayName,
+              email: user.email,
+              googleId: user.uid,
+            })
+            .then((response) => {
+              console.log("Server response:", response); // Debug log
+              toast.success("Sign in with your Google account successfully");
+              navigate("/");
+            })
+            .catch((error) => {
+              if (error.response) {
+                // Server responded with a status other than 2xx
+                console.error("Axios error response:", error.response);
+                toast.error(
+                  `Failed to save user details: ${error.response.data.message}`
+                );
+              } else if (error.request) {
+                // No response received
+                console.error("Axios error request:", error.request);
+                toast.error(
+                  "Failed to save user details: No response from server"
+                );
+              } else {
+                // Other errors
+                console.error("Axios error message:", error.message);
+                toast.error(`Failed to save user details: ${error.message}`);
+              }
+            });
         })
         .catch((error) => {
           toast.error(error.message);
         });
     });
   };
-  
 
   return (
     <body className="loginBody">
@@ -270,14 +278,18 @@ const Login = () => {
               onChange={handleOnChange}
               placeholder="Enter your password"
             />
-            <ReCAPTCHA sitekey="6LcK-BEqAAAAADJxdIF5CVMyPVVH_xumF3we_0zW" onChange={(val) => setCapVal(val)} />, 
+            <ReCAPTCHA
+              sitekey="6LcK-BEqAAAAADJxdIF5CVMyPVVH_xumF3we_0zW"
+              onChange={(val) => setCapVal(val)}
+            />
+            ,
             <div className="checkbox">
               <input
                 type="checkbox"
                 checked={showPassword}
                 onChange={toggleShowPassword}
               />
-              <div style={{fontSize : "10"}}>Show Password</div>
+              <div style={{ fontSize: "10" }}>Show Password</div>
             </div>
             <Link
               to="/forgotpassword"
@@ -285,7 +297,9 @@ const Login = () => {
             >
               Forgot password?
             </Link>
-            <button disabled={!capVal} className="btnn">Sign In</button>
+            <button disabled={!capVal} className="btnn">
+              Sign In
+            </button>
           </form>
         </div>
         <div className="toggle-containerLogin">

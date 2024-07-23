@@ -18,7 +18,7 @@ export default function Sidebar() {
 
             <Link to="/managePet" className="linkToSlidebar">
               <li className="sidebarListItem">
-                List Pet
+                Customer's Pet
               </li>
             </Link>
 

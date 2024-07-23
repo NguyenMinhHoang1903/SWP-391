@@ -204,7 +204,7 @@ const Header = () => {
               </div>
 
               <div className="wallet">
-                {user ? (
+                {user && user.role === "CUSTOMER" ? (
                   <div className="wallet-part">
                     <div className="iconWallet">
                       <FaWallet />
@@ -268,22 +268,26 @@ const Header = () => {
           </li>
 
           <li>
-            <div className="wallet2">
-              <div className="iconWallet">
-                <FaWallet />
+            {user && user.role === "CUSTOMER" ? (
+              <div className="wallet2">
+                <div className="iconWallet">
+                  <FaWallet />
+                </div>
+                <div className="numberWallet">
+                  {myWallet.map((data) => {
+                    const showUserWallet = formatCurrency(data?.wallet);
+                    return (
+                      <div>{showWallet ? "********" : showUserWallet + " VND"}</div>
+                    );
+                  })}
+                </div>
+                <div className="iconEye" onClick={toggleWallet}>
+                  {showWallet ? <FaEye /> : <FaEyeSlash />}
+                </div>
               </div>
-              <div className="numberWallet">
-                {myWallet.map((data) => {
-                  const showUserWallet = formatCurrency(data?.wallet);
-                  return (
-                    <div>{showWallet ? "********" : showUserWallet + " VND"}</div>
-                  );
-                })}
-              </div>
-              <div className="iconEye" onClick={toggleWallet}>
-                {showWallet ? <FaEye /> : <FaEyeSlash />}
-              </div>
-            </div>
+            ) : (
+              <div class="guest"></div>
+            )}
           </li>
 
           <li>

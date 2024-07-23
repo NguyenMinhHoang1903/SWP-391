@@ -56,8 +56,6 @@ const WidgetRevenueLM = ({ type }) => {
     <div className="widget-part">
       <div className="left">
         <span className="title">REVENUE LAST MONTH</span>
-
-
         <span className="counter">{formatCurrency(totalRevenue)} VND</span>
       </div>
       <div className="right">

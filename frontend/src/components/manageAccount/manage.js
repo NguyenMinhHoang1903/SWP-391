@@ -120,7 +120,7 @@ export default function ManageStaff() {
               <table>
                 <thead>
                   <tr>
-                    <th style={{ textAlign: "center" }}>St</th>
+                    <th style={{ textAlign: "center" }}>No.</th>
                     <th style={{ textAlign: "center" }}>Name</th>
                     <th style={{ textAlign: "center" }}>Email</th>
                     <th style={{ textAlign: "center" }}>Role</th>

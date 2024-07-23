@@ -75,19 +75,14 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const API_KEY = "baad659508684e57832c13e81b63d551";
-    const BASE_URL = "https://api.zerobounce.net/v2/validate";
+    const API_KEY = "qa4efb9adawc50oj9vwc";
     const email = data.email;
+    const BASE_URL = `https://api.mailscan.cc/v1/verify?email=${email}&api_key=${API_KEY}`;
 
     try {
-      const response = await axios.get(BASE_URL, {
-        params: {
-          api_key: API_KEY,
-          email: email,
-        },
-      });
+      const response = await axios.get(BASE_URL);
       console.log(response);
-      if (response.data.status === "invalid") {
+      if (response.data.isValid === "No") {
         toast.error("Invalid email address or domain");
         return;
       }

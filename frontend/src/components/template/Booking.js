@@ -15,16 +15,20 @@ import {
   Button,
   Divider,
   FormControl,
+  FormControlLabel,
+  FormLabel,
   IconButton,
   MenuItem,
   Modal,
+  Radio,
+  RadioGroup,
   Select,
   Stack,
   Typography,
 } from "@mui/material";
 import TooltipMUI from "@mui/material/Tooltip";
 import { useSelector } from "react-redux";
-import { Collapse, Table } from "react-bootstrap";
+import { Col, Collapse, Row, Table } from "react-bootstrap";
 import Backdrop from "@mui/material/Backdrop";
 import Fade from "@mui/material/Fade";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
@@ -33,6 +37,7 @@ import setHours from "date-fns/setHours";
 import setMinutes from "date-fns/setMinutes";
 import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
+import { styled } from "@mui/material/styles";
 
 export default function BookingSpa() {
   const [listService, setListService] = useState([]);
@@ -51,6 +56,8 @@ export default function BookingSpa() {
   const [excludedTimes, setExcludedTimes] = useState([]);
   const [myPetList, setAllPet] = useState([]);
   const [isClicked, setIsClicked] = useState(false);
+  const [payingOption, setPayingOption] = useState();
+  const [openPayingWallet, setOpenPayingWallet] = useState(false);
 
   useEffect(() => {
     if (user?.name) {
@@ -69,11 +76,38 @@ export default function BookingSpa() {
       services: [],
       combo: "",
       total: 0,
+      newWallet: 0,
+      status: "PENDING",
     },
     onSubmit: (values) => {
       setIsClicked(true);
+
       const handleSubmit = async () => {
         try {
+          // Update wallet of customer
+          if (payingOption === "wallet") {
+            if (user.wallet < formik.values.total) {
+              toast.error("Not enough money in your wallet!");
+              return;
+            } else {
+              let newWallet = user.wallet - formik.values.total;
+              formik.setFieldValue("newWallet", newWallet);
+              const res = await axios.post(
+                "http://localhost:5000/api/updateWallet",
+                {
+                  userId: user._id,
+                  wallet: newWallet,
+                }
+              );
+
+              if (res.data.success) {
+                // formik.setFieldValue("status", "PROCESS");
+              } else {
+                toast.error(res.data.message);
+              }
+            }
+          }
+
           // Check pet already on the same date or not
           const resCheckPet = await axios.post(
             "http://localhost:5000/api/bookings/checkPet",
@@ -118,29 +152,36 @@ export default function BookingSpa() {
               services: values.services,
               combo: values.combo,
               total: Number(formik.values.total),
+              status: formik.values.status,
             }),
           })
             .then((res) => res.json())
             .then((data) => {
               if (data.success) {
-                toast.success(data.message);
-                setOpenSuccessModal(true);
-                setTimeout(() => {
-                  navigate("/bookingDetail", {
-                    state: { 
-                      id: data.id,
-                      userName: values.userName,
-                      email: values.email,
-                      petName: values.petName,
-                      petType: values.petType,
-                      date: values.date,
-                      weight: Number(values.weight),
-                      services: values.services,
-                      combo: values.combo,
-                      total: Number(formik.values.total),
-                    },
-                  });
-                }, 5000);
+                console.log(formik.values.status)
+                console.log(values.status)
+                if (formik.values.status === "PENDING") {
+                  toast.success(data.message);
+                  setOpenSuccessModal(true);
+                  setTimeout(() => {
+                    navigate("/bookingDetail", {
+                      state: {
+                        id: data.id,
+                        userName: values.userName,
+                        email: values.email,
+                        petName: values.petName,
+                        petType: values.petType,
+                        date: values.date,
+                        weight: Number(values.weight),
+                        services: values.services,
+                        combo: values.combo,
+                        total: Number(formik.values.total),
+                      },
+                    });
+                  }, 5000);
+                } else if (formik.values.status === "PROCESS") {
+                  setOpenPayingWallet(true);
+                }
               } else {
                 setIsClicked(false);
                 toast.error(data.message);
@@ -474,12 +515,69 @@ export default function BookingSpa() {
     }
   };
 
+  // Handle paying options
+  const handlePayingOption = (e) => {
+    const option = e.target.value;
+    if (option === "wallet") {
+      formik.setFieldValue("status", "PROCESS");
+      setPayingOption(option);
+    } else if (option === "bank") {
+      formik.setFieldValue("status", "PENDING");
+      setPayingOption(option);
+    }
+  };
+
+  // if customers have enough money in wallet then use them, or not
+  const handlePayingByWallet = async () => {
+    try {
+      if (user.wallet < formik.values.total) {
+        toast.error("Not enough money in your wallet!");
+        return;
+      } else {
+        let newWallet = user.wallet - formik.values.total;
+        formik.setFieldValue("newWallet", newWallet);
+        const res = await axios.post("http://localhost:5000/api/updateWallet", {
+          userId: user._id,
+          wallet: newWallet,
+        });
+
+        if (res.data.success) {
+          setOpenPayingWallet(true);
+          formik.setFieldValue("status", "PROCESS");
+        } else {
+          toast.error(res.data.message);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     handleFullDate();
     readAllService();
     readAllCombo();
     readUser();
   }, []);
+
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 4,
+  };
+
+  const CustomRadio = styled(Radio)(({ theme }) => ({
+    color: "rgb(0, 201, 170)",
+    "&.Mui-checked": {
+      color: "rgb(0, 201, 170)",
+    },
+  }));
 
   return (
     <>
@@ -866,6 +964,36 @@ export default function BookingSpa() {
                   </Stack>
                 </Box>
 
+                <Box
+                  component="section"
+                  sx={{ p: 2, bgcolor: "white", marginBottom: 3 }}
+                >
+                  <FormControl>
+                    <FormLabel
+                      sx={{ color: "rgb(0, 201, 170)" }}
+                      id="demo-radio-buttons-group-label"
+                    >
+                      Option:
+                    </FormLabel>
+                    <RadioGroup
+                      aria-labelledby="demo-radio-buttons-group-label"
+                      name="radio-buttons-group"
+                      onChange={(e) => handlePayingOption(e)}
+                    >
+                      <FormControlLabel
+                        value="bank"
+                        control={<CustomRadio />}
+                        label="Bank"
+                      />
+                      <FormControlLabel
+                        value="wallet"
+                        control={<CustomRadio />}
+                        label="Wallet"
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                </Box>
+
                 {/* Book Button */}
                 <button
                   className="submit-button"
@@ -940,6 +1068,75 @@ export default function BookingSpa() {
               >
                 You will be moved to the booking detail page after 5 second
               </Typography>
+            </Box>
+          </Fade>
+        </Modal>
+
+        {/* After selected option to pay */}
+        <Modal
+          open={openPayingWallet}
+          slots={{ backdrop: Backdrop }}
+          slotProps={{
+            backdrop: {
+              timeout: 500,
+            },
+          }}
+        >
+          <Fade in={openPayingWallet}>
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 400,
+                bgcolor: "background.paper",
+                border: "2px solid #000",
+                boxShadow: 24,
+                p: 4,
+              }}
+            >
+              <CheckCircleOutlineIcon
+                sx={{ fontSize: 80, marginX: 15 }}
+                color="success"
+              />
+              <Typography
+                variant="h4"
+                component="h2"
+                sx={{ mb: 1, textAlign: "center" }}
+              >
+                Success
+              </Typography>
+              <Typography
+                variant="h6"
+                component="h2"
+                sx={{ mb: 1, textAlign: "center" }}
+              >
+                Your new wallet: {formattedPrice(formik.values.newWallet)} VND
+                <br />
+                <span>You paid: </span>
+                <span className="text-danger">
+                  {formattedPrice(formik.values.total)} VND
+                </span>
+              </Typography>
+
+              <Button
+                sx={{
+                  marginLeft: "30%",
+                  bgcolor: "rgb(0, 201, 170)",
+                  ":hover": { bgcolor: "rgb(0, 201, 170)" },
+                }}
+                variant="contained"
+                onClick={() => setOpenPayingWallet(false)}
+              >
+                <Link
+                  className="text-decoration-none text-white"
+                  style={{}}
+                  to="/"
+                >
+                  Return Home
+                </Link>
+              </Button>
             </Box>
           </Fade>
         </Modal>

@@ -49,7 +49,8 @@ export default function TimeBookPet() {
     const countBookings = (userName, petName) => {
         let count = 0;
         bookingList.forEach(booking => {
-            if (booking.userName === userName && booking.petName === petName) {
+            if (booking.userName === userName && booking.petName === petName && booking.status === "FINISHED"
+) {
                 count++;
             }
         });

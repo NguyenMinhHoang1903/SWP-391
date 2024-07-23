@@ -16,14 +16,21 @@ const allListBooking = async (req, res) => {
       status: 'PENDING',
       createdAt: { $lte: deleteOlderThanTime }
     });
+    console.log("Before:")
 
-    const cancelTime = Booking.date.subtract(30, 'minutes').toDate();
+    const allBooking = await Booking.findOne({});
+    console.log("After: "+allBooking)
+
+    const cancelTime = currentTime.subtract(30, 'minutes').toDate();
+    console.log("TEST: "+cancelTime)
+
     await Booking.updateMany({
       status: 'PROCESS',
       date: { $lte: cancelTime }
     }, {
       $set: { status: 'CANCELLED' }
     });
+    console.log("AFter:")
 
     const allBookingUser = await Booking.find();
 

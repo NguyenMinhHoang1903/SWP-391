@@ -44,7 +44,7 @@ export default function ShowListService() {
                 <div className="listService">
                   <Card
                     className="card"
-                    style={{ width: "19.2rem", height: "35rem" }}
+                    style={{ width: "19.2rem", height: "36rem" }}
                   >
                     <Card.Img
                       variant="top"
@@ -52,10 +52,10 @@ export default function ShowListService() {
                       src={data.imageUrl}
                       className="card-img"
                     />
-                    <Card.Body>
+                    <Card.Body >
                       <Card.Title style={{ width: "100%", height: "1.5rem" }}>{data.name}</Card.Title>
                       <h5>Price:</h5>
-                      <Card.Text style={{ width: "100%", height: "1.5rem" }}>{data.priceByWeight.map((value) => (
+                      <Card.Text style={{ width: "100%", height: "6rem" }}>{data.priceByWeight.map((value) => (
                         <div key={value} className="row">
                           <div className="col-7"> {formattedPrice(value.price)} VND</div>
                           <div className="col-5">{formattedPrice(value.weight)} KG</div>

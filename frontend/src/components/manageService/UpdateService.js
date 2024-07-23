@@ -51,7 +51,7 @@ export default function UpdateService() {
     onSubmit: (values) => {
       let flag = 0;
 
-      if(!values.image) {
+      if (!values.image) {
         toast.error("Image is required");
         return;
       }
@@ -246,18 +246,25 @@ export default function UpdateService() {
   const handlePriceByWeight = async () => {
     const pw = { price: "", weight: "" };
 
-    if (
-      !(
-        formik.values.priceByWeight[formik.values.priceByWeight.length - 1]
-          .price === "" ||
-        formik.values.priceByWeight[formik.values.priceByWeight.length - 1]
-          .weight === ""
-      )
-    ) {
-      formik.values.priceByWeight.push(pw);
-      formik.setFieldValue("priceByWeight", formik.values.priceByWeight);
-      toast.success("Added to the list");
-    } else toast.error("You need to enter price and weight");
+    if (formik.values.priceByWeight.length < 4) {
+      if (
+        !(
+          formik.values.priceByWeight[formik.values.priceByWeight.length - 1]
+            .price === "" ||
+          formik.values.priceByWeight[formik.values.priceByWeight.length - 1]
+            .weight === ""
+        )
+      ) {
+        formik.values.priceByWeight.push(pw);
+        formik.setFieldValue("priceByWeight", formik.values.priceByWeight);
+        toast.success("Added to the list");
+      } else {
+        toast.error("You need to enter price and weight");
+      }
+    } else {
+      toast.error("Cannot add more than 5 price and weight");
+    }
+
   };
 
   const formattedPrice = (price) => {
@@ -402,8 +409,11 @@ export default function UpdateService() {
                             type="text"
                             onChange={(e) => handlePrice(e.target.value, index)}
                             onKeyDown={handleKeyDown}
+                            // value={value.price}
+                            // label={formattedPrice(formik.values.total)}
+                            // variant="outlined"
+                            label="Price"
                             value={value.price}
-                            label={formattedPrice(formik.values.total)}
                             variant="outlined"
                           />
                         </div>
@@ -419,6 +429,7 @@ export default function UpdateService() {
                             variant="outlined"
                           />
                         </div>
+                        {/* button add new price */}
                         <div className="col-2">
                           <TooltipDefault title="Click me to add this one to list">
                             <Button

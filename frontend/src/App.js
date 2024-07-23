@@ -55,7 +55,6 @@ const ChangePassword = lazy(() =>
   import("./components/template/ChangePassword")
 );
 const SpeedDialBox = lazy(() => import("./components/layouts/SpeedDialBox"));
-const Transaction = lazy(() => import("./components/template/TransactionHistory"));
 
 const Pet = lazy(() => import("./components/MyPet/MyPets"));
 const PetList = lazy(() => import("./components/MyPet/MyPetList"));
@@ -322,19 +321,6 @@ function App() {
                         <PrivateRoute>
                           <Suspense fallback={<Loader />}>
                             <MyBookingDetail />
-                          </Suspense>
-                        </PrivateRoute>
-                      </Suspense>
-                    }
-                  />
-
-                  <Route
-                    path="/transactionHistory"
-                    element={
-                      <Suspense fallback={<Loader />}>
-                        <PrivateRoute>
-                          <Suspense fallback={<Loader />}>
-                            <Transaction />
                           </Suspense>
                         </PrivateRoute>
                       </Suspense>

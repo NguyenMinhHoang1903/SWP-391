@@ -7,6 +7,9 @@ import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import TodayIcon from "@mui/icons-material/Today";
 import { FaCircleCheck } from "react-icons/fa6";
 import { Button } from "@mui/material";
+import toast from "react-hot-toast";
+import axios from 'axios';
+import { useState } from "react";
 
 export default function BookingDetail() {
   const location = useLocation();
@@ -19,8 +22,11 @@ export default function BookingDetail() {
     date,
     services,
     combo,
+    status,
     total,
   } = location.state || {};
+
+  const [bookingStatus, setBookingStatus] = useState(status);
 
   // Convert date to a readable string
   const formattedDate = new Date(date).toLocaleString();
@@ -28,6 +34,29 @@ export default function BookingDetail() {
   // Format price
   const formattedPrice = (price) => {
     return new Intl.NumberFormat("vi-VN").format(price);
+  };
+
+  const handleConfirm = async () => {
+    console.log(location.state);
+    try {
+      const response = await fetch(`http://localhost:5000/api/updateBookingStatus/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setBookingStatus("PROCESS");
+        toast.success("Status updated to PROCESS");
+      } else {
+        toast.error(result.message || "Failed to update status");
+      }
+    } catch (error) {
+      toast.error("An error occurred while updating status");
+    }
   };
   return (
     <>
@@ -138,7 +167,7 @@ export default function BookingDetail() {
                 <div className="col text-right">
                   <Link
                     className="text-decoration-none text-white"
-                    to={`http://localhost:8888/order/create_payment_url?id=${id}&total=${total}`}
+                   to={`http://localhost:8888/order/create_payment_url?id=${id}&total=${total}`}
                   >
                     <Button
                       sx={{
@@ -146,6 +175,7 @@ export default function BookingDetail() {
                         ":hover": { bgcolor: "rgb(0, 201, 170)" },
                       }}
                       variant="contained"
+                      onClick={handleConfirm}
                     >
                       Confirm
                     </Button>

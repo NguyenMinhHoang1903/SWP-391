@@ -113,22 +113,12 @@ router.get('/vnpay_return', async function (req, res, next) {
     let hmac = crypto.createHmac("sha512", secretKey);
     let signed = hmac.update(new Buffer(signData, 'utf-8')).digest("hex");  
 
-    if (secureHash === signed) {
-        try {
-            const booking = await Booking.findOneAndUpdate(
-                { _id: vnp_Params['vnp_TxnRef'] },
-                { status: 'PROCESS', paymentDate: new Date() }
-            );
-            if (booking) {
-                res.render('success', { code: vnp_Params['vnp_ResponseCode'] });
-            } else {
-                res.render('success', { code: '01', message: 'Booking not found' });
-            }
-        } catch (error) {
-            res.render('success', { code: '99', message: 'An error occurred' });
-        }
-    } else {
-        res.render('success', { code: '97' });
+    if(secureHash === signed){
+        //Kiem tra xem du lieu trong db co hop le hay khong va thong bao ket qua
+
+        res.render('success', {code: vnp_Params['vnp_ResponseCode']})
+    } else{
+        res.render('success', {code: '97'})
     }
 });
 

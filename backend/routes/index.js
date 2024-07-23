@@ -18,6 +18,7 @@ const updatePassword = require("../controller/changePassword");
 const updateBooking = require("../controller/updateBooking");
 const forgotPassword = require("../controller/forgotPassword");
 const resetPassword = require("../controller/resetPassword");
+const updateBookingStatus = require("../controller/updateBookingStatus")
 
 // Booking Import
 const booking = require("../controller/booking");
@@ -74,6 +75,7 @@ router.get("/myBooking/read", myBooking.allMyBooking);
 router.get("/myBooking/readOne/:id", myBooking.readOneBooking);
 router.get("/listBooking/read", listBooking.allListBooking);
 router.post("/update-booking", updateBooking);
+router.patch("/updateBookingStatus/:id",updateBookingStatus);
 
 // Refund Router
 router.post("/refund/createOne/:id", refund.createRefund);

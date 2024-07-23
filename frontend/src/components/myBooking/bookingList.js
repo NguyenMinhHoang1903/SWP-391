@@ -15,36 +15,21 @@ import { Link } from "react-router-dom";
 export default function MyBooking() {
   const user = useSelector((state) => state?.user?.user);
   const [MyBookingList, setAllBooking] = useState([]);
-  const [filteredStatus, setFilteredStatus] = useState("All");
-
-  const [data, setData] = useState({
-    userName: user?.name || "",
-    petName: "",
-    date: "",
-    total: "",
-    status: "",
-  });
-
-  useEffect(() => {
-    if (user) {
-      setData(prev => ({
-        ...prev,
-        userName: user.name,
-      }));
-    }
-  }, [user]);
+  const [filteredStatus, setFilteredStatus] = useState("All"); // State to store filtered status
+  const [isLoading, setIsLoading] = useState(false); // Loading state
 
   useEffect(() => {
     fetchAllBooking();
   }, []);
 
   const fetchAllBooking = async () => {
+    setIsLoading(true); // Start loading
     try {
       const fetchData = await fetch(SummaryApi.allMyBooking.url, {
         method: SummaryApi.allMyBooking.method,
         credentials: 'include',
       });
-  
+
       const dataResponse = await fetchData.json();
       if (dataResponse.success) {
         const userBookings = dataResponse.data.filter(booking => booking.userName === user.name);
@@ -55,6 +40,8 @@ export default function MyBooking() {
       }
     } catch (error) {
       toast.error("Failed to fetch bookings");
+    } finally {
+      setIsLoading(false); // End loading
     }
   };
 
@@ -88,16 +75,15 @@ export default function MyBooking() {
                 <img
                   className="table-heading-right"
                   src="assets/imgs/gif-1.gif"
-                  alt=""
+                  alt="GIF"
                 />
               </div>
             </div>
             {/* Filter bar */}
-            <div className="row justify-content-end mb-4" >
+            <div className="row justify-content-end mb-4">
               <div className="col-auto">
                 <select
                   className="form-select"
-                  
                   value={filteredStatus}
                   onChange={handleFilterChange}
                 >
@@ -109,62 +95,66 @@ export default function MyBooking() {
                 </select>
               </div>
             </div>
-            <table>
-              <thead>
-                <tr>
-                  <th style={{ textAlign: "center" }}>
-                    <NumbersTwoToneIcon /> No.
-                  </th>
-                  <th style={{ textAlign: "center" }}>
-                    <PetsTwoToneIcon /> Pet's Name
-                  </th>
-                  <th style={{ textAlign: "center" }}>
-                    <EventTwoToneIcon /> Date
-                  </th>
-                  <th style={{ textAlign: "center" }}>
-                    <EventTwoToneIcon /> Time
-                  </th>
-                  <th style={{ textAlign: "center" }}>
-                    <PaymentsTwoToneIcon /> Total
-                  </th>
-                  <th style={{ textAlign: "center" }}>
-                    <SubjectTwoToneIcon /> Status
-                  </th>
-                  <th>
-                    <SubjectTwoToneIcon /> Detail
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {MyBookingList.filter(filterBookings).map((data, index) => {
-                  const date = new Date(data?.date);
-                  const formattedDate = format(date, 'yyyy-MM-dd');
-                  const formattedTime = format(date, 'HH:mm');
-                  return (
-                    <tr key={data?.userName}>
-                      <td style={{ textAlign: "center" }}>{index + 1}</td>
-                      <td style={{ textAlign: "center" }}>{data?.petName}</td>
-                      <td style={{ textAlign: "center" }}>{formattedDate}</td>
-                      <td style={{ textAlign: "center" }}>{formattedTime}</td>
-                      <td style={{ textAlign: "right" }}>{formatCurrency(data?.total)}</td>
-                      <td className={`status-${data?.status}`} style={{ textAlign: "center" }}>{data?.status}</td>
-                      <td>
-                        <Link
-                          className="update-button"
-                          to={`/mybooking?${data._id}`}
-                        >
-                          <Tooltip TransitionComponent={Zoom} arrow>
-                            <IconButton>
-                              <SubjectTwoToneIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </Link>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+            {isLoading ? (
+              <div>Loading...</div> // Display loading message while fetching data
+            ) : (
+              <table>
+                <thead>
+                  <tr>
+                    <th style={{ textAlign: "center" }}>
+                      <NumbersTwoToneIcon /> No.
+                    </th>
+                    <th style={{ textAlign: "center" }}>
+                      <PetsTwoToneIcon /> Pet's Name
+                    </th>
+                    <th style={{ textAlign: "center" }}>
+                      <EventTwoToneIcon /> Date
+                    </th>
+                    <th style={{ textAlign: "center" }}>
+                      <EventTwoToneIcon /> Time
+                    </th>
+                    <th style={{ textAlign: "center" }}>
+                      <PaymentsTwoToneIcon /> Total
+                    </th>
+                    <th style={{ textAlign: "center" }}>
+                      <SubjectTwoToneIcon /> Status
+                    </th>
+                    <th>
+                      <SubjectTwoToneIcon /> Detail
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {MyBookingList.filter(filterBookings).map((data, index) => {
+                    const date = new Date(data?.date);
+                    const formattedDate = format(date, 'yyyy-MM-dd');
+                    const formattedTime = format(date, 'HH:mm');
+                    return (
+                      <tr key={data?._id}>
+                        <td style={{ textAlign: "center" }}>{index + 1}</td>
+                        <td style={{ textAlign: "center" }}>{data?.petName}</td>
+                        <td style={{ textAlign: "center" }}>{formattedDate}</td>
+                        <td style={{ textAlign: "center" }}>{formattedTime}</td>
+                        <td style={{ textAlign: "right" }}>{formatCurrency(data?.total)}</td>
+                        <td className={`status-${data?.status}`} style={{ textAlign: "center" }}>{data?.status}</td>
+                        <td>
+                          <Link
+                            className="update-button"
+                            to={`/mybooking?${data._id}`}
+                          >
+                            <Tooltip TransitionComponent={Zoom} arrow title="View Details">
+                              <IconButton>
+                                <SubjectTwoToneIcon />
+                              </IconButton>
+                            </Tooltip>
+                          </Link>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            )}
           </div>
         </div>
       </div>
